@@ -9,6 +9,8 @@ import { MobileFrame } from './components/MobileFrame';
 import { LoanHubScreen } from './components/LoanHubScreen';
 import { InputValueScreen } from './components/InputValueScreen';
 import { LoanSimulationScreen } from './components/LoanSimulationScreen';
+import { ProposalLoadingScreen } from './components/ProposalLoadingScreen';
+import { SummaryScreen } from './components/SummaryScreen';
 
 // Smooth ease-out curve for native mobile push transition
 const SILKY_EASE_OUT = [0.16, 1, 0.3, 1] as const;
@@ -37,7 +39,9 @@ const screenPushVariants: Variants = {
 };
 
 export default function App() {
-  const [currentStep, setCurrentStep] = useState<'loan_hub' | 'input_value' | 'simulation'>('loan_hub');
+  const [currentStep, setCurrentStep] = useState<
+    'loan_hub' | 'input_value' | 'simulation' | 'proposal_loading' | 'summary'
+  >('loan_hub');
   // Starts empty (null) on first visit; persists once the user enters an amount in this session
   const [sessionAmount, setSessionAmount] = useState<number | null>(null);
   const [loanAmount, setLoanAmount] = useState<number>(2000);
@@ -65,8 +69,28 @@ export default function App() {
     setCurrentStep('input_value');
   };
 
+  const handleContinueProposal = () => {
+    setDirection(1);
+    setCurrentStep('proposal_loading');
+  };
+
+  const handleLoadingComplete = () => {
+    setDirection(1);
+    setCurrentStep('summary');
+  };
+
+  const handleBackFromSummary = () => {
+    setDirection(-1);
+    setCurrentStep('simulation');
+  };
+
+  const handleRestart = () => {
+    setDirection(-1);
+    setCurrentStep('loan_hub');
+  };
+
   return (
-    <MobileFrame>
+    <MobileFrame statusBarBg={currentStep === 'proposal_loading' ? 'bg-[#c5e6ff]' : 'bg-white'}>
       <div className="w-full flex-1 min-h-0 flex flex-col relative overflow-hidden bg-white">
         <AnimatePresence mode="popLayout" custom={direction} initial={false}>
           {currentStep === 'loan_hub' ? (
@@ -102,7 +126,7 @@ export default function App() {
                 onBack={handleBackToLoanHub}
               />
             </motion.div>
-          ) : (
+          ) : currentStep === 'simulation' ? (
             <motion.div
               key="simulation"
               custom={direction}
@@ -119,6 +143,34 @@ export default function App() {
                   setSessionAmount(newAmt);
                 }}
                 onBack={handleBackToInputValue}
+                onContinueProposal={handleContinueProposal}
+              />
+            </motion.div>
+          ) : currentStep === 'proposal_loading' ? (
+            <motion.div
+              key="proposal_loading"
+              custom={direction}
+              variants={screenPushVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="w-full h-full flex flex-col flex-1 min-h-0 overflow-hidden"
+            >
+              <ProposalLoadingScreen onComplete={handleLoadingComplete} />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="summary"
+              custom={direction}
+              variants={screenPushVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="w-full h-full flex flex-col flex-1 min-h-0 overflow-hidden"
+            >
+              <SummaryScreen
+                onBack={handleBackFromSummary}
+                onRestart={handleRestart}
               />
             </motion.div>
           )}

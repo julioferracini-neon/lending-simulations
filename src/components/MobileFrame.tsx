@@ -4,9 +4,10 @@ import { StatusBar } from './StatusBar';
 
 interface MobileFrameProps {
   children: React.ReactNode;
+  statusBarBg?: string;
 }
 
-export const MobileFrame: React.FC<MobileFrameProps> = ({ children }) => {
+export const MobileFrame: React.FC<MobileFrameProps> = ({ children, statusBarBg = 'bg-white' }) => {
   const [viewMode, setViewMode] = useState<'mobile' | 'responsive'>('mobile');
 
   return (
@@ -56,7 +57,7 @@ export const MobileFrame: React.FC<MobileFrameProps> = ({ children }) => {
         } bg-white flex flex-col relative h-[100dvh]`}
       >
         {/* Native Android Status Bar */}
-        <div className="bg-white shrink-0">
+        <div className={`${statusBarBg} shrink-0 transition-colors duration-300`}>
           <StatusBar time="9:30" showPunchHole={viewMode === 'mobile'} />
         </div>
 

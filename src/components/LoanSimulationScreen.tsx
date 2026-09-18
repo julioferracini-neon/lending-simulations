@@ -15,6 +15,7 @@ interface LoanSimulationScreenProps {
   initialLoanAmount?: number;
   onBack?: () => void;
   onAmountChange?: (amount: number) => void;
+  onContinueProposal?: () => void;
 }
 
 // Smooth easing curves for UI transitions
@@ -52,6 +53,7 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
   initialLoanAmount = 2000,
   onBack,
   onAmountChange,
+  onContinueProposal,
 }) => {
   // State variables corresponding to user controls
   const [loanAmount, setLoanAmount] = useState<number>(initialLoanAmount);
@@ -341,7 +343,13 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
           type="button"
           whileTap={{ scale: 0.98 }}
           transition={{ duration: 0.12, ease: EASE_IN_OUT }}
-          onClick={() => setIsSuccessModalOpen(true)}
+          onClick={() => {
+            if (onContinueProposal) {
+              onContinueProposal();
+            } else {
+              setIsSuccessModalOpen(true);
+            }
+          }}
           className="w-full bg-[#0072e6] hover:bg-[#0062c4] active:bg-[#0055aa] text-white font-bold py-4 px-6 rounded-full transition-all flex items-center justify-center text-base shadow-lg shadow-blue-500/25 cursor-pointer"
         >
           Continuar proposta

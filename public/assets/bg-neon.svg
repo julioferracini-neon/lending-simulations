@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 800" width="100%" height="100%" preserveAspectRatio="xMidYMin slice">
+  <defs>
+    <linearGradient id="skyGrad" x1="180" y1="0" x2="180" y2="800" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#cbe7ff" />
+      <stop offset="16%" stop-color="#bfe1fd" />
+      <stop offset="30%" stop-color="#d0eaff" />
+      <stop offset="44%" stop-color="#ebf5ff" />
+      <stop offset="52%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#ffffff" />
+    </linearGradient>
+  </defs>
+
+  <!-- Sky gradient rectangle -->
+  <rect width="360" height="800" fill="url(#skyGrad)" />
+
+  <!-- Neon white organic wave: smooth continuous compound path matching PDF page 1 -->
+  <g fill="#ffffff">
+    <!-- Left tilted pill -->
+    <rect x="52" y="58" width="86" height="320" rx="43" transform="rotate(11 95 218)" />
+    
+    <!-- Right tilted pill -->
+    <rect x="226" y="58" width="86" height="320" rx="43" transform="rotate(11 269 218)" />
+
+    <!-- Organic bridge connecting left base to right crest -->
+    <path d="
+      M 95 260
+      C 125 260, 165 210, 205 155
+      C 235 115, 255 100, 280 90
+      L 292 135
+      C 255 155, 215 220, 175 280
+      C 140 330, 115 350, 75 340
+      Z
+    " />
+
+    <!-- Left tail coming from left border -->
+    <path d="
+      M -15 205
+      C 15 200, 32 180, 56 150
+      L 72 186
+      C 45 220, 20 250, -15 250
+      Z
+    " />
+
+    <!-- Right tail going to right border -->
+    <path d="
+      M 285 295
+      C 310 270, 340 235, 375 205
+      L 375 252
+      C 345 278, 318 312, 275 338
+      Z
+    " />
+
+    <!-- Round junctions for perfect fluid organic continuity -->
+    <circle cx="145" cy="238" r="38" />
+    <circle cx="236" cy="178" r="38" />
+  </g>
+</svg>
