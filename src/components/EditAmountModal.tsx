@@ -28,7 +28,7 @@ export const EditAmountModal: React.FC<EditAmountModalProps> = ({
   }, [isOpen, currentAmount]);
 
   const handleStep = (delta: number) => {
-    setAmount((prev) => Math.max(500, Math.min(25000, prev + delta)));
+    setAmount((prev) => Math.max(500, Math.min(10000, prev + delta)));
   };
 
   const handleSave = () => {
@@ -51,7 +51,7 @@ export const EditAmountModal: React.FC<EditAmountModalProps> = ({
           <div className="text-4xl font-black text-slate-900 tracking-tight my-2 tabular-nums">
             {formatCurrency(amount)}
           </div>
-          <p className="text-xs text-slate-400 font-medium">Disponível de R$ 500 a R$ 25.000</p>
+          <p className="text-xs text-slate-400 font-medium">Disponível de R$ 500 a R$ 10.000</p>
 
           {/* Stepper Controls */}
           <div className="flex items-center justify-center gap-4 mt-4">
@@ -70,7 +70,7 @@ export const EditAmountModal: React.FC<EditAmountModalProps> = ({
             <button
               type="button"
               onClick={() => handleStep(500)}
-              disabled={amount >= 25000}
+              disabled={amount >= 10000}
               aria-label="Aumentar R$ 500"
               className="w-11 h-11 rounded-full bg-slate-100 hover:bg-slate-200 disabled:opacity-40 flex items-center justify-center text-slate-700 font-bold transition-all cursor-pointer active:scale-90"
             >

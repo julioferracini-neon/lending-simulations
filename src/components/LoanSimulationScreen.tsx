@@ -12,7 +12,9 @@ import { EditMonthlyInstallmentModal } from './EditMonthlyInstallmentModal';
 import { ProposalSuccessModal } from './ProposalSuccessModal';
 
 interface LoanSimulationScreenProps {
+  initialLoanAmount?: number;
   onBack?: () => void;
+  onAmountChange?: (amount: number) => void;
 }
 
 // Smooth easing curves for UI transitions
@@ -46,12 +48,23 @@ const itemEntranceVariants: Variants = {
   },
 };
 
-export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({ onBack }) => {
+export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
+  initialLoanAmount = 2000,
+  onBack,
+  onAmountChange,
+}) => {
   // State variables corresponding to user controls
-  const [loanAmount, setLoanAmount] = useState<number>(2000); // R$ 2.000,00
+  const [loanAmount, setLoanAmount] = useState<number>(initialLoanAmount);
   const [installments, setInstallments] = useState<number>(7); // Real-time 0ms
   const [selectedDueDay, setSelectedDueDay] = useState<number>(10);
   const [firstDueDate, setFirstDueDate] = useState<Date>(new Date(2026, 8, 10)); // 10 de setembro de 2026
+
+  // Keep in sync with initialLoanAmount if updated externally
+  useEffect(() => {
+    if (initialLoanAmount && initialLoanAmount > 0) {
+      setLoanAmount(initialLoanAmount);
+    }
+  }, [initialLoanAmount]);
 
   // Staggered Micro-Interactions:
   // 1st: User moves slider (0ms) -> slider thumb, badge, and section header update instantly
@@ -360,7 +373,10 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({ onBa
         isOpen={isAmountModalOpen}
         onClose={() => setIsAmountModalOpen(false)}
         currentAmount={loanAmount}
-        onConfirmAmount={(amt) => setLoanAmount(amt)}
+        onConfirmAmount={(amt) => {
+          setLoanAmount(amt);
+          onAmountChange?.(amt);
+        }}
       />
 
       {/* Bottom Sheet: Proposta Concluída com Confete */}
