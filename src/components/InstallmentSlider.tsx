@@ -83,7 +83,7 @@ export const InstallmentSlider: React.FC<InstallmentSliderProps> = ({
   };
 
   return (
-    <div className="w-full select-none pt-2 pb-1" id="installment-slider-container">
+    <div className="w-full select-none pt-1 pb-1" id="installment-slider-container">
       {/* Slider Interactive Track Area */}
       <div
         ref={trackRef}
@@ -98,14 +98,14 @@ export const InstallmentSlider: React.FC<InstallmentSliderProps> = ({
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
-        className="relative h-14 flex items-center cursor-pointer touch-none focus:outline-none"
+        className="relative h-[72px] cursor-pointer touch-none focus:outline-none"
       >
         {/* Background Track Line */}
-        <div className="absolute inset-x-0 h-1 bg-[#e2e8f0] rounded-full" />
+        <div className="absolute left-0 right-0 top-[16px] -translate-y-1/2 h-[2px] bg-[#dbe4ee] rounded-full" />
 
         {/* Active Filled Track Line with ease-in-out curve */}
         <div
-          className="absolute left-0 h-1 bg-[#0066cc] rounded-full"
+          className="absolute left-0 top-[16px] -translate-y-1/2 h-[2px] bg-[#0060ad] rounded-full"
           style={{
             width: `${percentage}%`,
             transition: isDragging ? 'none' : 'width 180ms cubic-bezier(0.4, 0.0, 0.2, 1)',
@@ -116,88 +116,92 @@ export const InstallmentSlider: React.FC<InstallmentSliderProps> = ({
         {DOT_PERCENTAGES.map((dotPercent, index) => {
           // A dot is active/filled if the slider percentage is at or beyond it
           const isPassed = percentage >= dotPercent;
-          const isCloseToThumb = Math.abs(percentage - dotPercent) < 4;
+          const isCloseToThumb = Math.abs(percentage - dotPercent) < 3.5;
 
           return (
             <div
               key={index}
-              className="absolute -translate-x-1/2 flex items-center justify-center pointer-events-none"
+              className="absolute -translate-x-1/2 top-[16px] -translate-y-1/2 flex items-center justify-center pointer-events-none"
               style={{ left: `${dotPercent}%` }}
             >
               <div
-                className={`w-2 h-2 rounded-full border transition-colors duration-150 ${
+                className={`w-2 h-2 rounded-full transition-colors duration-150 ${
                   isPassed
-                    ? 'bg-[#0066cc] border-[#0066cc]'
-                    : 'bg-white border-[#cbd5e1]'
-                } ${isCloseToThumb ? 'opacity-30' : 'opacity-100'}`}
+                    ? 'bg-[#0060ad]'
+                    : 'bg-white border-[1.5px] border-[#cfd9e5]'
+                } ${isCloseToThumb ? 'opacity-0' : 'opacity-100'}`}
               />
             </div>
           );
         })}
 
-        {/* Draggable Thumb Knob with Fixed Floating Droplet */}
+        {/* Draggable Thumb Knob Anchor at Track Line Center (X: percentage, Y: 16px) */}
         <div
-          className="absolute -translate-x-1/2 flex flex-col items-center pointer-events-none z-20"
+          className="absolute top-[16px] pointer-events-none z-20"
           style={{
             left: `${percentage}%`,
             transition: isDragging ? 'none' : 'left 180ms cubic-bezier(0.4, 0.0, 0.2, 1)',
           }}
         >
-          {/* Thumb Outer White Circle */}
-          <motion.div
-            animate={{
-              scale: isDragging ? 1.12 : 1,
-            }}
-            transition={{
-              duration: 0.16,
-              ease: [0.4, 0.0, 0.2, 1],
-            }}
-            className="w-7 h-7 rounded-full bg-white border-2 border-slate-200 shadow-md flex items-center justify-center relative"
-          >
-            <div className="w-2.5 h-2.5 rounded-full bg-blue-50/40" />
-          </motion.div>
+          {/* Thumb Outer White Circle - precisely centered on the track line */}
+          <div className="absolute top-0 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none">
+            <motion.div
+              animate={{
+                scale: isDragging ? 1.08 : 1,
+              }}
+              transition={{
+                duration: 0.16,
+                ease: [0.4, 0.0, 0.2, 1],
+              }}
+              className="w-[26px] h-[26px] rounded-full bg-white border-[1.5px] border-[#e2eaf2] shadow-[0_2px_7px_rgba(20,40,75,0.18)] flex items-center justify-center relative"
+            />
+          </div>
 
-          {/* Hanging Droplet Badge beneath the thumb */}
-          <div className="relative mt-1 flex flex-col items-center">
-            {/* Top pointer triangle */}
-            <div className="w-0 h-0 border-x-4 border-x-transparent border-b-[5px] border-b-[#223953]" />
-            
-            {/* Dark Navy Droplet Pill with strictly fixed geometry & tabular numbers */}
-            <div className="bg-[#223953] text-white text-xs font-bold px-3 py-1 rounded-full shadow-md w-11 h-6 flex items-center justify-center text-center">
-              <span className="tabular-nums tracking-normal inline-block text-center leading-none">
-                {value}x
-              </span>
+          {/* Droplet Pin Badge - positioned beneath the white circle with 3px gap */}
+          <div className="absolute top-[16px] -translate-x-1/2 flex flex-col items-center pointer-events-none">
+            <div className="relative w-[48px] h-[34px]">
+              <svg
+                width="48"
+                height="34"
+                viewBox="0 0 48 34"
+                fill="none"
+                className="filter drop-shadow-[0_2px_5px_rgba(20,40,75,0.2)]"
+              >
+                <path
+                  d="M 21.5 3 C 21.5 1.3 22.8 0 24 0 C 25.2 0 26.5 1.3 26.5 3 L 26.5 6 C 26.5 8.5 28.5 10 31.5 10 L 36 10 C 42.6 10 48 15.4 48 22 C 48 28.6 42.6 34 36 34 L 12 34 C 5.4 34 0 28.6 0 22 C 0 15.4 5.4 10 12 10 L 16.5 10 C 19.5 10 21.5 8.5 21.5 6 Z"
+                  fill="#2c4155"
+                />
+              </svg>
+              <div className="absolute inset-x-0 bottom-0 h-[24px] flex items-center justify-center pointer-events-none">
+                <span className="text-white text-[13.5px] font-semibold tabular-nums tracking-tight leading-none">
+                  {value}x
+                </span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Numerical Labels Row (1x and 24x) with Fixed Widths & Tabular Nums */}
-      <div className="flex justify-between items-center text-sm font-medium text-slate-700 mt-4 px-0.5">
+        {/* Numerical Labels Row (1x and 24x) beneath endpoints */}
         <button
           type="button"
           onClick={() => onChange(min)}
-          className="w-8 text-left hover:text-blue-600 transition-colors cursor-pointer tabular-nums"
+          className="absolute left-0 top-[28px] text-[17px] font-medium text-[#384c61] hover:text-[#0060ad] transition-colors cursor-pointer tabular-nums select-none focus:outline-none"
         >
           {min}x
         </button>
         <button
           type="button"
           onClick={() => onChange(max)}
-          className="w-8 text-right hover:text-blue-600 transition-colors cursor-pointer tabular-nums"
+          className="absolute right-0 top-[28px] text-[17px] font-medium text-[#384c61] hover:text-[#0060ad] transition-colors cursor-pointer tabular-nums select-none focus:outline-none"
         >
           {max}x
         </button>
       </div>
 
       {/* Explanatory Indicators (Menor custo vs Menor parcela) */}
-      <div className="flex justify-between items-center text-xs font-semibold text-[#325272] mt-1.5 px-0.5">
-        <span className="flex items-center gap-1 select-none">
-          Menor custo
-        </span>
-        <span className="flex items-center gap-1 select-none">
-          Menor parcela
-        </span>
+      <div className="flex justify-between items-center text-[13px] font-medium text-[#41607e] mt-2 px-0.5 select-none">
+        <span>Menor custo</span>
+        <span>Menor parcela</span>
       </div>
     </div>
   );

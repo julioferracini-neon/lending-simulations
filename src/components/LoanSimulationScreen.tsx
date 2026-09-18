@@ -289,21 +289,21 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
         {/* Subtle Dotted Separator matching Figma */}
         <div className="border-b border-dotted border-slate-300 my-5" />
 
-        {/* Section: "Ajuste o prazo" with Fixed Right-Aligned Counter */}
-        <motion.div variants={itemEntranceVariants} className="space-y-3">
+        {/* Section: "Ajuste o prazo" matching prototype */}
+        <motion.div variants={itemEntranceVariants} className="space-y-4 pt-1">
           <div className="flex items-center justify-between">
-            <h2 className="text-[17px] font-bold text-[#142742] tracking-tight">
+            <h2 className="text-[19px] sm:text-[20px] font-bold text-[#142840] tracking-tight">
               Ajuste o prazo
             </h2>
-            {/* Real-time display with interactive click to open the installments bottom sheet, styled like Taxa */}
+            {/* Real-time counter matching prototype: 7 Parcelas */}
             <button
               type="button"
               onClick={() => setIsMonthlyModalOpen(true)}
-              className="w-32 text-right cursor-pointer hover:opacity-80 transition-opacity"
+              className="text-right cursor-pointer hover:opacity-80 transition-opacity"
               aria-label="Selecionar prazo de parcelas"
             >
-              <span className="text-base font-bold text-[#1e3a5f] hover:text-blue-600 underline decoration-dotted decoration-slate-300 underline-offset-4 tabular-nums inline-block text-right transition-colors">
-                {installments} Parcelas
+              <span className="text-[17px] sm:text-[18px] font-bold text-[#355272] hover:text-[#1e3a5f] tabular-nums inline-block text-right transition-colors">
+                {installments} {installments === 1 ? 'Parcela' : 'Parcelas'}
               </span>
             </button>
           </div>
