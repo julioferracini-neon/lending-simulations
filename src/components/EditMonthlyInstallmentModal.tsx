@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { CreditCard, Check, Sparkles } from 'lucide-react';
 import { BottomSheet } from './BottomSheet';
 import { calculateLoanSimulation, formatCurrency, BASE_MONTHLY_RATE } from '../utils/finance';
@@ -35,14 +35,32 @@ export const EditMonthlyInstallmentModal: React.FC<EditMonthlyInstallmentModalPr
     return plans;
   }, [loanAmount, firstDueDate]);
 
+  // Synchronize state with current selection from first layer whenever modal opens or currentInstallments changes
   const [selectedPlanInstallments, setSelectedPlanInstallments] = useState<number>(currentInstallments);
+  const selectedItemRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      setSelectedPlanInstallments(currentInstallments);
+      // Ensure smooth scroll to the selected option in the grid
+      const timer = setTimeout(() => {
+        if (selectedItemRef.current) {
+          selectedItemRef.current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+          });
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, currentInstallments]);
 
   const handleConfirm = () => {
     onSelectInstallments(selectedPlanInstallments);
     onClose();
   };
 
-  const currentSelected = availablePlans.find((p) => p.installments === selectedPlanInstallments) || availablePlans[6];
+  const currentSelected = availablePlans.find((p) => p.installments === selectedPlanInstallments) || availablePlans[0];
 
   return (
     <BottomSheet
@@ -87,6 +105,7 @@ export const EditMonthlyInstallmentModal: React.FC<EditMonthlyInstallmentModalPr
               return (
                 <button
                   key={plan.installments}
+                  ref={isSelected ? selectedItemRef : null}
                   type="button"
                   onClick={() => setSelectedPlanInstallments(plan.installments)}
                   className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between relative ${

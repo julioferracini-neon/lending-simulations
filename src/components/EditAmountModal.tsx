@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DollarSign, Check, Plus, Minus } from 'lucide-react';
 import { BottomSheet } from './BottomSheet';
 import { formatCurrency } from '../utils/finance';
@@ -19,6 +19,13 @@ export const EditAmountModal: React.FC<EditAmountModalProps> = ({
   onConfirmAmount,
 }) => {
   const [amount, setAmount] = useState<number>(currentAmount);
+
+  // Keep bottom sheet amount strictly in sync with the first layer
+  useEffect(() => {
+    if (isOpen) {
+      setAmount(currentAmount);
+    }
+  }, [isOpen, currentAmount]);
 
   const handleStep = (delta: number) => {
     setAmount((prev) => Math.max(500, Math.min(25000, prev + delta)));

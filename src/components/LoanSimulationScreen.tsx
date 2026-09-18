@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { motion } from 'motion/react';
+import { motion, type Variants } from 'motion/react';
 import { ArrowLeft, Info, Calendar as CalendarIcon, Edit2 } from 'lucide-react';
 import { calculateLoanSimulation, formatCurrency, formatDatePtBR, BASE_MONTHLY_RATE } from '../utils/finance';
 import { AnimatedNumber } from './AnimatedNumber';
@@ -15,8 +15,36 @@ interface LoanSimulationScreenProps {
   onBack?: () => void;
 }
 
-// Ease-in-out curve for motion transitions
+// Smooth easing curves for UI transitions
 const EASE_IN_OUT = [0.4, 0.0, 0.2, 1] as const;
+const SILKY_EASE = [0.22, 1, 0.36, 1] as const;
+
+// Fluid and smooth entrance animation variants for initial screen load
+const screenEntranceVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.06,
+      duration: 0.7,
+      ease: SILKY_EASE,
+    },
+  },
+};
+
+const itemEntranceVariants: Variants = {
+  hidden: { opacity: 0, y: 18, filter: 'blur(4px)' },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: {
+      duration: 0.65,
+      ease: SILKY_EASE,
+    },
+  },
+};
 
 export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({ onBack }) => {
   // State variables corresponding to user controls
@@ -79,12 +107,18 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({ onBa
   };
 
   return (
-    <div
+    <motion.div
+      variants={screenEntranceVariants}
+      initial="hidden"
+      animate="visible"
       className="w-full flex flex-col flex-1 bg-white min-h-full relative select-none"
       id="loan-simulation-screen"
     >
       {/* Top App Bar */}
-      <header className="px-5 pt-3 pb-3 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-xs z-20">
+      <motion.header
+        variants={itemEntranceVariants}
+        className="px-5 pt-3 pb-3 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-xs z-20"
+      >
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -94,7 +128,7 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({ onBa
           >
             <ArrowLeft className="w-6 h-6 stroke-[2.2]" />
           </button>
-          <h1 className="text-xl sm:text-[22px] font-bold text-[#142742] tracking-tight">
+          <h1 className="text-[17px] sm:text-lg font-bold text-[#142742] tracking-tight">
             Plano de Pagamento
           </h1>
         </div>
@@ -107,12 +141,15 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({ onBa
         >
           <Info className="w-6 h-6 stroke-[2]" />
         </button>
-      </header>
+      </motion.header>
 
       {/* Main Scrollable Content */}
       <main className="flex-1 px-5 pt-2 pb-28 overflow-y-auto space-y-4">
         {/* Subtitle / Metadata Summary Row with Tabular Numbers */}
-        <div className="flex items-center justify-between text-sm py-1">
+        <motion.div
+          variants={itemEntranceVariants}
+          className="flex items-center justify-between text-sm py-1"
+        >
           {/* Requested Amount (Interactive Bottom Sheet Trigger) */}
           <button
             type="button"
@@ -137,10 +174,13 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({ onBa
               3,49% a.m.
             </span>
           </button>
-        </div>
+        </motion.div>
 
         {/* Highlight Card: Valor da Parcela e Custo Total */}
-        <div className="bg-[#eef7fe] rounded-3xl p-5 sm:p-6 shadow-xs border border-blue-100/60 relative overflow-hidden">
+        <motion.div
+          variants={itemEntranceVariants}
+          className="bg-[#eef7fe] rounded-3xl p-5 sm:p-6 shadow-xs border border-blue-100/60 relative overflow-hidden"
+        >
           {/* Top Row: Label + Installments Pill (Fixed width to prevent jumping) */}
           <div className="flex items-center justify-between">
             <button
@@ -208,10 +248,13 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({ onBa
               />
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Card 2: Due Date with Alterar Action (Triggers Bottom Sheet) */}
-        <div className="bg-white border border-[#e2e8f0] rounded-2xl px-4 py-3.5 flex items-center justify-between shadow-xs hover:border-blue-200 transition-colors">
+        <motion.div
+          variants={itemEntranceVariants}
+          className="bg-white border border-[#e2e8f0] rounded-2xl px-4 py-3.5 flex items-center justify-between shadow-xs hover:border-blue-200 transition-colors"
+        >
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-[#0073e6] shrink-0">
               <CalendarIcon className="w-4 h-4 stroke-[2.2]" />
@@ -228,15 +271,15 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({ onBa
           >
             Alterar
           </button>
-        </div>
+        </motion.div>
 
         {/* Subtle Dotted Separator matching Figma */}
         <div className="border-b border-dotted border-slate-300 my-5" />
 
         {/* Section: "Ajuste o prazo" with Fixed Right-Aligned Counter */}
-        <div className="space-y-3">
+        <motion.div variants={itemEntranceVariants} className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-[#142742] tracking-tight">
+            <h2 className="text-[17px] font-bold text-[#142742] tracking-tight">
               Ajuste o prazo
             </h2>
             {/* Real-time display with interactive click to open the installments bottom sheet, styled like Taxa */}
@@ -259,11 +302,14 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({ onBa
             min={1}
             max={24}
           />
-        </div>
+        </motion.div>
       </main>
 
       {/* Sticky Bottom Action Bar with Smooth Gradient Backdrop */}
-      <footer className="fixed sm:absolute bottom-0 inset-x-0 p-5 bg-gradient-to-t from-white via-white/95 to-transparent pt-6 z-20">
+      <motion.footer
+        variants={itemEntranceVariants}
+        className="fixed sm:absolute bottom-0 inset-x-0 p-5 bg-gradient-to-t from-white via-white/95 to-transparent pt-6 z-20"
+      >
         <motion.button
           type="button"
           whileTap={{ scale: 0.98 }}
@@ -273,7 +319,7 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({ onBa
         >
           Continuar proposta
         </motion.button>
-      </footer>
+      </motion.footer>
 
       {/* Bottom Sheet: Editar Valor da Parcela Mensal */}
       <EditMonthlyInstallmentModal
@@ -327,6 +373,6 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({ onBa
         totalCost={totalSimulation.totalEstimatedCost}
         firstDueDate={firstDueDate}
       />
-    </div>
+    </motion.div>
   );
 };

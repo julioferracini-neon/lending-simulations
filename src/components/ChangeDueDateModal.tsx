@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar as CalendarIcon, Check, Clock, TrendingUp } from 'lucide-react';
 import { BottomSheet } from './BottomSheet';
 import { calculateLoanSimulation, formatCurrency, formatDatePtBR, BASE_MONTHLY_RATE } from '../utils/finance';
@@ -24,6 +24,13 @@ export const ChangeDueDateModal: React.FC<ChangeDueDateModalProps> = ({
   installments = 7,
 }) => {
   const [selectedDay, setSelectedDay] = useState<number>(currentDay);
+
+  // Keep bottom sheet selection strictly in sync with the first layer
+  useEffect(() => {
+    if (isOpen) {
+      setSelectedDay(currentDay);
+    }
+  }, [isOpen, currentDay]);
 
   const getCalculatedDate = (day: number): Date => {
     return new Date(2026, 8, day); // Month 8 is September
