@@ -90,7 +90,7 @@ export default function App() {
   };
 
   return (
-    <MobileFrame statusBarBg={currentStep === 'proposal_loading' ? 'bg-[#c5e6ff]' : 'bg-white'}>
+    <MobileFrame statusBarBg="bg-transparent">
       <div className="w-full flex-1 min-h-0 flex flex-col relative overflow-hidden bg-white">
         <AnimatePresence mode="popLayout" custom={direction} initial={false}>
           {currentStep === 'loan_hub' ? (

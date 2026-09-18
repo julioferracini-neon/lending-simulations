@@ -7,7 +7,7 @@ interface MobileFrameProps {
   statusBarBg?: string;
 }
 
-export const MobileFrame: React.FC<MobileFrameProps> = ({ children, statusBarBg = 'bg-white' }) => {
+export const MobileFrame: React.FC<MobileFrameProps> = ({ children, statusBarBg = 'bg-transparent' }) => {
   const [viewMode, setViewMode] = useState<'mobile' | 'responsive'>('mobile');
 
   return (

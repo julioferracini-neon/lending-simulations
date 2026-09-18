@@ -14,7 +14,7 @@ export const StatusBar: React.FC<StatusBarProps> = ({
 }) => {
   return (
     <div
-      className={`w-full px-6 pt-3 pb-1 flex items-center justify-between select-none pointer-events-none ${textColor}`}
+      className={`w-full px-6 pt-3 pb-1 flex items-center justify-between select-none pointer-events-none bg-transparent opacity-0 ${textColor}`}
       id="mobile-status-bar"
       aria-hidden="true"
     >
