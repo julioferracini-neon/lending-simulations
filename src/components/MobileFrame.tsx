@@ -51,17 +51,17 @@ export const MobileFrame: React.FC<MobileFrameProps> = ({ children }) => {
       <div
         className={`w-full transition-all duration-300 ${
           viewMode === 'mobile'
-            ? 'max-w-[412px] sm:rounded-[44px] sm:border-[8px] sm:border-slate-800 sm:shadow-2xl sm:shadow-black/70 overflow-hidden'
-            : 'max-w-xl sm:rounded-3xl sm:border sm:border-slate-800 shadow-xl overflow-hidden'
-        } bg-white flex flex-col relative min-h-screen sm:min-h-[860px] sm:max-h-[920px]`}
+            ? 'max-w-[412px] sm:h-[844px] sm:rounded-[44px] sm:border-[8px] sm:border-slate-800 sm:shadow-2xl sm:shadow-black/70 overflow-hidden'
+            : 'max-w-xl sm:h-[844px] sm:rounded-3xl sm:border sm:border-slate-800 shadow-xl overflow-hidden'
+        } bg-white flex flex-col relative h-[100dvh]`}
       >
         {/* Native Android Status Bar */}
-        <div className="bg-white">
+        <div className="bg-white shrink-0">
           <StatusBar time="9:30" showPunchHole={viewMode === 'mobile'} />
         </div>
 
-        {/* Screen Content */}
-        <div className="flex-1 flex flex-col relative overflow-hidden bg-white">
+        {/* Screen Content with min-h-0 so internal overflow-y-auto functions correctly */}
+        <div className="flex-1 min-h-0 flex flex-col relative overflow-hidden bg-white">
           {children}
         </div>
 

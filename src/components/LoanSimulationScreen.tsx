@@ -124,13 +124,13 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
       variants={screenEntranceVariants}
       initial="hidden"
       animate="visible"
-      className="w-full flex flex-col flex-1 bg-white min-h-full relative select-none"
+      className="w-full h-full flex flex-col flex-1 min-h-0 bg-white relative select-none overflow-hidden"
       id="loan-simulation-screen"
     >
       {/* Top App Bar */}
       <motion.header
         variants={itemEntranceVariants}
-        className="px-5 pt-3 pb-3 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-xs z-20"
+        className="px-5 pt-3 pb-3 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-xs z-20 shrink-0"
       >
         <div className="flex items-center gap-3">
           <button
@@ -157,7 +157,7 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
       </motion.header>
 
       {/* Main Scrollable Content */}
-      <main className="flex-1 px-5 pt-2 pb-28 overflow-y-auto space-y-4">
+      <main className="flex-1 min-h-0 px-5 pt-2 pb-28 overflow-y-auto overscroll-contain space-y-4">
         {/* Subtitle / Metadata Summary Row with Tabular Numbers */}
         <motion.div
           variants={itemEntranceVariants}

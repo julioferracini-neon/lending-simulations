@@ -6,6 +6,7 @@
 import React, { useState } from 'react';
 import { AnimatePresence, motion, type Variants } from 'motion/react';
 import { MobileFrame } from './components/MobileFrame';
+import { LoanHubScreen } from './components/LoanHubScreen';
 import { InputValueScreen } from './components/InputValueScreen';
 import { LoanSimulationScreen } from './components/LoanSimulationScreen';
 
@@ -36,9 +37,19 @@ const screenPushVariants: Variants = {
 };
 
 export default function App() {
-  const [currentStep, setCurrentStep] = useState<'input_value' | 'simulation'>('input_value');
+  const [currentStep, setCurrentStep] = useState<'loan_hub' | 'input_value' | 'simulation'>('loan_hub');
   const [loanAmount, setLoanAmount] = useState<number>(2000);
   const [direction, setDirection] = useState<number>(1);
+
+  const handleSelectPersonalLoan = () => {
+    setDirection(1);
+    setCurrentStep('input_value');
+  };
+
+  const handleBackToLoanHub = () => {
+    setDirection(-1);
+    setCurrentStep('loan_hub');
+  };
 
   const handleContinueToSimulation = (amount: number) => {
     setLoanAmount(amount);
@@ -53,9 +64,25 @@ export default function App() {
 
   return (
     <MobileFrame>
-      <div className="w-full flex-1 flex flex-col relative overflow-hidden bg-white">
+      <div className="w-full flex-1 min-h-0 flex flex-col relative overflow-hidden bg-white">
         <AnimatePresence mode="popLayout" custom={direction} initial={false}>
-          {currentStep === 'input_value' ? (
+          {currentStep === 'loan_hub' ? (
+            <motion.div
+              key="loan_hub"
+              custom={direction}
+              variants={screenPushVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="w-full h-full flex flex-col flex-1 min-h-0 overflow-hidden"
+            >
+              <LoanHubScreen
+                maxPersonalLimit={10000}
+                onSelectPersonalLoan={handleSelectPersonalLoan}
+                onBack={handleBackToLoanHub}
+              />
+            </motion.div>
+          ) : currentStep === 'input_value' ? (
             <motion.div
               key="input_value"
               custom={direction}
@@ -63,13 +90,13 @@ export default function App() {
               initial="enter"
               animate="center"
               exit="exit"
-              className="w-full h-full flex flex-col flex-1"
+              className="w-full h-full flex flex-col flex-1 min-h-0 overflow-hidden"
             >
               <InputValueScreen
                 initialAmount={loanAmount}
                 availableLimit={10000}
                 onContinue={handleContinueToSimulation}
-                onBack={handleBackToInputValue}
+                onBack={handleBackToLoanHub}
               />
             </motion.div>
           ) : (
@@ -80,7 +107,7 @@ export default function App() {
               initial="enter"
               animate="center"
               exit="exit"
-              className="w-full h-full flex flex-col flex-1"
+              className="w-full h-full flex flex-col flex-1 min-h-0 overflow-hidden"
             >
               <LoanSimulationScreen
                 initialLoanAmount={loanAmount}
