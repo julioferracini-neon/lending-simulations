@@ -38,6 +38,8 @@ const screenPushVariants: Variants = {
 
 export default function App() {
   const [currentStep, setCurrentStep] = useState<'loan_hub' | 'input_value' | 'simulation'>('loan_hub');
+  // Starts empty (null) on first visit; persists once the user enters an amount in this session
+  const [sessionAmount, setSessionAmount] = useState<number | null>(null);
   const [loanAmount, setLoanAmount] = useState<number>(2000);
   const [direction, setDirection] = useState<number>(1);
 
@@ -52,6 +54,7 @@ export default function App() {
   };
 
   const handleContinueToSimulation = (amount: number) => {
+    setSessionAmount(amount);
     setLoanAmount(amount);
     setDirection(1);
     setCurrentStep('simulation');
@@ -93,7 +96,7 @@ export default function App() {
               className="w-full h-full flex flex-col flex-1 min-h-0 overflow-hidden"
             >
               <InputValueScreen
-                initialAmount={loanAmount}
+                initialAmount={sessionAmount}
                 availableLimit={10000}
                 onContinue={handleContinueToSimulation}
                 onBack={handleBackToLoanHub}
@@ -111,7 +114,10 @@ export default function App() {
             >
               <LoanSimulationScreen
                 initialLoanAmount={loanAmount}
-                onAmountChange={(newAmt) => setLoanAmount(newAmt)}
+                onAmountChange={(newAmt) => {
+                  setLoanAmount(newAmt);
+                  setSessionAmount(newAmt);
+                }}
                 onBack={handleBackToInputValue}
               />
             </motion.div>

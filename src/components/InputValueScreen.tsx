@@ -4,7 +4,7 @@ import { ArrowLeft, AlertCircle, X } from 'lucide-react';
 import { formatCurrency } from '../utils/finance';
 
 interface InputValueScreenProps {
-  initialAmount?: number;
+  initialAmount?: number | null;
   availableLimit?: number;
   onContinue: (amount: number) => void;
   onBack?: () => void;
@@ -40,21 +40,36 @@ const itemEntranceVariants: Variants = {
 };
 
 export const InputValueScreen: React.FC<InputValueScreenProps> = ({
-  initialAmount = 2000,
+  initialAmount = null,
   availableLimit = 10000,
   onContinue,
   onBack,
 }) => {
-  // Amount represented in cents for precision currency input
-  const [cents, setCents] = useState<number>(initialAmount * 100);
+  // Amount represented in cents for precision currency input (starts empty at 0 if no initial amount)
+  const [cents, setCents] = useState<number>(() => {
+    if (initialAmount && initialAmount > 0) {
+      return Math.round(initialAmount * 100);
+    }
+    return 0;
+  });
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Sync if initialAmount changes
+  // Sync if initialAmount is updated externally
   useEffect(() => {
-    if (initialAmount > 0) {
+    if (initialAmount !== undefined && initialAmount !== null && initialAmount > 0) {
       setCents(Math.round(initialAmount * 100));
+    } else if (initialAmount === null) {
+      setCents(0);
     }
   }, [initialAmount]);
+
+  // Auto-focus input on mount for seamless user input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      inputRef.current?.focus();
+    }, 250);
+    return () => clearTimeout(timer);
+  }, []);
 
   const currentAmount = cents / 100;
   const isOverLimit = currentAmount > availableLimit;

@@ -18,6 +18,7 @@ const DRUM_DIGITS = [
   ...DIGIT_CYCLE,
 ];
 const TOTAL_DRUM_ITEMS = DRUM_DIGITS.length; // 50 items
+const DIGIT_HEIGHT_EM = 1.16;
 
 interface RouletteDigitColumnProps {
   targetDigit: number;
@@ -95,13 +96,11 @@ const RouletteDigitColumn: React.FC<RouletteDigitColumnProps> = ({
     }
   }, [targetDigit, staggerIndex]);
 
-  const digitHeightEm = 1.16;
-
   return (
     <span
-      className="inline-block relative overflow-hidden align-top text-center select-none"
+      className="inline-block relative overflow-hidden align-middle text-center select-none"
       style={{
-        height: `${digitHeightEm}em`,
+        height: `${DIGIT_HEIGHT_EM}em`,
         width: '0.62em',
         maskImage:
           'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.85) 15%, black 35%, black 65%, rgba(0,0,0,0.85) 85%, transparent 100%)',
@@ -231,19 +230,22 @@ export const RouletteOdometer: React.FC<RouletteOdometerProps> = ({
       aria-label={`${prefix}${formatted}`}
     >
       {prefix && (
-        <span className="mr-1 select-none font-bold text-[0.88em] opacity-95">
-          {prefix}
+        <span className="mr-1.5 select-none font-black leading-none inline-flex items-center">
+          {prefix.trim()}
         </span>
       )}
 
-      <span className="inline-flex items-baseline overflow-hidden leading-none">
+      <span className="inline-flex items-center overflow-hidden leading-none">
         {items.map((item) => {
           if (item.type === 'symbol') {
             return (
               <span
                 key={item.key}
-                className="inline-block text-center leading-none select-none font-black"
-                style={{ width: item.value === ',' ? '0.28em' : '0.22em' }}
+                className="inline-flex items-center justify-center leading-none select-none font-black"
+                style={{
+                  width: item.value === ',' ? '0.28em' : '0.22em',
+                  height: `${DIGIT_HEIGHT_EM}em`,
+                }}
               >
                 {item.value}
               </span>

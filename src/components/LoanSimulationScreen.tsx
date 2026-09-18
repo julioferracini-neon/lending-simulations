@@ -161,7 +161,7 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
         {/* Subtitle / Metadata Summary Row with Tabular Numbers */}
         <motion.div
           variants={itemEntranceVariants}
-          className="flex items-center justify-between text-sm py-1"
+          className="flex items-center justify-between text-[15px] py-1"
         >
           {/* Requested Amount (Interactive Bottom Sheet Trigger) */}
           <button
@@ -169,8 +169,8 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
             onClick={() => setIsAmountModalOpen(true)}
             className="group flex items-center gap-1.5 text-left cursor-pointer hover:opacity-80 transition-opacity"
           >
-            <span className="text-[#586c82] font-normal">Solicitado:</span>
-            <span className="font-semibold text-[#142742] group-hover:text-blue-600 transition-colors tabular-nums">
+            <span className="text-[#4b6076] font-normal">Solicitado:</span>
+            <span className="font-semibold text-[#1b3248] group-hover:text-blue-600 transition-colors tabular-nums">
               {formatCurrency(loanAmount)}
             </span>
             <Edit2 className="w-3.5 h-3.5 text-blue-500 opacity-60 group-hover:opacity-100 transition-opacity" />
@@ -180,10 +180,10 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
           <button
             type="button"
             onClick={() => setIsDetailsModalOpen(true)}
-            className="flex items-center gap-1 text-right cursor-pointer hover:opacity-80 transition-opacity"
+            className="flex items-center gap-1.5 text-right cursor-pointer hover:opacity-80 transition-opacity"
           >
-            <span className="text-[#586c82] font-normal">Taxa:</span>
-            <span className="font-semibold text-[#142742] underline decoration-dotted decoration-slate-300 underline-offset-4 tabular-nums">
+            <span className="text-[#4b6076] font-normal">Taxa:</span>
+            <span className="font-semibold text-[#1b3248] tabular-nums">
               3,49% a.m.
             </span>
           </button>
@@ -192,63 +192,66 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
         {/* Highlight Card: Valor da Parcela e Custo Total */}
         <motion.div
           variants={itemEntranceVariants}
-          className="bg-[#eef7fe] rounded-3xl p-5 sm:p-6 shadow-xs border border-blue-100/60 relative overflow-hidden"
+          className="bg-[#e6f4fe] rounded-[22px] p-5 sm:p-6 border border-[#d7ebfa] relative overflow-hidden"
         >
-          {/* Top Row: Label + Installments Pill (Fixed width to prevent jumping) */}
+          {/* Top Row: Label + Installments Pill */}
           <div className="flex items-center justify-between">
             <button
               type="button"
               onClick={() => setIsMonthlyModalOpen(true)}
-              className="group flex items-center gap-1 text-sm font-medium text-[#5c7086] hover:text-blue-700 transition-colors cursor-pointer"
+              className="group flex items-center gap-1 text-[15px] font-normal text-[#4b6076] hover:text-[#1b3248] transition-colors cursor-pointer"
             >
               <span>Valor da parcela mensal</span>
               <Edit2 className="w-3 h-3 text-blue-500 opacity-60 group-hover:opacity-100 transition-opacity" />
             </button>
 
-            {/* Fixed width pill with ease-in-out update at 100ms */}
+            {/* Pill matching prototype: vibrant cyan-blue background with dark navy text */}
             <motion.button
               type="button"
               onClick={() => setIsMonthlyModalOpen(true)}
               key={delayedInstallmentsPrimary}
-              initial={{ scale: 0.94, opacity: 0.8 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{
-                duration: 0.22,
-                ease: EASE_IN_OUT,
+              initial={{ scale: 1 }}
+              animate={{
+                scale: [1, 1.05, 0.99, 1],
               }}
-              className="bg-[#00a2ff] hover:bg-[#0092e6] active:scale-95 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-xs w-24 text-center tabular-nums cursor-pointer transition-all"
+              transition={{
+                duration: 0.46,
+                delay: 0.12, // 120ms de delay no pulse
+                ease: [0.25, 1, 0.5, 1], // curva de aceleração e desaceleração suave
+              }}
+              className="bg-[#00b2fe] hover:bg-[#00a2ea] active:scale-95 text-[#083863] text-[13px] font-semibold px-3.5 py-1 rounded-full shadow-xs text-center tabular-nums cursor-pointer transition-colors select-none"
             >
               {delayedInstallmentsPrimary} parcelas
             </motion.button>
           </div>
 
-          {/* Huge Installment Amount (Clickable to edit via Bottom Sheet) */}
+          {/* Huge Installment Amount */}
           <button
             type="button"
             onClick={() => setIsMonthlyModalOpen(true)}
-            className="group w-full text-left h-11 sm:h-12 flex items-center my-2.5 cursor-pointer focus:outline-none"
+            className="group w-full text-left h-12 flex items-center my-3 cursor-pointer focus:outline-none"
             aria-label="Editar valor da parcela mensal"
           >
             <RouletteOdometer
               value={primarySimulation.monthlyInstallment}
               prefix="R$ "
               motionDuration={400}
-              className="text-3xl sm:text-[36px] font-black text-[#142742] group-hover:text-blue-600 transition-colors tracking-tight leading-none"
+              className="text-[38px] sm:text-[42px] font-black text-[#173049] group-hover:text-[#007fe8] transition-colors tracking-tight leading-none"
             />
-            <span className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-xs font-semibold text-blue-600 bg-white/80 px-2 py-0.5 rounded-md border border-blue-100 shadow-xs">
+            <span className="ml-2.5 opacity-0 group-hover:opacity-100 transition-opacity text-xs font-semibold text-blue-600 bg-white/90 px-2 py-0.5 rounded-md border border-blue-100 shadow-xs">
               Editar
             </span>
           </button>
 
-          {/* Subtle separator inside card */}
-          <div className="h-[1px] bg-[#d8ebfa] my-3" />
+          {/* Delicate separator inside card */}
+          <div className="h-[1px] bg-[#d5eaf9] my-4" />
 
-          {/* Bottom Row: Custo Total Estimado (Changes 200ms after slider move with fixed tabular alignment) */}
+          {/* Bottom Row: Custo Total Estimado */}
           <div className="flex items-center justify-between">
             <button
               type="button"
               onClick={() => setIsDetailsModalOpen(true)}
-              className="text-sm font-normal text-[#5c7086] hover:text-slate-800 transition-colors cursor-pointer text-left"
+              className="text-[15px] font-normal text-[#4b6076] hover:text-[#1b3248] transition-colors cursor-pointer text-left"
             >
               Custo total estimado
             </button>
@@ -257,22 +260,33 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
                 value={totalSimulation.totalEstimatedCost}
                 prefix="R$ "
                 duration={240}
-                className="text-base font-bold text-[#142742] tabular-nums"
+                className="text-[16px] sm:text-[17px] font-bold text-[#516e8b] tabular-nums"
               />
             </div>
           </div>
         </motion.div>
 
-        {/* Card 2: Due Date with Alterar Action (Triggers Bottom Sheet) */}
+        {/* Card 2: Due Date with Alterar Action */}
         <motion.div
           variants={itemEntranceVariants}
-          className="bg-white border border-[#e2e8f0] rounded-2xl px-4 py-3.5 flex items-center justify-between shadow-xs hover:border-blue-200 transition-colors"
+          className="bg-[#f8fafd] border border-[#e2edf7] rounded-xl px-4 py-3.5 flex items-center justify-between shadow-xs hover:border-[#ccdff1] transition-colors"
         >
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-[#0073e6] shrink-0">
-              <CalendarIcon className="w-4 h-4 stroke-[2.2]" />
-            </div>
-            <span className="text-sm font-medium text-[#334155]">
+            <svg
+              className="w-[19px] h-[19px] text-[#007fe8] shrink-0"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="3" y="4" width="18" height="18" rx="2.5" />
+              <line x1="3" y1="9.5" x2="21" y2="9.5" />
+              <rect x="7" y="13.5" width="3.5" height="3.5" rx="0.5" fill="currentColor" stroke="none" />
+            </svg>
+            <span className="text-[14px] font-medium text-[#253e57]">
               Vencimento: {formatDatePtBR(firstDueDate)}
             </span>
           </div>
@@ -280,7 +294,7 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
           <button
             type="button"
             onClick={() => setIsDueDateModalOpen(true)}
-            className="text-sm font-semibold text-[#0072e6] hover:text-[#005bb5] active:scale-95 transition-all cursor-pointer px-1 py-0.5 rounded-md hover:bg-blue-50/50"
+            className="text-[14px] font-semibold text-[#007fe8] hover:text-[#0066c0] active:scale-95 transition-all cursor-pointer px-1 py-0.5"
           >
             Alterar
           </button>
