@@ -84,7 +84,7 @@ export const PinBottomSheet: React.FC<PinBottomSheetProps> = ({
             {[0, 1, 2, 3].map((index) => (
               <div
                 key={index}
-                className={`w-[48px] h-[48px] rounded-full border-2 flex items-center justify-center text-[20px] font-medium transition-colors ${
+                className={`w-[48px] h-[48px] rounded-[16px] border-2 flex items-center justify-center text-[20px] font-medium transition-colors ${
                   pin.length > index ? 'border-[#233549] text-[#233549]' : 'border-[#233549] text-transparent'
                 }`}
               >
