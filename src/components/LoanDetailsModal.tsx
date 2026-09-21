@@ -28,8 +28,7 @@ export const LoanDetailsModal: React.FC<LoanDetailsModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title="Composição do plano"
-      subtitle="Transparência e taxas regulamentadas"
-      icon={<Info className="w-5 h-5" />}
+      subtitle="Entenda valores, amortização, taxas e cobranças do seu plano."
       maxHeightClass="max-h-[90vh]"
       id="loan-details-modal"
     >

@@ -58,9 +58,8 @@ export const ChangeDueDateModal: React.FC<ChangeDueDateModalProps> = ({
     <BottomSheet
       isOpen={isOpen}
       onClose={onClose}
-      title="Dia de vencimento"
+      title="Data de vencimento"
       subtitle="Escolha a data do seu primeiro pagamento"
-      icon={<CalendarIcon className="w-5 h-5" />}
       id="due-date-modal"
     >
       <div className="space-y-4">
@@ -99,9 +98,9 @@ export const ChangeDueDateModal: React.FC<ChangeDueDateModalProps> = ({
 
         {/* Dynamic Preview & Financial Explanation */}
         <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200/80">
-          <div className="flex justify-between items-center text-sm font-medium text-slate-700 mb-1">
-            <span>Primeiro pagamento</span>
-            <span>{formatDatePtBR(selectedDate)}</span>
+          <div className="flex justify-between items-center mb-1">
+            <span className="text-sm font-medium text-slate-700">Primeiro pagamento</span>
+            <span className="text-[15px] font-bold text-slate-800">{formatDatePtBR(selectedDate)}</span>
           </div>
           <div className="flex justify-between items-center text-sm font-medium text-slate-700">
             <span>Valor da parcela</span>
