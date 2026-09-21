@@ -42,7 +42,6 @@ export const EditAmountModal: React.FC<EditAmountModalProps> = ({
       onClose={onClose}
       title="Valor do empréstimo"
       subtitle="Escolha o valor que deseja simular"
-      icon={<DollarSign className="w-5 h-5" />}
       id="edit-amount-modal"
     >
       <div className="space-y-6">

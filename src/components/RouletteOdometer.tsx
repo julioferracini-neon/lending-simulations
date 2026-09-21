@@ -64,12 +64,10 @@ const RouletteDigitColumn: React.FC<RouletteDigitColumnProps> = ({
       const absDiff = Math.abs(diff);
 
       // Blur intensity and duration strictly proportional to movement velocity:
-      // Small delta (1 digit): subtle blur (1.1px), clears ultra-fast (130ms)
-      // Medium delta (2-3 digits): moderate blur (1.8px), clears in 160ms
-      // Large delta (4+ digits): high speed roulette spin (2.4px), clears in 190ms
       const blurAmount = absDiff <= 1 ? 1.1 : absDiff <= 3 ? 1.8 : 2.4;
-      const moveDuration = absDiff <= 1 ? 0.24 : 0.30;
-      const blurDuration = absDiff <= 1 ? 0.13 : absDiff <= 3 ? 0.16 : 0.19;
+      // Increased durations for a much softer and silkier ease-out
+      const moveDuration = absDiff <= 1 ? 0.40 : 0.55;
+      const blurDuration = absDiff <= 1 ? 0.20 : absDiff <= 3 ? 0.25 : 0.30;
 
       setSpinConfig({
         blurAmount,
@@ -90,7 +88,7 @@ const RouletteDigitColumn: React.FC<RouletteDigitColumnProps> = ({
       // Rapid cleanup timeout to reset spinning state right after the blur clears
       const timer = setTimeout(() => {
         setIsSpinning(false);
-      }, blurDuration * 1000 + (staggerIndex * 10) + 30);
+      }, blurDuration * 1000 + (staggerIndex * 15) + 30);
 
       return () => clearTimeout(timer);
     }
@@ -120,17 +118,17 @@ const RouletteDigitColumn: React.FC<RouletteDigitColumnProps> = ({
         transition={{
           y: {
             duration: spinConfig.moveDuration,
-            delay: (staggerIndex * 10) / 1000,
-            ease: [0.15, 0.9, 0.25, 1], // snappy initial burst, smooth slot docking
+            delay: (staggerIndex * 15) / 1000,
+            ease: [0.16, 1, 0.3, 1], // softer, prolonged silky ease out
           },
           filter: {
-            duration: spinConfig.blurDuration, // Very fast! 0.13s - 0.19s max
-            delay: (staggerIndex * 10) / 1000,
+            duration: spinConfig.blurDuration, 
+            delay: (staggerIndex * 15) / 1000,
             ease: 'easeOut',
           },
           opacity: {
             duration: spinConfig.blurDuration,
-            delay: (staggerIndex * 10) / 1000,
+            delay: (staggerIndex * 15) / 1000,
           },
         }}
         className="flex flex-col select-none will-change-transform"
