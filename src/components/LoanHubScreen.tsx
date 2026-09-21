@@ -54,7 +54,7 @@ export const LoanHubScreen: React.FC<LoanHubScreenProps> = ({
       {/* Top Navigation Bar */}
       <motion.header
         variants={itemEntranceVariants}
-        className="px-5 pt-3 pb-3 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-xs z-20 shrink-0"
+        className="px-5 pt-3 pb-3 flex items-center justify-between sticky top-0 bg-white/70 backdrop-blur-md z-20 shrink-0"
       >
         <div className="flex items-center gap-2">
           <button

@@ -91,7 +91,7 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
       id="summary-screen"
     >
       {/* App Bar */}
-      <header className="w-full px-5 pt-3 pb-3 flex items-center justify-between shrink-0 bg-transparent z-20 relative">
+      <header className="w-full px-5 pt-3 pb-3 flex items-center justify-between shrink-0 sticky top-0 bg-white/70 backdrop-blur-md z-30">
         <div className="flex items-center gap-3.5">
           <button
             type="button"
