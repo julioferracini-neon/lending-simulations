@@ -24,7 +24,8 @@ export function calculateLoanSimulation(
   loanAmount: number,
   installments: number,
   rate: number = BASE_MONTHLY_RATE,
-  firstDueDate: Date = getDefaultFirstDueDate()
+  firstDueDate: Date = getDefaultFirstDueDate(),
+  hasInsurance: boolean = true
 ): SimulationResult {
   // Calculate day difference relative to standard 30-day term from today
   const msPerDay = 1000 * 60 * 60 * 24;
@@ -54,6 +55,11 @@ export function calculateLoanSimulation(
     baseMonthlyPmt = 423.16;
   } else {
     baseMonthlyPmt = loanAmount * rawPriceFactor * calibrationMultiplier;
+  }
+
+  // Remove insurance cost from installment if disabled (insurance is ~7.9% of total)
+  if (!hasInsurance) {
+    baseMonthlyPmt = baseMonthlyPmt / 1.079;
   }
 
   // Apply compound interest based on days of first installment grace period

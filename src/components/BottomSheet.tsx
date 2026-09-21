@@ -11,6 +11,7 @@ interface BottomSheetProps {
   children: React.ReactNode;
   maxHeightClass?: string;
   id?: string;
+  noPadding?: boolean;
 }
 
 const SHEET_EASING = [0.32, 0.72, 0, 1] as const;
@@ -24,6 +25,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   children,
   maxHeightClass = 'max-h-[88vh]',
   id,
+  noPadding = false,
 }) => {
   // Prevent body scrolling when sheet is open
   useEffect(() => {
@@ -95,7 +97,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
             )}
 
             {/* Scrollable Sheet Body */}
-            <div className="flex-1 overflow-y-auto px-6 py-4">
+            <div className={`flex-1 overflow-y-auto ${noPadding ? '' : 'px-6 py-4'}`}>
               {children}
             </div>
           </motion.div>
