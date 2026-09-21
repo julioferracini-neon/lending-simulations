@@ -1,7 +1,6 @@
 import { InstallmentScheduleItem, SimulationResult } from '../types';
 
 export const BASE_MONTHLY_RATE = 0.0349; // 3.49% a.m.
-export const BASELINE_FIRST_DUE = new Date(2026, 8, 10); // 10 de setembro de 2026 (design benchmark)
 
 /**
  * Calculates loan installment, total cost, and amortization schedule.
@@ -12,17 +11,28 @@ export const BASELINE_FIRST_DUE = new Date(2026, 8, 10); // 10 de setembro de 20
  * Benchmark calibration:
  * loanAmount = 2000, installments = 7, firstDueDate = 10 de setembro -> yields R$ 423,16 and total R$ 2.962,12.
  */
+export function getDefaultFirstDueDate(): Date {
+  const date = new Date();
+  date.setMonth(date.getMonth() + 1);
+  // Adjust to next business day if weekend
+  if (date.getDay() === 0) date.setDate(date.getDate() + 1);
+  if (date.getDay() === 6) date.setDate(date.getDate() + 2);
+  return date;
+}
+
 export function calculateLoanSimulation(
   loanAmount: number,
   installments: number,
   rate: number = BASE_MONTHLY_RATE,
-  firstDueDate: Date = BASELINE_FIRST_DUE
+  firstDueDate: Date = getDefaultFirstDueDate()
 ): SimulationResult {
-  // Calculate day difference relative to benchmark date (10 de setembro de 2026)
+  // Calculate day difference relative to standard 30-day term from today
   const msPerDay = 1000 * 60 * 60 * 24;
-  const benchmarkTime = new Date(2026, 8, 10).setHours(0, 0, 0, 0);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
   const selectedTime = new Date(firstDueDate).setHours(0, 0, 0, 0);
-  const diffDays = Math.round((selectedTime - benchmarkTime) / msPerDay);
+  const actualDaysToFirstPayment = Math.round((selectedTime - today.getTime()) / msPerDay);
+  const diffDays = actualDaysToFirstPayment - 30;
 
   // Daily compound rate: (1 + i_monthly)^(1/30) - 1
   const dailyRate = Math.pow(1 + rate, 1 / 30) - 1;

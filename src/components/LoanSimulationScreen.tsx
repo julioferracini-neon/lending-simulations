@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { motion, type Variants } from 'motion/react';
 import { ArrowLeft, Info, Calendar as CalendarIcon, Edit2 } from 'lucide-react';
-import { calculateLoanSimulation, formatCurrency, formatDatePtBR, BASE_MONTHLY_RATE } from '../utils/finance';
+import { calculateLoanSimulation, formatCurrency, formatDatePtBR, BASE_MONTHLY_RATE, getDefaultFirstDueDate } from '../utils/finance';
 import { AnimatedNumber } from './AnimatedNumber';
 import { RouletteOdometer } from './RouletteOdometer';
 import { InstallmentSlider } from './InstallmentSlider';
@@ -11,11 +11,21 @@ import { EditAmountModal } from './EditAmountModal';
 import { EditMonthlyInstallmentModal } from './EditMonthlyInstallmentModal';
 import { ProposalSuccessModal } from './ProposalSuccessModal';
 
+export interface LoanSimulationData {
+  loanAmount: number;
+  installments: number;
+  firstDueDate: Date;
+  monthlyInstallment: number;
+  totalCost: number;
+}
+
 interface LoanSimulationScreenProps {
   initialLoanAmount?: number;
+  initialInstallments?: number;
+  initialFirstDueDate?: Date;
   onBack?: () => void;
   onAmountChange?: (amount: number) => void;
-  onContinueProposal?: () => void;
+  onContinueProposal?: (data: LoanSimulationData) => void;
 }
 
 // Smooth easing curves for UI transitions
@@ -51,15 +61,17 @@ const itemEntranceVariants: Variants = {
 
 export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
   initialLoanAmount = 2000,
+  initialInstallments = 7,
+  initialFirstDueDate,
   onBack,
   onAmountChange,
   onContinueProposal,
 }) => {
   // State variables corresponding to user controls
   const [loanAmount, setLoanAmount] = useState<number>(initialLoanAmount);
-  const [installments, setInstallments] = useState<number>(7); // Real-time 0ms
-  const [selectedDueDay, setSelectedDueDay] = useState<number>(10);
-  const [firstDueDate, setFirstDueDate] = useState<Date>(new Date(2026, 8, 10)); // 10 de setembro de 2026
+  const [installments, setInstallments] = useState<number>(initialInstallments); // Real-time 0ms
+  const [selectedDueDay, setSelectedDueDay] = useState<number>(initialFirstDueDate ? initialFirstDueDate.getDate() : 10);
+  const [firstDueDate, setFirstDueDate] = useState<Date>(initialFirstDueDate || getDefaultFirstDueDate());
 
   // Keep in sync with initialLoanAmount if updated externally
   useEffect(() => {
@@ -72,8 +84,8 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
   // 1st: User moves slider (0ms) -> slider thumb, badge, and section header update instantly
   // 2nd: Primary installment amount changes 100ms later
   // 3rd: Total estimated cost changes 200ms later
-  const [delayedInstallmentsPrimary, setDelayedInstallmentsPrimary] = useState<number>(7);
-  const [delayedInstallmentsTotal, setDelayedInstallmentsTotal] = useState<number>(7);
+  const [delayedInstallmentsPrimary, setDelayedInstallmentsPrimary] = useState<number>(initialInstallments);
+  const [delayedInstallmentsTotal, setDelayedInstallmentsTotal] = useState<number>(initialInstallments);
 
   useEffect(() => {
     // 100ms delay for primary monthly installment
@@ -118,7 +130,7 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
     setLoanAmount(2000);
     setInstallments(7);
     setSelectedDueDay(10);
-    setFirstDueDate(new Date(2026, 8, 10));
+    setFirstDueDate(getDefaultFirstDueDate());
   };
 
   return (
@@ -139,9 +151,9 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
             type="button"
             onClick={onBack || resetToDefault}
             aria-label="Voltar"
-            className="w-10 h-10 rounded-full flex items-center justify-center text-[#0066cc] hover:bg-blue-50 active:scale-90 transition-all cursor-pointer -ml-1"
+            className="w-10 h-10 rounded-full flex items-center justify-center text-[#0072e6] hover:bg-blue-50 active:scale-90 transition-all cursor-pointer -ml-1"
           >
-            <ArrowLeft className="w-6 h-6 stroke-[2.2]" />
+            <ArrowLeft className="w-6 h-6 stroke-[2]" />
           </button>
           <h1 className="text-[17px] sm:text-lg font-bold text-[#142742] tracking-tight">
             Plano de Pagamento
@@ -154,7 +166,7 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
           aria-label="Informações sobre taxas e CET"
           className="w-10 h-10 rounded-full flex items-center justify-center text-[#142742] hover:bg-slate-100 active:scale-90 transition-all cursor-pointer"
         >
-          <Info className="w-6 h-6 stroke-[2]" />
+          <Info className="w-6 h-6 stroke-[1.5]" />
         </button>
       </motion.header>
 
@@ -172,10 +184,9 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
             className="group flex items-center gap-1.5 text-left cursor-pointer hover:opacity-80 transition-opacity"
           >
             <span className="text-[#4b6076] font-normal">Solicitado:</span>
-            <span className="font-semibold text-[#1b3248] group-hover:text-blue-600 transition-colors tabular-nums">
+            <span className="font-semibold text-[#1b3248] transition-colors tabular-nums">
               {formatCurrency(loanAmount)}
             </span>
-            <Edit2 className="w-3.5 h-3.5 text-blue-500 opacity-60 group-hover:opacity-100 transition-opacity" />
           </button>
 
           {/* Interest Rate (Interactive Bottom Sheet Trigger) */}
@@ -194,7 +205,7 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
         {/* Highlight Card: Valor da Parcela e Custo Total */}
         <motion.div
           variants={itemEntranceVariants}
-          className="bg-[#e6f4fe] rounded-[22px] p-5 sm:p-6 border border-[#d7ebfa] relative overflow-hidden"
+          className="bg-[#f8fafd] rounded-[24px] p-5 sm:p-6 border border-[#e2edf7] relative overflow-hidden"
         >
           {/* Top Row: Label + Installments Pill */}
           <div className="flex items-center justify-between">
@@ -204,7 +215,6 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
               className="group flex items-center gap-1 text-[15px] font-normal text-[#4b6076] hover:text-[#1b3248] transition-colors cursor-pointer"
             >
               <span>Valor da parcela mensal</span>
-              <Edit2 className="w-3 h-3 text-blue-500 opacity-60 group-hover:opacity-100 transition-opacity" />
             </button>
 
             {/* Pill matching prototype: vibrant cyan-blue background with dark navy text */}
@@ -221,7 +231,7 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
                 delay: 0.12, // 120ms de delay no pulse
                 ease: [0.25, 1, 0.5, 1], // curva de aceleração e desaceleração suave
               }}
-              className="bg-[#00b2fe] hover:bg-[#00a2ea] active:scale-95 text-[#083863] text-[13px] font-semibold px-3.5 py-1 rounded-full shadow-xs text-center tabular-nums cursor-pointer transition-colors select-none"
+              className="hidden bg-[#00b2fe] hover:bg-[#00a2ea] active:scale-95 text-[#083863] text-[13px] font-semibold px-3.5 py-1 rounded-full shadow-xs text-center tabular-nums cursor-pointer transition-colors select-none"
             >
               {delayedInstallmentsPrimary} parcelas
             </motion.button>
@@ -240,13 +250,14 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
               motionDuration={400}
               className="text-[38px] sm:text-[42px] font-black text-[#173049] group-hover:text-[#007fe8] transition-colors tracking-tight leading-none"
             />
-            <span className="ml-2.5 opacity-0 group-hover:opacity-100 transition-opacity text-xs font-semibold text-blue-600 bg-white/90 px-2 py-0.5 rounded-md border border-blue-100 shadow-xs">
+            {/* HIDDEN: Tag 'Editar' escondida para limpeza visual */}
+            <span className="hidden ml-2.5 opacity-0 group-hover:opacity-100 transition-opacity text-xs font-semibold text-blue-600 bg-white/90 px-2 py-0.5 rounded-md border border-blue-100 shadow-xs">
               Editar
             </span>
           </button>
 
           {/* Delicate separator inside card */}
-          <div className="h-[1px] bg-[#d5eaf9] my-4" />
+          <div className="h-[1px] bg-[#e2edf7] my-4" />
 
           {/* Bottom Row: Custo Total Estimado */}
           <div className="flex items-center justify-between">
@@ -271,25 +282,12 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
         {/* Card 2: Due Date with Alterar Action */}
         <motion.div
           variants={itemEntranceVariants}
-          className="bg-[#f8fafd] border border-[#e2edf7] rounded-xl px-4 py-3.5 flex items-center justify-between shadow-xs hover:border-[#ccdff1] transition-colors"
+          className="bg-white border border-[#e2edf7] rounded-[24px] px-4 py-3.5 flex items-center justify-between shadow-xs hover:border-[#ccdff1] transition-colors"
         >
           <div className="flex items-center gap-2.5">
-            <svg
-              className="w-[19px] h-[19px] text-[#007fe8] shrink-0"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <rect x="3" y="4" width="18" height="18" rx="2.5" />
-              <line x1="3" y1="9.5" x2="21" y2="9.5" />
-              <rect x="7" y="13.5" width="3.5" height="3.5" rx="0.5" fill="currentColor" stroke="none" />
-            </svg>
+            <CalendarIcon className="w-5 h-5 text-[#0072e6] stroke-[2]" />
             <span className="text-[14px] font-medium text-[#253e57]">
-              Vencimento: {formatDatePtBR(firstDueDate)}
+              Vencimento: todo dia {firstDueDate.getDate()}
             </span>
           </div>
 
@@ -318,7 +316,7 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
               className="text-right cursor-pointer hover:opacity-80 transition-opacity"
               aria-label="Selecionar prazo de parcelas"
             >
-              <span className="text-[17px] sm:text-[18px] font-bold text-[#355272] hover:text-[#1e3a5f] tabular-nums inline-block text-right transition-colors">
+              <span className="text-[16px] sm:text-[17px] font-bold text-[#355272] hover:text-[#1e3a5f] tabular-nums inline-block text-right transition-colors">
                 {installments} {installments === 1 ? 'Parcela' : 'Parcelas'}
               </span>
             </button>
@@ -334,10 +332,10 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
         </motion.div>
       </main>
 
-      {/* Sticky Bottom Action Bar with Smooth Gradient Backdrop */}
+      {/* Sticky Bottom Action Bar with Solid Background */}
       <motion.footer
         variants={itemEntranceVariants}
-        className="fixed sm:absolute bottom-0 inset-x-0 p-5 bg-gradient-to-t from-white via-white/95 to-transparent pt-6 z-20"
+        className="fixed sm:absolute bottom-0 inset-x-0 p-5 pb-8 sm:pb-6 bg-white z-20"
       >
         <motion.button
           type="button"
@@ -345,12 +343,18 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
           transition={{ duration: 0.12, ease: EASE_IN_OUT }}
           onClick={() => {
             if (onContinueProposal) {
-              onContinueProposal();
+              onContinueProposal({
+                loanAmount,
+                installments,
+                firstDueDate,
+                monthlyInstallment: primarySimulation.monthlyInstallment,
+                totalCost: totalSimulation.totalEstimatedCost,
+              });
             } else {
               setIsSuccessModalOpen(true);
             }
           }}
-          className="w-full bg-[#0072e6] hover:bg-[#0062c4] active:bg-[#0055aa] text-white font-bold py-4 px-6 rounded-full transition-all flex items-center justify-center text-base shadow-lg shadow-blue-500/25 cursor-pointer"
+          className="w-full bg-[#0072e6] hover:bg-[#0062c4] active:bg-[#0055aa] text-white font-bold py-4 px-6 rounded-full transition-all flex items-center justify-center text-base cursor-pointer"
         >
           Continuar proposta
         </motion.button>

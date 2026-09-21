@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar as CalendarIcon, Check, Clock, TrendingUp } from 'lucide-react';
+import { Calendar as CalendarIcon } from 'lucide-react';
 import { BottomSheet } from './BottomSheet';
-import { calculateLoanSimulation, formatCurrency, formatDatePtBR, BASE_MONTHLY_RATE } from '../utils/finance';
+import { calculateLoanSimulation, formatCurrency, formatDatePtBR, BASE_MONTHLY_RATE, getDefaultFirstDueDate } from '../utils/finance';
 
 interface ChangeDueDateModalProps {
   isOpen: boolean;
@@ -13,35 +13,44 @@ interface ChangeDueDateModalProps {
   installments?: number;
 }
 
-const AVAILABLE_DAYS = [5, 10, 15, 20, 25, 28];
-
 export const ChangeDueDateModal: React.FC<ChangeDueDateModalProps> = ({
   isOpen,
   onClose,
-  currentDay,
+  currentDate,
   onSelectDate,
   loanAmount = 2000,
   installments = 7,
 }) => {
-  const [selectedDay, setSelectedDay] = useState<number>(currentDay);
+  const [selectedDate, setSelectedDate] = useState<Date>(currentDate);
+  const [availableDates, setAvailableDates] = useState<Date[]>([]);
 
-  // Keep bottom sheet selection strictly in sync with the first layer
+  // Calculate next 5 business days starting from the default first due date (1 month ahead)
   useEffect(() => {
     if (isOpen) {
-      setSelectedDay(currentDay);
+      const dates: Date[] = [];
+      let current = getDefaultFirstDueDate();
+      current.setHours(0, 0, 0, 0);
+      
+      while (dates.length < 5) {
+        const dayOfWeek = current.getDay();
+        // 0 is Sunday, 6 is Saturday
+        if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+          dates.push(new Date(current));
+        }
+        current.setDate(current.getDate() + 1);
+      }
+      setAvailableDates(dates);
+      
+      // Try to find the exact current date in the options, otherwise default to the first one
+      const found = dates.find(d => d.getTime() === currentDate.getTime());
+      setSelectedDate(found || dates[0]);
     }
-  }, [isOpen, currentDay]);
+  }, [isOpen, currentDate]);
 
-  const getCalculatedDate = (day: number): Date => {
-    return new Date(2026, 8, day); // Month 8 is September
-  };
-
-  const previewDate = getCalculatedDate(selectedDay);
-  const currentPreviewSim = calculateLoanSimulation(loanAmount, installments, BASE_MONTHLY_RATE, previewDate);
-  const baselineSim = calculateLoanSimulation(loanAmount, installments, BASE_MONTHLY_RATE, new Date(2026, 8, 10));
+  const currentPreviewSim = calculateLoanSimulation(loanAmount, installments, BASE_MONTHLY_RATE, selectedDate);
 
   const handleConfirm = () => {
-    onSelectDate(selectedDay, previewDate);
+    onSelectDate(selectedDate.getDate(), selectedDate);
     onClose();
   };
 
@@ -50,78 +59,38 @@ export const ChangeDueDateModal: React.FC<ChangeDueDateModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title="Dia de vencimento"
-      subtitle="Juros compostos diários influenciam o valor da parcela"
+      subtitle="Escolha a data do seu primeiro pagamento"
       icon={<CalendarIcon className="w-5 h-5" />}
       id="due-date-modal"
     >
       <div className="space-y-4">
-        {/* Days Grid with Real-time Recalculated Values */}
+        {/* Simple Horizontal Calendar for next 5 business days */}
         <div>
           <div className="flex items-center justify-between mb-2">
             <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-              Dias disponíveis todo mês:
+              Dias úteis disponíveis
             </label>
-            <span className="text-[11px] text-slate-400">
-              {installments}x de empréstimo
-            </span>
           </div>
 
-          <div className="grid grid-cols-2 gap-2.5">
-            {AVAILABLE_DAYS.map((day) => {
-              const isSelected = selectedDay === day;
-              const dateForDay = getCalculatedDate(day);
-              const simForDay = calculateLoanSimulation(loanAmount, installments, BASE_MONTHLY_RATE, dateForDay);
-              const diffFromBaseline = Math.round((simForDay.monthlyInstallment - baselineSim.monthlyInstallment) * 100) / 100;
+          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+            {availableDates.map((date) => {
+              const isSelected = selectedDate.getTime() === date.getTime();
+              const day = date.getDate();
+              const weekDay = date.toLocaleDateString('pt-BR', { weekday: 'short' }).replace('.', '');
 
               return (
                 <button
-                  key={day}
+                  key={date.toISOString()}
                   type="button"
-                  onClick={() => setSelectedDay(day)}
-                  className={`flex flex-col p-3 rounded-xl border-2 transition-all cursor-pointer text-left relative ${
+                  onClick={() => setSelectedDate(date)}
+                  className={`flex flex-col items-center justify-center min-w-[70px] py-3 rounded-xl border-2 transition-all cursor-pointer ${
                     isSelected
-                      ? 'border-[#0072e6] bg-blue-50/70 text-slate-900 shadow-xs ring-1 ring-blue-500'
-                      : 'border-slate-200 hover:border-slate-300 text-slate-700 bg-white hover:bg-slate-50/50'
+                      ? 'border-[#0073ea] bg-blue-50/70 text-[#0073ea]'
+                      : 'border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50'
                   }`}
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="text-base font-extrabold tabular-nums">
-                      Todo dia {day}
-                    </span>
-                    {day === 10 ? (
-                      <span className="text-[10px] bg-slate-100 text-slate-600 font-semibold px-1.5 py-0.5 rounded-sm">
-                        Padrão
-                      </span>
-                    ) : day < 10 ? (
-                      <span className="text-[10px] bg-emerald-100 text-emerald-800 font-semibold px-1.5 py-0.5 rounded-sm">
-                        Menos juros
-                      </span>
-                    ) : (
-                      <span className="text-[10px] bg-amber-50 text-amber-800 font-semibold px-1.5 py-0.5 rounded-sm flex items-center gap-0.5">
-                        <TrendingUp className="w-2.5 h-2.5 text-amber-600" />
-                        Mais prazo
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="mt-1.5">
-                    <span className="text-lg font-black text-slate-900 tabular-nums block">
-                      {formatCurrency(simForDay.monthlyInstallment)}
-                    </span>
-                    <span className="text-[11px] text-slate-500 tabular-nums">
-                      {diffFromBaseline === 0
-                        ? 'Referência padrão'
-                        : diffFromBaseline > 0
-                        ? `+${formatCurrency(diffFromBaseline)}/mês (+ juros diários)`
-                        : `${formatCurrency(diffFromBaseline)}/mês (economia)`}
-                    </span>
-                  </div>
-
-                  {isSelected && (
-                    <div className="absolute top-2.5 right-2.5 w-4 h-4 rounded-full bg-[#0072e6] text-white flex items-center justify-center">
-                      <Check className="w-3 h-3 stroke-[3]" />
-                    </div>
-                  )}
+                  <span className="text-xs font-medium uppercase mb-1">{weekDay}</span>
+                  <span className="text-xl font-bold">{day}</span>
                 </button>
               );
             })}
@@ -129,32 +98,29 @@ export const ChangeDueDateModal: React.FC<ChangeDueDateModalProps> = ({
         </div>
 
         {/* Dynamic Preview & Financial Explanation */}
-        <div className="bg-slate-50 rounded-2xl p-3.5 border border-slate-200/80 flex items-start gap-3">
-          <Clock className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
-          <div className="text-xs text-slate-600">
-            <p className="font-bold text-slate-900 text-sm mb-0.5">
-              Primeiro vencimento: {formatDatePtBR(previewDate)}
-            </p>
-            <p className="text-slate-600 mt-1 leading-relaxed">
-              O valor da parcela é recalculado com base no número de dias de carência. Datas mais distantes acumulam juros compostos diários proporcionais (pró-rata die).
-            </p>
-            <div className="mt-2 pt-2 border-t border-slate-200 flex justify-between text-xs font-semibold text-slate-800">
-              <span>Nova parcela estimada:</span>
-              <span className="text-blue-700 font-black tabular-nums">
-                {formatCurrency(currentPreviewSim.monthlyInstallment)}
-              </span>
-            </div>
+        <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200/80">
+          <div className="flex justify-between items-center text-sm font-medium text-slate-700 mb-1">
+            <span>Primeiro pagamento</span>
+            <span>{formatDatePtBR(selectedDate)}</span>
           </div>
+          <div className="flex justify-between items-center text-sm font-medium text-slate-700">
+            <span>Valor da parcela</span>
+            <span className="text-[#0073ea] font-bold text-lg">
+              {formatCurrency(currentPreviewSim.monthlyInstallment)}
+            </span>
+          </div>
+          <p className="text-[11px] text-slate-500 mt-2 leading-tight">
+            As datas influenciam os juros aplicados (pró-rata).
+          </p>
         </div>
 
         {/* Action button */}
         <button
           type="button"
           onClick={handleConfirm}
-          className="w-full bg-[#0072e6] hover:bg-[#0062c4] active:scale-[0.98] text-white font-bold py-3.5 rounded-full transition-all flex items-center justify-center gap-2 shadow-md shadow-blue-500/20 text-base cursor-pointer"
+          className="w-full bg-[#0073ea] hover:bg-[#0062c4] active:scale-[0.98] text-white font-bold py-3.5 rounded-full transition-all text-base cursor-pointer"
         >
-          <Check className="w-5 h-5" />
-          Confirmar vencimento dia {selectedDay}
+          Confirmar
         </button>
       </div>
     </BottomSheet>

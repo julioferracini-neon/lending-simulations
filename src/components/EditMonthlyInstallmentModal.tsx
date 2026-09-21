@@ -67,38 +67,36 @@ export const EditMonthlyInstallmentModal: React.FC<EditMonthlyInstallmentModalPr
       isOpen={isOpen}
       onClose={onClose}
       title="Escolha o prazo e valor"
-      subtitle="Selecione uma das opções de parcelamento"
-      icon={<CreditCard className="w-5 h-5" />}
       maxHeightClass="max-h-[90vh]"
       id="edit-monthly-installment-sheet"
     >
-      <div className="space-y-4">
-        {/* Main Selection Tile matching Figma blue banner theme */}
-        <div className="bg-[#eef7fe] border border-blue-100/80 rounded-2xl p-4 text-center">
-          <span className="text-xs font-semibold text-[#5c7086] uppercase tracking-wider block mb-0.5">
-            Opção selecionada:
+      <div className="space-y-6 pt-2">
+        {/* Main Selection Tile matching main screen theme */}
+        <div className="flex flex-col items-center justify-center py-4">
+          <span className="text-[13px] font-medium text-[#5a738e] mb-1">
+            Opção selecionada
           </span>
-          <div className="text-3xl font-black text-[#142742] tracking-tight my-0.5">
+          <div className="text-[32px] font-bold text-[#142742] tracking-tight mb-2">
             <RouletteOdometer
               value={currentSelected.monthlyPmt}
               prefix="R$ "
               motionDuration={380}
             />
           </div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#0072e6] text-white text-xs font-bold mt-1">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#f1f5f9] text-[#142742] text-xs font-semibold">
             <span>{currentSelected.installments}x mensais</span>
-            <span className="opacity-60">•</span>
+            <span className="text-slate-300">•</span>
             <span>Total: {formatCurrency(currentSelected.totalCost)}</span>
           </div>
         </div>
 
         {/* 2 Columns x 12 Rows Grid with All 24 Options */}
         <div>
-          <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2 px-0.5">
-            Todas as 24 opções de prazo (1x a 24x):
+          <label className="text-[13px] font-medium text-[#5a738e] block mb-3 px-1">
+            Todas as opções de prazo
           </label>
 
-          <div className="grid grid-cols-2 gap-2 pb-2">
+          <div className="grid grid-cols-2 gap-3 pb-4">
             {availablePlans.map((plan) => {
               const isSelected = selectedPlanInstallments === plan.installments;
 
@@ -108,48 +106,48 @@ export const EditMonthlyInstallmentModal: React.FC<EditMonthlyInstallmentModalPr
                   ref={isSelected ? selectedItemRef : null}
                   type="button"
                   onClick={() => setSelectedPlanInstallments(plan.installments)}
-                  className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between relative ${
+                  className={`p-3.5 rounded-[16px] border text-left transition-all cursor-pointer flex flex-col justify-between relative ${
                     isSelected
-                      ? 'border-[#0072e6] bg-blue-50/80 shadow-xs ring-1 ring-[#0072e6]'
-                      : 'border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50/60'
+                      ? 'border-[#0073ea] bg-[#f0f7ff] shadow-sm ring-1 ring-[#0073ea]'
+                      : 'border-[#e2e8f0] hover:border-[#cbd5e1] bg-white hover:bg-slate-50'
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <span
-                      className={`text-xs font-bold ${
-                        isSelected ? 'text-[#0066cc]' : 'text-slate-800'
+                      className={`text-[13px] font-semibold ${
+                        isSelected ? 'text-[#0073ea]' : 'text-[#142742]'
                       }`}
                     >
                       {plan.installments}x parcelas
                     </span>
 
                     {plan.installments === 7 ? (
-                      <span className="text-[10px] bg-amber-100 text-amber-800 font-bold px-1.5 py-0.5 rounded-sm flex items-center gap-0.5 leading-none">
+                      <span className="text-[10px] bg-amber-50 text-amber-700 font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5 leading-none">
                         <Sparkles className="w-2.5 h-2.5" />
                         Ideal
                       </span>
                     ) : plan.installments === 1 ? (
-                      <span className="text-[10px] bg-emerald-100 text-emerald-800 font-semibold px-1.5 py-0.5 rounded-sm leading-none">
+                      <span className="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-1.5 py-0.5 rounded leading-none">
                         Menor custo
                       </span>
                     ) : plan.installments === 24 ? (
-                      <span className="text-[10px] bg-blue-100 text-blue-800 font-semibold px-1.5 py-0.5 rounded-sm leading-none">
+                      <span className="text-[10px] bg-blue-50 text-blue-700 font-bold px-1.5 py-0.5 rounded leading-none">
                         Menor parcela
                       </span>
                     ) : null}
                   </div>
 
-                  <div className="mt-2">
-                    <span className="text-base font-extrabold text-slate-900 tabular-nums block leading-tight">
+                  <div className="mt-3">
+                    <span className="text-[16px] font-bold text-[#142742] tabular-nums block leading-tight">
                       {formatCurrency(plan.monthlyPmt)}
                     </span>
-                    <span className="text-[11px] text-slate-400 tabular-nums mt-0.5 block">
+                    <span className="text-[11px] text-[#5a738e] tabular-nums mt-1 block">
                       Total: {formatCurrency(plan.totalCost)}
                     </span>
                   </div>
 
                   {isSelected && (
-                    <div className="absolute top-2.5 right-2.5 w-4 h-4 rounded-full bg-[#0072e6] text-white flex items-center justify-center">
+                    <div className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[#0073ea] text-white flex items-center justify-center border-2 border-white shadow-sm">
                       <Check className="w-3 h-3 stroke-[3]" />
                     </div>
                   )}
@@ -160,14 +158,13 @@ export const EditMonthlyInstallmentModal: React.FC<EditMonthlyInstallmentModalPr
         </div>
 
         {/* Sticky Confirm Action Button */}
-        <div className="sticky bottom-0 pt-2 pb-1 bg-white border-t border-slate-100">
+        <div className="sticky bottom-0 pt-4 pb-2 bg-white/95 backdrop-blur-sm border-t border-slate-100">
           <button
             type="button"
             onClick={handleConfirm}
-            className="w-full bg-[#0072e6] hover:bg-[#0062c4] active:scale-[0.98] text-white font-bold py-3.5 rounded-full transition-all flex items-center justify-center gap-2 shadow-md shadow-blue-500/20 text-base cursor-pointer"
+            className="w-full bg-[#0073ea] hover:bg-[#0062c4] active:scale-[0.98] text-white font-bold py-4 rounded-full transition-all flex items-center justify-center text-[15px] cursor-pointer"
           >
-            <Check className="w-5 h-5" />
-            Confirmar {selectedPlanInstallments}x de {formatCurrency(currentSelected.monthlyPmt)}
+            Confirmar opção
           </button>
         </div>
       </div>

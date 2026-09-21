@@ -82,31 +82,38 @@ export const ProposalLoadingScreen: React.FC<ProposalLoadingScreenProps> = ({ on
           </AnimatePresence>
         </div>
 
-        {/* Loading Bar matching Figma (Two segments) */}
-        <div className="w-full relative h-[6px] flex gap-2 overflow-hidden rounded-full mb-16">
-          <div className="flex-1 bg-[#edf2f8] rounded-full relative overflow-hidden">
-             <motion.div
-                className="absolute top-0 left-0 bottom-0 rounded-full bg-[#00aaff]"
-                initial={{ width: '15%' }}
-                animate={{ width: stage === 1 ? '100%' : '100%' }}
-                transition={{
-                  duration: stage === 1 ? 2.5 : 0,
-                  ease: [0.2, 0.05, 0.2, 1],
-                }}
-              />
-          </div>
-          <div className="flex-1 bg-[#edf2f8] rounded-full relative overflow-hidden">
+        {/* Loading Bar (Single continuous track matching Figma) */}
+        <div className="w-full relative h-[6px] bg-[#ebeffa] rounded-full overflow-hidden mb-16">
+          <AnimatePresence>
+            {stage === 1 && (
               <motion.div
-                className="absolute top-0 left-0 bottom-0 rounded-full bg-[#00aaff]"
-                initial={{ width: '0%' }}
-                animate={{ width: stage === 1 ? '70%' : '100%' }}
+                key="indeterminate"
+                className="absolute top-0 bottom-0 bg-[#0073ea] rounded-full"
+                initial={{ left: '-30%', right: '100%' }}
+                animate={{ left: '100%', right: '-30%' }}
+                exit={{ opacity: 0 }}
                 transition={{
-                  duration: stage === 1 ? 3.0 : 0.42,
-                  delay: stage === 1 ? 0.5 : 0,
-                  ease: [0.2, 0.05, 0.2, 1],
+                  duration: 1.5,
+                  ease: [0.4, 0, 0.2, 1],
+                  repeat: Infinity,
                 }}
               />
-          </div>
+            )}
+          </AnimatePresence>
+
+          {/* Full progress bar during Stage 2 ("Pronto") */}
+          <motion.div
+            className="absolute top-0 bottom-0 left-0 bg-[#0073ea] rounded-full z-10"
+            initial={false}
+            animate={{
+              width: stage === 2 ? '100%' : '0%',
+              opacity: stage === 2 ? 1 : 0,
+            }}
+            transition={{
+              duration: stage === 2 ? 0.38 : 0,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+          />
         </div>
 
         {/* Bottom Guidance Message */}
