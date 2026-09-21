@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, type Variants } from 'motion/react';
 import { ArrowLeft, HelpCircle, ChevronRight } from 'lucide-react';
 import { formatCurrency } from '../utils/finance';
+import { hapticLight, hapticMedium } from '../utils/haptics';
 
 interface LoanHubScreenProps {
   maxPersonalLimit?: number;
@@ -59,7 +60,10 @@ export const LoanHubScreen: React.FC<LoanHubScreenProps> = ({
         <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={onBack}
+            onClick={() => {
+              hapticLight();
+              onBack?.();
+            }}
             aria-label="Voltar"
             className="w-10 h-10 rounded-full flex items-center justify-center text-[#0073e6] hover:bg-blue-50 active:scale-90 transition-all cursor-pointer -ml-1"
           >
@@ -72,6 +76,7 @@ export const LoanHubScreen: React.FC<LoanHubScreenProps> = ({
 
         <button
           type="button"
+          onClick={() => hapticLight()}
           aria-label="Ajuda sobre empréstimos"
           className="w-10 h-10 rounded-full flex items-center justify-center text-[#142742] hover:bg-slate-100 active:scale-90 transition-all cursor-pointer"
         >
@@ -117,7 +122,10 @@ export const LoanHubScreen: React.FC<LoanHubScreenProps> = ({
 
             <button
               type="button"
-              onClick={onSelectPersonalLoan}
+              onClick={() => {
+                hapticMedium();
+                onSelectPersonalLoan();
+              }}
               className="w-full bg-[#0073e6] hover:bg-[#0062c4] active:bg-[#0055aa] text-white font-semibold py-3.5 rounded-full shadow-xs transition-all duration-200 cursor-pointer active:scale-[0.99] text-base"
             >
               Simular
@@ -148,6 +156,7 @@ export const LoanHubScreen: React.FC<LoanHubScreenProps> = ({
 
             <button
               type="button"
+              onClick={() => hapticLight()}
               className="w-full bg-[#0073e6] hover:bg-[#0062c4] active:bg-[#0055aa] text-white font-semibold py-3.5 rounded-full shadow-xs transition-all duration-200 cursor-pointer active:scale-[0.99] text-base"
             >
               Conferir
@@ -181,6 +190,7 @@ export const LoanHubScreen: React.FC<LoanHubScreenProps> = ({
 
             <button
               type="button"
+              onClick={() => hapticLight()}
               className="w-full bg-[#0073e6] hover:bg-[#0062c4] active:bg-[#0055aa] text-white font-semibold py-3.5 rounded-full shadow-xs transition-all duration-200 cursor-pointer active:scale-[0.99] text-base"
             >
               Simular
@@ -194,7 +204,10 @@ export const LoanHubScreen: React.FC<LoanHubScreenProps> = ({
             Conheça também
           </h3>
 
-          <div className="bg-white rounded-2xl border border-slate-200/90 p-4 flex items-center justify-between gap-3.5 hover:border-slate-300 transition-colors cursor-pointer shadow-xs">
+          <div
+            onClick={() => hapticLight()}
+            className="bg-white rounded-2xl border border-slate-200/90 p-4 flex items-center justify-between gap-3.5 hover:border-slate-300 transition-colors cursor-pointer shadow-xs"
+          >
             <div className="w-12 h-12 rounded-2xl bg-[#eaf4fe] flex items-center justify-center shrink-0 text-[#0073e6]">
               {/* Asset ic_device_data_usage_outline */}
               <svg

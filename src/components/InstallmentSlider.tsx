@@ -1,5 +1,6 @@
 import React, { useRef, useState, useCallback } from 'react';
 import { motion } from 'motion/react';
+import { hapticSelection } from '../utils/haptics';
 
 interface InstallmentSliderProps {
   value: number; // 1 to 24
@@ -38,12 +39,8 @@ export const InstallmentSlider: React.FC<InstallmentSliderProps> = ({
       if (bounded !== value) {
         onChange(bounded);
         // Haptic feedback if available in mobile browser
-        if (typeof navigator !== 'undefined' && 'vibrate' in navigator && bounded !== lastHapticVal) {
-          try {
-            navigator.vibrate(6);
-          } catch {
-            // Ignore if vibration is restricted
-          }
+        if (bounded !== lastHapticVal) {
+          hapticSelection();
           setLastHapticVal(bounded);
         }
       }

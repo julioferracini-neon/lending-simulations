@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { motion, type Variants } from 'motion/react';
 import { ArrowLeft, Info, Calendar as CalendarIcon, Edit2 } from 'lucide-react';
 import { calculateLoanSimulation, formatCurrency, formatDatePtBR, BASE_MONTHLY_RATE, getDefaultFirstDueDate } from '../utils/finance';
+import { hapticLight, hapticMedium, hapticSelection } from '../utils/haptics';
 import { AnimatedNumber } from './AnimatedNumber';
 import { RouletteOdometer } from './RouletteOdometer';
 import { InstallmentSlider } from './InstallmentSlider';
@@ -149,7 +150,11 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
         <div className="flex items-center gap-3">
           <button
             type="button"
-            onClick={onBack || resetToDefault}
+            onClick={() => {
+              hapticLight();
+              if (onBack) onBack();
+              else resetToDefault();
+            }}
             aria-label="Voltar"
             className="w-10 h-10 rounded-full flex items-center justify-center text-[#0072e6] hover:bg-blue-50 active:scale-90 transition-all cursor-pointer -ml-1"
           >
@@ -162,7 +167,10 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
 
         <button
           type="button"
-          onClick={() => setIsDetailsModalOpen(true)}
+          onClick={() => {
+            hapticLight();
+            setIsDetailsModalOpen(true);
+          }}
           aria-label="Informações sobre taxas e CET"
           className="w-10 h-10 rounded-full flex items-center justify-center text-[#142742] hover:bg-slate-100 active:scale-90 transition-all cursor-pointer"
         >
@@ -180,7 +188,10 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
           {/* Requested Amount (Interactive Bottom Sheet Trigger) */}
           <button
             type="button"
-            onClick={() => setIsAmountModalOpen(true)}
+            onClick={() => {
+              hapticLight();
+              setIsAmountModalOpen(true);
+            }}
             className="group flex items-center gap-1.5 text-left cursor-pointer hover:opacity-80 transition-opacity"
           >
             <span className="text-[#4b6076] font-normal">Solicitado:</span>
@@ -192,7 +203,10 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
           {/* Interest Rate (Interactive Bottom Sheet Trigger) */}
           <button
             type="button"
-            onClick={() => setIsDetailsModalOpen(true)}
+            onClick={() => {
+              hapticLight();
+              setIsDetailsModalOpen(true);
+            }}
             className="flex items-center gap-1.5 text-right cursor-pointer hover:opacity-80 transition-opacity"
           >
             <span className="text-[#4b6076] font-normal">Taxa:</span>
@@ -293,7 +307,10 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
 
           <button
             type="button"
-            onClick={() => setIsDueDateModalOpen(true)}
+            onClick={() => {
+              hapticLight();
+              setIsDueDateModalOpen(true);
+            }}
             className="text-[14px] font-semibold text-[#007fe8] hover:text-[#0066c0] active:scale-95 transition-all cursor-pointer px-1 py-0.5"
           >
             Alterar
@@ -312,7 +329,10 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
             {/* Real-time counter matching prototype: 7 Parcelas */}
             <button
               type="button"
-              onClick={() => setIsMonthlyModalOpen(true)}
+              onClick={() => {
+                hapticLight();
+                setIsMonthlyModalOpen(true);
+              }}
               className="text-right cursor-pointer hover:opacity-80 transition-opacity"
               aria-label="Selecionar prazo de parcelas"
             >
@@ -342,6 +362,7 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
           whileTap={{ scale: 0.98 }}
           transition={{ duration: 0.12, ease: EASE_IN_OUT }}
           onClick={() => {
+            hapticMedium();
             if (onContinueProposal) {
               onContinueProposal({
                 loanAmount,

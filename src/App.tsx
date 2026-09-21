@@ -13,6 +13,7 @@ import { ProposalLoadingScreen } from './components/ProposalLoadingScreen';
 import { SummaryScreen } from './components/SummaryScreen';
 import { SuccessScreen } from './components/SuccessScreen';
 import { ProductsScreen } from './components/ProductsScreen';
+import { hapticLight, hapticMedium, hapticSuccess } from './utils/haptics';
 
 // Smooth ease-out curve for native mobile push transition
 const SILKY_EASE_OUT = [0.16, 1, 0.3, 1] as const;
@@ -51,21 +52,25 @@ export default function App() {
   const [direction, setDirection] = useState<number>(1);
 
   const handleSelectLoansFromProducts = () => {
+    hapticMedium();
     setDirection(1);
     setCurrentStep('loan_hub');
   };
 
   const handleSelectPersonalLoan = () => {
+    hapticMedium();
     setDirection(1);
     setCurrentStep('input_value');
   };
 
   const handleBackToProducts = () => {
+    hapticLight();
     setDirection(-1);
     setCurrentStep('products');
   };
 
   const handleContinueToSimulation = (amount: number) => {
+    hapticMedium();
     setSessionAmount(amount);
     setLoanAmount(amount);
     setDirection(1);
@@ -73,42 +78,50 @@ export default function App() {
   };
 
   const handleBackToInputValue = () => {
+    hapticLight();
     setDirection(-1);
     setCurrentStep('input_value');
   };
 
   const handleContinueProposal = (data: LoanSimulationData) => {
+    hapticMedium();
     setSimulationData(data);
     setDirection(1);
     setCurrentStep('proposal_loading');
   };
 
   const handleLoadingComplete = () => {
+    hapticSuccess();
     setDirection(1);
     setCurrentStep('summary');
   };
 
   const handleBackFromSummary = () => {
+    hapticLight();
     setDirection(-1);
     setCurrentStep('simulation');
   };
 
   const handleEditAmountFromSummary = () => {
+    hapticLight();
     setDirection(-1);
     setCurrentStep('input_value');
   };
 
   const handleEditSimulationFromSummary = () => {
+    hapticLight();
     setDirection(-1);
     setCurrentStep('simulation');
   };
 
   const handleSuccess = () => {
+    hapticSuccess();
     setDirection(1);
     setCurrentStep('success');
   };
 
   const handleFinishSuccess = () => {
+    hapticMedium();
     // Reset the full flow
     setSessionAmount(null);
     setLoanAmount(2000);
@@ -118,6 +131,7 @@ export default function App() {
   };
 
   const handleRestart = () => {
+    hapticLight();
     setDirection(-1);
     setCurrentStep('products');
   };

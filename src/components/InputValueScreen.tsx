@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, type Variants } from 'motion/react';
 import { ArrowLeft, AlertCircle, X } from 'lucide-react';
 import { formatCurrency } from '../utils/finance';
+import { hapticLight, hapticMedium, hapticSelection, hapticWarning } from '../utils/haptics';
 
 interface InputValueScreenProps {
   initialAmount?: number | null;
@@ -92,6 +93,7 @@ export const InputValueScreen: React.FC<InputValueScreenProps> = ({
 
   const handleClear = (e: React.MouseEvent) => {
     e.stopPropagation();
+    hapticLight();
     setCents(0);
     inputRef.current?.focus();
   };
@@ -123,7 +125,10 @@ export const InputValueScreen: React.FC<InputValueScreenProps> = ({
         <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={onBack}
+            onClick={() => {
+              hapticLight();
+              onBack?.();
+            }}
             aria-label="Voltar"
             className="w-10 h-10 rounded-full flex items-center justify-center text-[#0073e6] hover:bg-blue-50 active:scale-90 transition-all cursor-pointer -ml-1"
           >
@@ -237,7 +242,10 @@ export const InputValueScreen: React.FC<InputValueScreenProps> = ({
           type="button"
           onClick={() => {
             if (isValid) {
+              hapticMedium();
               onContinue(currentAmount);
+            } else {
+              hapticWarning();
             }
           }}
           disabled={!isValid}

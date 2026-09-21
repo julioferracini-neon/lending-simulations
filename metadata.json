@@ -2,5 +2,5 @@
   "name": "Plano de Pagamento",
   "description": "Simulador interativo de plano de pagamento para financiamento com controle de prazos e micro-interações.",
   "requestFramePermissions": [],
-  "majorCapabilities": []
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

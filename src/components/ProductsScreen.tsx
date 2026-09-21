@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, type Variants } from 'motion/react';
 import { HelpCircle, ChevronRight } from 'lucide-react';
 import bottomNavSvg from '../assets/BottomNav.svg';
+import { hapticLight, hapticMedium } from '../utils/haptics';
 
 // Top Cards SVGs
 import consignadoSvg from '../assets/menu/Consignado.svg';
@@ -75,6 +76,7 @@ export const ProductsScreen: React.FC<ProductsScreenProps> = ({
           </h1>
           <button
             type="button"
+            onClick={() => hapticLight()}
             className="w-[34px] h-[34px] rounded-full border-[1.5px] border-white/60 bg-white/40 text-[#0073ea] flex items-center justify-center hover:bg-white/60 active:scale-95 transition-all shadow-sm"
             aria-label="Ajuda"
           >
@@ -84,7 +86,11 @@ export const ProductsScreen: React.FC<ProductsScreenProps> = ({
 
         {/* Top Cards */}
         <div className="px-5 grid grid-cols-2 gap-3 mb-6">
-          <motion.div variants={itemEntranceVariants} className="bg-gradient-to-br from-white to-[#f0f8ff] rounded-[24px] p-4 flex flex-col justify-between shadow-[0_2px_12px_rgba(0,0,0,0.03)] border border-white/60 cursor-pointer active:scale-95 transition-transform">
+          <motion.div
+            variants={itemEntranceVariants}
+            onClick={() => hapticLight()}
+            className="bg-gradient-to-br from-white to-[#f0f8ff] rounded-[24px] p-4 flex flex-col justify-between shadow-[0_2px_12px_rgba(0,0,0,0.03)] border border-white/60 cursor-pointer active:scale-95 transition-transform"
+          >
             <div className="flex justify-between items-start mb-4">
               <img src={consignadoSvg} alt="Consignado" className="w-[56px] h-[56px] -ml-1 -mt-1" />
               <ChevronRight className="w-5 h-5 text-[#0073ea] mt-1" strokeWidth={2.5} />
@@ -95,7 +101,11 @@ export const ProductsScreen: React.FC<ProductsScreenProps> = ({
             </div>
           </motion.div>
 
-          <motion.div variants={itemEntranceVariants} className="bg-gradient-to-br from-white to-[#f0f8ff] rounded-[24px] p-4 flex flex-col justify-between shadow-[0_2px_12px_rgba(0,0,0,0.03)] border border-white/60 cursor-pointer active:scale-95 transition-transform">
+          <motion.div
+            variants={itemEntranceVariants}
+            onClick={() => hapticLight()}
+            className="bg-gradient-to-br from-white to-[#f0f8ff] rounded-[24px] p-4 flex flex-col justify-between shadow-[0_2px_12px_rgba(0,0,0,0.03)] border border-white/60 cursor-pointer active:scale-95 transition-transform"
+          >
             <div className="flex justify-between items-start mb-4">
               <img src={orientacaoSvg} alt="Orientação financeira" className="w-[56px] h-[56px] -ml-1 -mt-1" />
               <ChevronRight className="w-5 h-5 text-[#0073ea] mt-1" strokeWidth={2.5} />
@@ -145,7 +155,14 @@ export const ProductsScreen: React.FC<ProductsScreenProps> = ({
 const ListItem = ({ iconSrc, title, onClick, hasNovo }: { iconSrc: string, title: string, onClick?: () => void, hasNovo?: boolean }) => {
   return (
     <div 
-      onClick={onClick}
+      onClick={() => {
+        if (onClick) {
+          hapticMedium();
+          onClick();
+        } else {
+          hapticLight();
+        }
+      }}
       className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-slate-50 active:bg-slate-100 rounded-2xl transition-colors"
     >
       <div className="flex items-center gap-4">

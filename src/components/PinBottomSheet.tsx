@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BottomSheet } from './BottomSheet';
 import { ArrowLeft, X, Eye, EyeOff } from 'lucide-react';
+import { hapticLight, hapticMedium, hapticSelection } from '../utils/haptics';
 
 interface PinBottomSheetProps {
   isOpen: boolean;
@@ -31,12 +32,18 @@ export const PinBottomSheet: React.FC<PinBottomSheetProps> = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, '');
     if (value.length <= 4) {
+      if (value.length > pin.length) {
+        hapticSelection();
+      } else if (value.length < pin.length) {
+        hapticLight();
+      }
       setPin(value);
     }
   };
 
   const handleConfirm = () => {
     if (pin.length === 4) {
+      hapticMedium();
       onSuccess();
     }
   };
@@ -48,12 +55,24 @@ export const PinBottomSheet: React.FC<PinBottomSheetProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-[#e2e8f0]">
           <div className="flex items-center gap-4">
-            <button onClick={onClose} className="text-[#0073ea] active:opacity-70 transition-opacity">
+            <button
+              onClick={() => {
+                hapticLight();
+                onClose();
+              }}
+              className="text-[#0073ea] active:opacity-70 transition-opacity cursor-pointer"
+            >
               <ArrowLeft className="w-5 h-5" strokeWidth={2.5} />
             </button>
             <h2 className="text-[17px] font-bold text-[#233549]">Senha</h2>
           </div>
-          <button onClick={onClose} className="text-[#0073ea] active:opacity-70 transition-opacity">
+          <button
+            onClick={() => {
+              hapticLight();
+              onClose();
+            }}
+            className="text-[#0073ea] active:opacity-70 transition-opacity cursor-pointer"
+          >
             <X className="w-5 h-5" strokeWidth={2.5} />
           </button>
         </div>
@@ -97,9 +116,10 @@ export const PinBottomSheet: React.FC<PinBottomSheetProps> = ({
               type="button"
               onClick={(e) => {
                 e.stopPropagation(); // prevent input focus steal
+                hapticLight();
                 setIsPinVisible(!isPinVisible);
               }}
-              className="ml-2 p-2 text-[#233549] hover:bg-slate-100 rounded-full active:opacity-70 transition-all z-20 relative"
+              className="ml-2 p-2 text-[#233549] hover:bg-slate-100 rounded-full active:opacity-70 transition-all z-20 relative cursor-pointer"
             >
               {isPinVisible ? (
                 <EyeOff className="w-[22px] h-[22px]" strokeWidth={2.5} />

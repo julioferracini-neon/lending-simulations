@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { motion } from 'motion/react';
 import { X, Clock } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { hapticLight, hapticSuccess } from '../utils/haptics';
 
 interface SuccessScreenProps {
   onFinish: () => void;
@@ -9,6 +10,9 @@ interface SuccessScreenProps {
 
 export const SuccessScreen: React.FC<SuccessScreenProps> = ({ onFinish }) => {
   useEffect(() => {
+    // Tactile celebration feedback on loan creation success
+    hapticSuccess();
+
     // Dispara o confete de forma mais realista e comedida (uma única explosão elaborada)
     try {
       const count = 130;
@@ -46,8 +50,11 @@ export const SuccessScreen: React.FC<SuccessScreenProps> = ({ onFinish }) => {
       {/* Top Bar Area */}
       <div className="w-full px-5 pt-12 pb-4 flex justify-end relative z-20">
         <button
-          onClick={onFinish}
-          className="w-10 h-10 rounded-full bg-white text-[#0073ea] flex items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.06)] active:scale-95 transition-transform"
+          onClick={() => {
+            hapticLight();
+            onFinish();
+          }}
+          className="w-10 h-10 rounded-full bg-white text-[#0073ea] flex items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.06)] active:scale-95 transition-transform cursor-pointer"
           aria-label="Fechar"
         >
           <X className="w-5 h-5" strokeWidth={2.5} />
@@ -95,8 +102,11 @@ export const SuccessScreen: React.FC<SuccessScreenProps> = ({ onFinish }) => {
         className="px-5 pb-8 pt-4 w-full bg-transparent"
       >
         <button
-          onClick={onFinish}
-          className="w-full h-[52px] bg-[#0073ea] text-white font-bold text-[16px] rounded-full active:scale-[0.98] transition-transform shadow-sm"
+          onClick={() => {
+            hapticLight();
+            onFinish();
+          }}
+          className="w-full h-[52px] bg-[#0073ea] text-white font-bold text-[16px] rounded-full active:scale-[0.98] transition-transform shadow-sm cursor-pointer"
         >
           Concluir
         </button>

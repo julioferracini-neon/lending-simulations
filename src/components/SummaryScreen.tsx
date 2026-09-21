@@ -3,6 +3,7 @@ import { ArrowLeft, HelpCircle, Shield, ChevronRight, Info, AlertTriangle, Check
 import { motion } from 'motion/react';
 import { type LoanSimulationData } from './LoanSimulationScreen';
 import { formatCurrency, formatDatePtBR, getDefaultFirstDueDate, calculateLoanSimulation, BASE_MONTHLY_RATE } from '../utils/finance';
+import { hapticLight, hapticMedium, hapticSelection } from '../utils/haptics';
 import { PinBottomSheet } from './PinBottomSheet';
 import { BottomSheet } from './BottomSheet';
 import { RouletteOdometer } from './RouletteOdometer';
@@ -95,8 +96,11 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
         <div className="flex items-center gap-3.5">
           <button
             type="button"
-            onClick={onBack}
-            className="text-[#0073ea] active:opacity-70 transition-opacity flex items-center justify-center"
+            onClick={() => {
+              hapticLight();
+              onBack?.();
+            }}
+            className="text-[#0073ea] active:opacity-70 transition-opacity flex items-center justify-center cursor-pointer"
             aria-label="Voltar"
           >
             <ArrowLeft className="w-6 h-6" strokeWidth={2.5} />
@@ -109,7 +113,8 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
 
         <button
           type="button"
-          className="text-[#0073ea] active:opacity-70 transition-opacity flex items-center justify-center"
+          onClick={() => hapticLight()}
+          className="text-[#0073ea] active:opacity-70 transition-opacity flex items-center justify-center cursor-pointer"
           aria-label="Ajuda"
         >
           <HelpCircle className="w-[22px] h-[22px]" strokeWidth={2.5} />
@@ -172,7 +177,10 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
             
             {/* Valor solicitado */}
             <div
-              onClick={onEditAmount}
+              onClick={() => {
+                hapticLight();
+                onEditAmount?.();
+              }}
               className="px-5 py-4 border-b border-[#e2e8f0] flex items-center justify-between cursor-pointer active:bg-slate-50 transition-colors"
             >
               <div>
@@ -185,9 +193,10 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
+                  hapticLight();
                   onEditAmount?.();
                 }}
-                className="text-[#0073ea] p-1 -mr-1 hover:opacity-80 active:scale-95 transition-all flex items-center justify-center"
+                className="text-[#0073ea] p-1 -mr-1 hover:opacity-80 active:scale-95 transition-all flex items-center justify-center cursor-pointer"
                 aria-label="Editar valor solicitado"
               >
                 <EditFilledIcon className="w-[18px] h-[18px]" />
@@ -196,7 +205,10 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
 
             {/* Parcelamento escolhido */}
             <div
-              onClick={onEditInstallments}
+              onClick={() => {
+                hapticLight();
+                onEditInstallments?.();
+              }}
               className="px-5 py-4 border-b border-[#e2e8f0] flex items-center justify-between cursor-pointer active:bg-slate-50 transition-colors"
             >
               <div>
@@ -209,9 +221,10 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
+                  hapticLight();
                   onEditInstallments?.();
                 }}
-                className="text-[#0073ea] p-1 -mr-1 hover:opacity-80 active:scale-95 transition-all flex items-center justify-center"
+                className="text-[#0073ea] p-1 -mr-1 hover:opacity-80 active:scale-95 transition-all flex items-center justify-center cursor-pointer"
                 aria-label="Editar parcelamento escolhido"
               >
                 <EditFilledIcon className="w-[18px] h-[18px]" />
@@ -220,7 +233,10 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
 
             {/* Primeiro vencimento */}
             <div
-              onClick={onEditDueDate}
+              onClick={() => {
+                hapticLight();
+                onEditDueDate?.();
+              }}
               className="px-5 py-4 border-b border-[#e2e8f0] flex items-center justify-between cursor-pointer active:bg-slate-50 transition-colors"
             >
               <div>
@@ -233,9 +249,10 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
+                  hapticLight();
                   onEditDueDate?.();
                 }}
-                className="text-[#0073ea] p-1 -mr-1 hover:opacity-80 active:scale-95 transition-all flex items-center justify-center"
+                className="text-[#0073ea] p-1 -mr-1 hover:opacity-80 active:scale-95 transition-all flex items-center justify-center cursor-pointer"
                 aria-label="Editar primeiro vencimento"
               >
                 <EditFilledIcon className="w-[18px] h-[18px]" />
@@ -354,7 +371,10 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
             </div>
 
             <button
-              onClick={() => setIsLoanDetailsModalOpen(true)}
+              onClick={() => {
+                hapticLight();
+                setIsLoanDetailsModalOpen(true);
+              }}
               className="w-full px-5 py-4 flex items-center justify-between cursor-pointer active:bg-slate-50 transition-colors"
             >
               <span className="text-[14px] font-bold text-[#0073ea]">Detalhes dos custos</span>
@@ -370,8 +390,11 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
           Ao contratar, você aceita os <a href="#" className="text-[#0073ea] font-bold underline-offset-2 hover:underline">Termos de Uso</a> e <a href="#" className="text-[#0073ea] font-bold underline-offset-2 hover:underline">autoriza a cobrança da proteção</a> e débito na conta Neo do valor total ou parcial das parcelas no dia do vencimento ou após
         </p>
         <button
-          onClick={() => setIsPinModalOpen(true)}
-          className="w-full h-[52px] bg-[#0073ea] text-white font-bold text-[16px] rounded-full active:scale-[0.98] transition-transform shadow-sm"
+          onClick={() => {
+            hapticMedium();
+            setIsPinModalOpen(true);
+          }}
+          className="w-full h-[52px] bg-[#0073ea] text-white font-bold text-[16px] rounded-full active:scale-[0.98] transition-transform shadow-sm cursor-pointer"
         >
           Contratar empréstimo
         </button>
