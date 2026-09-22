@@ -59,7 +59,7 @@ export const PortalScreen: React.FC<PortalScreenProps> = ({ onNavigateHome }) =>
             </div>
           </div>
           <p className="text-slate-500 text-sm leading-relaxed pr-8">
-            Product Vision de Personal Loan com "Encontre seu Produto" e nova proposta de "Simulador".
+            Product Vision de Personal Loan: como usuário contrata Empréstimo Pessoal através do Hub "Encontre seu Produto" que concentra os produtos disponíveis. Jornada possui nova proposta de "Simulador".
           </p>
         </button>
       </motion.div>

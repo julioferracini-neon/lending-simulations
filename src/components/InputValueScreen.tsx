@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, type Variants } from 'motion/react';
+import { motion, useAnimation, type Variants } from 'motion/react';
 import { X, AlertCircle } from 'lucide-react';
 import { TopNavBar } from './TopNavBar';
 import { BottomSheet } from './BottomSheet';
@@ -49,6 +49,8 @@ export const InputValueScreen: React.FC<InputValueScreenProps> = ({
   onBack,
 }) => {
   const [isExitSheetOpen, setIsExitSheetOpen] = useState(false);
+  const controls = useAnimation();
+  
   // Amount represented in cents for precision currency input (starts empty at 0 if no initial amount)
   const [cents, setCents] = useState<number>(() => {
     if (initialAmount && initialAmount > 0) {
@@ -152,15 +154,16 @@ export const InputValueScreen: React.FC<InputValueScreenProps> = ({
             {/* Pill Input Container matching Figma */}
             <motion.div
               onClick={handleContainerClick}
-              className={`w-full rounded-full border transition-all bg-white px-5 py-3.5 flex items-center justify-between cursor-text ${
+              className={`w-full rounded-full border transition-colors bg-white px-5 py-3.5 flex items-center justify-between cursor-text ${
                 isOverLimit || isBelowMin
                   ? 'border-red-400 ring-2 ring-red-100'
                   : 'border-[#c5d5e8] hover:border-blue-400 focus-within:border-[#0073e6] focus-within:ring-2 focus-within:ring-blue-100'
               }`}
             >
-              <div className="flex-1 flex items-center">
+              <div className="flex-1 relative h-[28px] overflow-hidden flex items-center">
                 {/* Hidden native input maintaining focus and accessibility */}
-                <input
+                <motion.input
+                  animate={controls}
                   ref={inputRef}
                   id="loan-amount-input"
                   type="text"
@@ -168,7 +171,7 @@ export const InputValueScreen: React.FC<InputValueScreenProps> = ({
                   value={cents > 0 ? formatCurrency(currentAmount) : ''}
                   onChange={handleInputChange}
                   placeholder="Ex.: R$ 3.000,00"
-                  className="w-full bg-transparent outline-hidden text-[#142742] text-[17px] sm:text-lg font-bold placeholder:text-[#94a3b8] placeholder:font-normal"
+                  className="absolute inset-0 w-full h-full bg-transparent outline-hidden text-[#142742] text-[17px] sm:text-lg font-bold placeholder:text-[#94a3b8] placeholder:font-normal leading-[28px]"
                 />
               </div>
 
@@ -216,7 +219,35 @@ export const InputValueScreen: React.FC<InputValueScreenProps> = ({
                   type="button"
                   onClick={() => {
                     hapticLight();
-                    setCents(val * 100);
+                    const newVal = val * 100;
+                    if (newVal === cents) return;
+                    
+                    const isUp = newVal > cents;
+                    const offset = 24;
+
+                    const animateRoulette = async () => {
+                      // Slide out old value
+                      await controls.start({
+                        y: isUp ? -offset : offset,
+                        opacity: 0,
+                        transition: { duration: 0.15, ease: 'easeIn' }
+                      });
+                      
+                      // Swap value
+                      setCents(newVal);
+                      
+                      // Teleport instantly to opposite side
+                      controls.set({ y: isUp ? offset : -offset });
+                      
+                      // Slide in new value
+                      controls.start({
+                        y: 0,
+                        opacity: 1,
+                        transition: { duration: 0.3, ease: 'easeOut' }
+                      });
+                    };
+                    
+                    animateRoulette();
                   }}
                   className="px-4 py-2 shrink-0 rounded-full border border-[#E1E6F5] bg-white text-[#2D3342] font-semibold text-[13px] whitespace-nowrap hover:bg-[#F5FAFF] hover:border-[#0078D9] hover:text-[#0078D9] active:scale-95 transition-all"
                 >
