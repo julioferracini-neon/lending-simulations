@@ -15,7 +15,9 @@ import { SuccessScreen } from './components/SuccessScreen';
 import { ProductsScreen } from './components/ProductsScreen';
 import { hapticLight, hapticMedium, hapticSuccess } from './utils/haptics';
 
-// Smooth ease-out curve for native mobile push transition
+import { FlowStep } from './router/steps';
+import { getInitialFlowState, useUrlSyncedFlow } from './router/useUrlSyncedFlow';
+
 const SILKY_EASE_OUT = [0.16, 1, 0.3, 1] as const;
 
 const screenPushVariants: Variants = {
@@ -42,14 +44,24 @@ const screenPushVariants: Variants = {
 };
 
 export default function App() {
-  const [currentStep, setCurrentStep] = useState<
-    'products' | 'loan_hub' | 'input_value' | 'simulation' | 'proposal_loading' | 'summary' | 'success'
-  >('products');
-  // Starts empty (null) on first visit; persists once the user enters an amount in this session
-  const [sessionAmount, setSessionAmount] = useState<number | null>(null);
-  const [loanAmount, setLoanAmount] = useState<number>(2000);
-  const [simulationData, setSimulationData] = useState<LoanSimulationData | null>(null);
-  const [direction, setDirection] = useState<number>(1);
+  const [currentStep, setCurrentStep] = useState<FlowStep>(() => getInitialFlowState().step);
+  const [sessionAmount, setSessionAmount] = useState<number | null>(() => getInitialFlowState().sessionAmount);
+  const [loanAmount, setLoanAmount] = useState<number>(() => getInitialFlowState().loanAmount);
+  const [simulationData, setSimulationData] = useState<LoanSimulationData | null>(() => getInitialFlowState().simulationData);
+  const [direction, setDirection] = useState<number>(() => getInitialFlowState().direction);
+
+  useUrlSyncedFlow({
+    step: currentStep,
+    setStep: setCurrentStep,
+    sessionAmount,
+    setSessionAmount,
+    loanAmount,
+    setLoanAmount,
+    simulationData,
+    setSimulationData,
+    direction,
+    setDirection,
+  });
 
   const handleSelectLoansFromProducts = () => {
     hapticMedium();
