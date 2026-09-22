@@ -62,6 +62,9 @@ export const EditMonthlyInstallmentModal: React.FC<EditMonthlyInstallmentModalPr
 
   const currentSelected = availablePlans.find((p) => p.installments === selectedPlanInstallments) || availablePlans[0];
 
+  // Configuração reversível: mude para true caso queira reexibir o bloco "Opção selecionada"
+  const SHOW_SELECTED_HERO = false;
+
   return (
     <BottomSheet
       isOpen={isOpen}
@@ -70,29 +73,31 @@ export const EditMonthlyInstallmentModal: React.FC<EditMonthlyInstallmentModalPr
       maxHeightClass="max-h-[90vh]"
       id="edit-monthly-installment-sheet"
     >
-      <div className="space-y-6 pt-2">
-        {/* Main Selection Tile matching main screen theme */}
-        <div className="flex flex-col items-center justify-center py-4">
-          <span className="text-[13px] font-medium text-[#5a738e] mb-1">
-            Opção selecionada
-          </span>
-          <div className="text-[32px] font-bold text-[#142742] tracking-tight mb-2">
-            <RouletteOdometer
-              value={currentSelected.monthlyPmt}
-              prefix="R$ "
-              motionDuration={380}
-            />
+      <div className="space-y-4 pt-1">
+        {/* Bloco de resumo da opção selecionada (Reversível) */}
+        {SHOW_SELECTED_HERO && (
+          <div className="flex flex-col items-center justify-center py-4">
+            <span className="text-[13px] font-medium text-[#5a738e] mb-1">
+              Opção selecionada
+            </span>
+            <div className="text-[32px] font-bold text-[#142742] tracking-tight mb-2">
+              <RouletteOdometer
+                value={currentSelected.monthlyPmt}
+                prefix="R$ "
+                motionDuration={380}
+              />
+            </div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#f1f5f9] text-[#142742] text-xs font-semibold">
+              <span>{currentSelected.installments}x mensais</span>
+              <span className="text-slate-300">•</span>
+              <span>Total: {formatCurrency(currentSelected.totalCost)}</span>
+            </div>
           </div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#f1f5f9] text-[#142742] text-xs font-semibold">
-            <span>{currentSelected.installments}x mensais</span>
-            <span className="text-slate-300">•</span>
-            <span>Total: {formatCurrency(currentSelected.totalCost)}</span>
-          </div>
-        </div>
+        )}
 
         {/* 2 Columns x 12 Rows Grid with All 24 Options */}
         <div>
-          <label className="text-[13px] font-medium text-[#5a738e] block mb-3 px-1">
+          <label className="text-[13px] font-medium text-[#5a738e] block mb-2.5 px-1">
             Todas as opções de prazo
           </label>
 

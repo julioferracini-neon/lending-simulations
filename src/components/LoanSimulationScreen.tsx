@@ -166,7 +166,7 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
         {/* Subtitle / Metadata Summary Row with Tabular Numbers */}
         <motion.div
           variants={itemEntranceVariants}
-          className="flex items-center justify-between text-[15px] py-1"
+          className="flex items-center justify-between text-[15px] py-1 mx-2"
         >
           {/* Requested Amount (Interactive Bottom Sheet Trigger) */}
           <button
@@ -204,53 +204,36 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
           variants={itemEntranceVariants}
           className="bg-[#f8fafd] rounded-[24px] p-5 sm:p-6 border border-[#e2edf7] relative overflow-hidden"
         >
-          {/* Top Row: Label + Installments Pill */}
+          {/* Top Row: Label */}
           <div className="flex items-center justify-between">
-            <button
-              type="button"
-              onClick={() => setIsMonthlyModalOpen(true)}
-              className="group flex items-center gap-1 text-[15px] font-normal text-[#4b6076] hover:text-[#1b3248] transition-colors cursor-pointer"
-            >
-              <span>Valor da parcela mensal</span>
-            </button>
-
-            {/* Pill matching prototype: vibrant cyan-blue background with dark navy text */}
-            <motion.button
-              type="button"
-              onClick={() => setIsMonthlyModalOpen(true)}
-              key={delayedInstallmentsPrimary}
-              initial={{ scale: 1 }}
-              animate={{
-                scale: [1, 1.05, 0.99, 1],
-              }}
-              transition={{
-                duration: 0.46,
-                delay: 0.12, // 120ms de delay no pulse
-                ease: [0.25, 1, 0.5, 1], // curva de aceleração e desaceleração suave
-              }}
-              className="hidden bg-[#00b2fe] hover:bg-[#00a2ea] active:scale-95 text-[#083863] text-[13px] font-semibold px-3.5 py-1 rounded-full shadow-xs text-center tabular-nums cursor-pointer transition-colors select-none"
-            >
-              {delayedInstallmentsPrimary} parcelas
-            </motion.button>
+            <span className="text-[15px] font-normal text-[#4b6076]">
+              Valor da parcela mensal
+            </span>
           </div>
 
-          {/* Huge Installment Amount */}
+          {/* Installment Amount with Unfold Indicator */}
           <button
             type="button"
-            onClick={() => setIsMonthlyModalOpen(true)}
-            className="group w-full text-left h-12 flex items-center my-3 cursor-pointer focus:outline-none"
+            onClick={() => {
+              hapticLight();
+              setIsMonthlyModalOpen(true);
+            }}
+            className="group inline-flex items-center my-1.5 cursor-pointer focus:outline-none select-none text-left"
             aria-label="Editar valor da parcela mensal"
           >
             <RouletteOdometer
               value={primarySimulation.monthlyInstallment}
               prefix="R$ "
               motionDuration={400}
-              className="text-[38px] sm:text-[42px] font-black text-[#173049] group-hover:text-[#007fe8] transition-colors tracking-tight leading-none"
+              className="text-[34px] sm:text-[36px] font-black text-[#142742] tracking-tight leading-none"
             />
-            {/* HIDDEN: Tag 'Editar' escondida para limpeza visual */}
-            <span className="hidden ml-2.5 opacity-0 group-hover:opacity-100 transition-opacity text-xs font-semibold text-blue-600 bg-white/90 px-2 py-0.5 rounded-md border border-blue-100 shadow-xs">
-              Editar
-            </span>
+            <div className="w-10 h-10 flex items-center justify-center shrink-0">
+              <img 
+                src="/assets/nav-unfold.svg" 
+                alt="Alterar parcelas" 
+                className="w-10 h-10 select-none pointer-events-none group-hover:scale-105 active:scale-95 transition-transform" 
+              />
+            </div>
           </button>
 
           {/* Delicate separator inside card */}
