@@ -14,6 +14,7 @@ import { SummaryScreen } from './components/SummaryScreen';
 import { SuccessScreen } from './components/SuccessScreen';
 import { ProductsScreen } from './components/ProductsScreen';
 import { GlobalHomeScreen } from './components/GlobalHomeScreen';
+import { PortalScreen } from './components/PortalScreen';
 import { hapticLight, hapticMedium, hapticSuccess } from './utils/haptics';
 
 import { FlowStep } from './router/steps';
@@ -63,6 +64,12 @@ export default function App() {
     direction,
     setDirection,
   });
+
+  const handleSelectGlobalHomeFromPortal = () => {
+    hapticMedium();
+    setDirection(1);
+    setCurrentStep('global_home');
+  };
 
   const handleSelectProducts = () => {
     hapticMedium();
@@ -165,6 +172,20 @@ export default function App() {
     <MobileFrame statusBarBg="bg-transparent">
       <div className="w-full flex-1 min-h-0 flex flex-col relative overflow-hidden bg-[#f0f6fc]">
         <AnimatePresence mode="wait" custom={direction} initial={false}>
+          {currentStep === 'portal' && (
+            <motion.div
+              key="portal"
+              custom={direction}
+              variants={screenPushVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="absolute inset-0 z-0 bg-white"
+            >
+              <PortalScreen onNavigateHome={handleSelectGlobalHomeFromPortal} />
+            </motion.div>
+          )}
+
           {currentStep === 'global_home' && (
             <motion.div
               key="global_home"

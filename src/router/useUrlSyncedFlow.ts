@@ -13,8 +13,8 @@ export interface FlowState {
 
 export function getInitialFlowState(): FlowState {
   const pathname = window.location.pathname;
-  // Se for a raiz, redirecionamos internamente para global_home, ou se bater, usamos.
-  const step = pathname === '/' ? 'global_home' : (pathToStep[pathname] || 'global_home');
+  // Se for a raiz, redirecionamos para o portal, ou se não encontrar, default portal
+  const step = pathToStep[pathname] || 'portal';
 
   const state = window.history.state as Partial<FlowState> | null;
 
@@ -102,7 +102,7 @@ export function useUrlSyncedFlow({
       isPopState.current = true;
       
       const pathname = window.location.pathname;
-      const newStep = pathname === '/' ? 'global_home' : (pathToStep[pathname] || 'global_home');
+      const newStep = pathToStep[pathname] || 'portal';
       
       setDirection(-1);
       setStep(newStep);
