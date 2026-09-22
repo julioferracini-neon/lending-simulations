@@ -163,10 +163,11 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
 
         {/* Main Scrollable Content */}
         <main className="px-5 pt-2 pb-28 space-y-4">
-        {/* Subtitle / Metadata Summary Row with Tabular Numbers */}
+        
+        {/* Requested Amount Block */}
         <motion.div
           variants={itemEntranceVariants}
-          className="flex items-center justify-between text-[15px] py-1 mx-2"
+          className="flex justify-between items-center mb-2 mt-2 px-2"
         >
           {/* Requested Amount (Interactive Bottom Sheet Trigger) */}
           <button
@@ -175,9 +176,9 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
               hapticLight();
               setIsAmountModalOpen(true);
             }}
-            className="group flex items-center gap-1.5 text-left cursor-pointer hover:opacity-80 transition-opacity"
+            className="flex items-center gap-1.5 active:opacity-70 transition-opacity"
           >
-            <span className="font-semibold text-[#1b3248] text-[18px] transition-colors tabular-nums">
+            <span className="font-bold text-[#142742] text-[18px]">
               {formatCurrency(loanAmount)}
             </span>
           </button>
@@ -191,8 +192,8 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
             }}
             className="flex items-center gap-1.5 text-right cursor-pointer hover:opacity-80 transition-opacity"
           >
-            <span className="text-[#4b6076] font-normal">Taxa:</span>
-            <span className="font-semibold text-[#1b3248] tabular-nums">
+            <span className="text-[#4b6076] font-normal text-[15px]">Taxa:</span>
+            <span className="font-bold text-[#1b3248] text-[15px] tabular-nums">
               3,49% a.m.
             </span>
           </button>

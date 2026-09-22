@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useAnimation, type Variants } from 'motion/react';
-import { X, AlertCircle } from 'lucide-react';
+import { X, AlertCircle, Check } from 'lucide-react';
 import { TopNavBar } from './TopNavBar';
 import { BottomSheet } from './BottomSheet';
 import { formatCurrency } from '../utils/finance';
@@ -49,6 +49,7 @@ export const InputValueScreen: React.FC<InputValueScreenProps> = ({
   onBack,
 }) => {
   const [isExitSheetOpen, setIsExitSheetOpen] = useState(false);
+  const [isDataprevChecked, setIsDataprevChecked] = useState(true);
   const controls = useAnimation();
   
   // Amount represented in cents for precision currency input (starts empty at 0 if no initial amount)
@@ -80,7 +81,7 @@ export const InputValueScreen: React.FC<InputValueScreenProps> = ({
   const currentAmount = cents / 100;
   const isOverLimit = currentAmount > availableLimit;
   const isBelowMin = currentAmount > 0 && currentAmount < 100;
-  const isValid = currentAmount >= 100 && currentAmount <= availableLimit;
+  const isValid = currentAmount >= 100 && currentAmount <= availableLimit && isDataprevChecked;
 
   // Handle typing numbers (Brazilian currency mask)
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -275,8 +276,27 @@ export const InputValueScreen: React.FC<InputValueScreenProps> = ({
         {/* Sticky Bottom Action Bar with Smooth Gradient Backdrop */}
         <motion.footer
           variants={itemEntranceVariants}
-          className="fixed sm:absolute bottom-0 inset-x-0 p-5 bg-gradient-to-t from-white via-white/95 to-transparent pt-6 z-20"
+          className="fixed sm:absolute bottom-0 inset-x-0 p-5 bg-gradient-to-t from-white via-white/95 to-transparent pt-6 z-20 flex flex-col gap-4"
         >
+          {/* Dataprev Checkbox */}
+          <div 
+            className="flex items-start gap-3 cursor-pointer select-none" 
+            onClick={() => {
+              hapticLight();
+              setIsDataprevChecked(!isDataprevChecked);
+            }}
+          >
+            <div className={`w-5 h-5 shrink-0 rounded flex items-center justify-center border transition-colors mt-0.5 ${isDataprevChecked ? 'bg-[#0073e6] border-[#0073e6]' : 'border-slate-300 bg-white'}`}>
+              {isDataprevChecked && <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />}
+            </div>
+            <p className="text-[13px] leading-tight text-[#475569]">
+              Autorizo a Neon a consultar meus dados na Dataprev.{' '}
+              <a href="#" onClick={(e) => { e.preventDefault(); e.stopPropagation(); hapticLight(); }} className="text-[#0073e6] underline decoration-1 underline-offset-2 font-medium">
+                Termos do Crédito do Trabalhador
+              </a>
+            </p>
+          </div>
+
           <motion.button
             type="button"
             onClick={() => {

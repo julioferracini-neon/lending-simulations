@@ -218,7 +218,7 @@ export const LoanHubScreen: React.FC<LoanHubScreenProps> = ({
           className="text-center px-3 pt-7 pb-4"
         >
           <p className="text-[12px] text-[#475569] leading-relaxed">
-            Eu autorizo a Neon a consultar meus dados na Dataprev, saiba sobre os{' '}
+            Eu autorizo a Neon a consultar meus dados na Dataprev,{' '}
             <span className="underline text-[#0073e6] cursor-pointer hover:text-blue-700">
               Termos do Crédito do Trabalhador
             </span>
