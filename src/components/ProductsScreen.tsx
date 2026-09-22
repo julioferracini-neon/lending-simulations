@@ -25,6 +25,7 @@ import { TopNavBar } from './TopNavBar';
 
 interface ProductsScreenProps {
   onSelectLoans: () => void;
+  onSelectHome: () => void;
 }
 
 const SILKY_EASE = [0.22, 1, 0.36, 1] as const;
@@ -57,6 +58,7 @@ const itemEntranceVariants: Variants = {
 
 export const ProductsScreen: React.FC<ProductsScreenProps> = ({
   onSelectLoans,
+  onSelectHome,
 }) => {
   return (
     <motion.div
@@ -136,6 +138,29 @@ export const ProductsScreen: React.FC<ProductsScreenProps> = ({
           {/* We place a blurry pill exactly where the nav bar sits within the SVG to create the glass effect */}
           <div className="absolute top-[38px] left-[43px] right-[43px] h-[68px] bg-white/50 backdrop-blur-md rounded-[16px] pointer-events-none"></div>
           <img src={bottomNavSvg} alt="Bottom Navigation" className="w-full pointer-events-auto relative z-10" />
+
+          {/* Clickable Overlay Hotspots */}
+          {/* Menu layout: Início, Cartão, Pix, Investir, Produtos */}
+          <div className="absolute inset-0 z-20 pointer-events-auto flex items-end">
+            <div className="w-full h-[68px] flex">
+              <button 
+                onClick={() => {
+                  hapticMedium();
+                  onSelectHome();
+                }} 
+                className="flex-1 h-full cursor-pointer focus:outline-none" 
+                aria-label="Início" 
+              />
+              <button className="flex-1 h-full cursor-default focus:outline-none" />
+              <button className="flex-1 h-full cursor-default focus:outline-none" />
+              <button className="flex-1 h-full cursor-default focus:outline-none" />
+              <button 
+                onClick={() => hapticLight()} 
+                className="flex-1 h-full cursor-pointer focus:outline-none" 
+                aria-label="Produtos" 
+              />
+            </div>
+          </div>
         </div>
       </div>
     </motion.div>

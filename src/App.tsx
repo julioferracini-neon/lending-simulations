@@ -13,6 +13,7 @@ import { ProposalLoadingScreen } from './components/ProposalLoadingScreen';
 import { SummaryScreen } from './components/SummaryScreen';
 import { SuccessScreen } from './components/SuccessScreen';
 import { ProductsScreen } from './components/ProductsScreen';
+import { GlobalHomeScreen } from './components/GlobalHomeScreen';
 import { hapticLight, hapticMedium, hapticSuccess } from './utils/haptics';
 
 import { FlowStep } from './router/steps';
@@ -62,6 +63,18 @@ export default function App() {
     direction,
     setDirection,
   });
+
+  const handleSelectProducts = () => {
+    hapticMedium();
+    setDirection(1);
+    setCurrentStep('products');
+  };
+
+  const handleSelectHome = () => {
+    hapticMedium();
+    setDirection(-1);
+    setCurrentStep('global_home');
+  };
 
   const handleSelectLoansFromProducts = () => {
     hapticMedium();
@@ -151,8 +164,22 @@ export default function App() {
   return (
     <MobileFrame statusBarBg="bg-transparent">
       <div className="w-full flex-1 min-h-0 flex flex-col relative overflow-hidden bg-[#f0f6fc]">
-        <AnimatePresence mode="popLayout" custom={direction} initial={false}>
-          {currentStep === 'products' ? (
+        <AnimatePresence mode="wait" custom={direction} initial={false}>
+          {currentStep === 'global_home' && (
+            <motion.div
+              key="global_home"
+              custom={direction}
+              variants={screenPushVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="absolute inset-0 z-0 bg-white"
+            >
+              <GlobalHomeScreen onSelectProducts={handleSelectProducts} />
+            </motion.div>
+          )}
+
+          {currentStep === 'products' && (
             <motion.div
               key="products"
               custom={direction}
@@ -160,11 +187,13 @@ export default function App() {
               initial="enter"
               animate="center"
               exit="exit"
-              className="w-full h-full flex flex-col flex-1 min-h-0 overflow-hidden"
+              className="absolute inset-0 z-0 bg-white"
             >
-              <ProductsScreen onSelectLoans={handleSelectLoansFromProducts} />
+              <ProductsScreen onSelectLoans={handleSelectLoansFromProducts} onSelectHome={handleSelectHome} />
             </motion.div>
-          ) : currentStep === 'loan_hub' ? (
+          )}
+
+          {currentStep === 'loan_hub' && (
             <motion.div
               key="loan_hub"
               custom={direction}
@@ -172,7 +201,7 @@ export default function App() {
               initial="enter"
               animate="center"
               exit="exit"
-              className="w-full h-full flex flex-col flex-1 min-h-0 overflow-hidden"
+              className="absolute inset-0 z-0 bg-white"
             >
               <LoanHubScreen
                 maxPersonalLimit={10000}
@@ -180,7 +209,9 @@ export default function App() {
                 onBack={handleBackToProducts}
               />
             </motion.div>
-          ) : currentStep === 'input_value' ? (
+          )}
+          
+          {currentStep === 'input_value' && (
             <motion.div
               key="input_value"
               custom={direction}
@@ -200,7 +231,9 @@ export default function App() {
                 }}
               />
             </motion.div>
-          ) : currentStep === 'simulation' ? (
+          )}
+
+          {currentStep === 'simulation' && (
             <motion.div
               key="simulation"
               custom={direction}
@@ -222,7 +255,9 @@ export default function App() {
                 onContinueProposal={handleContinueProposal}
               />
             </motion.div>
-          ) : currentStep === 'proposal_loading' ? (
+          )}
+
+          {currentStep === 'proposal_loading' && (
             <motion.div
               key="proposal_loading"
               custom={direction}
@@ -234,7 +269,9 @@ export default function App() {
             >
               <ProposalLoadingScreen onComplete={handleLoadingComplete} />
             </motion.div>
-          ) : currentStep === 'summary' ? (
+          )}
+
+          {currentStep === 'summary' && (
             <motion.div
               key="summary"
               custom={direction}
@@ -255,7 +292,9 @@ export default function App() {
                 onContract={handleSuccess}
               />
             </motion.div>
-          ) : (
+          )}
+
+          {currentStep === 'success' && (
             <motion.div
               key="success"
               custom={direction}

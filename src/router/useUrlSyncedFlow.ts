@@ -13,8 +13,8 @@ export interface FlowState {
 
 export function getInitialFlowState(): FlowState {
   const pathname = window.location.pathname;
-  // Se for a raiz, redirecionamos internamente para products, ou se bater, usamos.
-  const step = pathname === '/' ? 'products' : (pathToStep[pathname] || 'products');
+  // Se for a raiz, redirecionamos internamente para global_home, ou se bater, usamos.
+  const step = pathname === '/' ? 'global_home' : (pathToStep[pathname] || 'global_home');
 
   const state = window.history.state as Partial<FlowState> | null;
 
@@ -102,7 +102,7 @@ export function useUrlSyncedFlow({
       isPopState.current = true;
       
       const pathname = window.location.pathname;
-      const newStep = pathname === '/' ? 'products' : (pathToStep[pathname] || 'products');
+      const newStep = pathname === '/' ? 'global_home' : (pathToStep[pathname] || 'global_home');
       
       setDirection(-1);
       setStep(newStep);

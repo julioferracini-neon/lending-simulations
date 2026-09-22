@@ -57,12 +57,12 @@ export const MobileFrame: React.FC<MobileFrameProps> = ({ children, statusBarBg 
         } bg-white flex flex-col relative h-[100dvh]`}
       >
         {/* Native Android Status Bar */}
-        <div className={`${statusBarBg} shrink-0 transition-colors duration-300`}>
+        <div className={`absolute top-0 inset-x-0 z-50 ${statusBarBg} transition-colors duration-300 pointer-events-none`}>
           <StatusBar time="9:30" showPunchHole={viewMode === 'mobile'} />
         </div>
 
         {/* Screen Content with min-h-0 so internal overflow-y-auto functions correctly */}
-        <div className="flex-1 min-h-0 flex flex-col relative overflow-hidden bg-white">
+        <div className="flex-1 min-h-0 flex flex-col relative overflow-hidden">
           {children}
         </div>
 

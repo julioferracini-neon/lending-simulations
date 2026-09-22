@@ -24,7 +24,7 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
   variants,
   variant = 'default',
 }) => {
-  // Products variant uses pt-8 pb-4 and larger title
+  // Products variant uses pt-[72px] pb-4 and larger title (originally pt-8 which is 32px + 40px = 72px)
   const isProducts = variant === 'products';
   // Summary variant uses smaller gap and tighter button styling
   const isSummary = variant === 'summary';
@@ -33,7 +33,7 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
     <motion.header
       variants={variants}
       style={{ WebkitBackdropFilter: 'blur(16px)', backdropFilter: 'blur(16px)' }}
-      className={`w-full px-5 ${isProducts ? 'pt-8 pb-4' : 'pt-3 pb-3'} flex items-center justify-between shrink-0 sticky top-0 bg-transparent backdrop-blur-md z-30`}
+      className={`w-full px-5 ${isProducts ? 'pt-[72px] pb-4' : 'pt-[52px] pb-3'} flex items-center justify-between shrink-0 sticky top-0 bg-transparent backdrop-blur-md z-30`}
     >
       <div className={`flex items-center ${isSummary ? 'gap-3.5' : 'gap-2'}`}>
         {showBack && (
