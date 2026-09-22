@@ -146,7 +146,7 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
       {/* Scrollable Container with sticky TopNavBar */}
       <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
         <TopNavBar 
-          title="Plano de Pagamento" 
+          title="Empréstimo pessoal" 
           showBack={true} 
           onBack={() => {
             hapticLight();
@@ -177,8 +177,7 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
             }}
             className="group flex items-center gap-1.5 text-left cursor-pointer hover:opacity-80 transition-opacity"
           >
-            <span className="text-[#4b6076] font-normal">Solicitado:</span>
-            <span className="font-semibold text-[#1b3248] transition-colors tabular-nums">
+            <span className="font-semibold text-[#1b3248] text-[18px] transition-colors tabular-nums">
               {formatCurrency(loanAmount)}
             </span>
           </button>

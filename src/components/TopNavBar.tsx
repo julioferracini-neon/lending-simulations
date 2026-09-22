@@ -1,11 +1,12 @@
 import React from 'react';
 import { motion, type Variants } from 'motion/react';
-import { ArrowLeft, HelpCircle } from 'lucide-react';
+import { ArrowLeft, HelpCircle, X } from 'lucide-react';
 import { hapticLight } from '../utils/haptics';
 
 interface TopNavBarProps {
   title: string;
   showBack?: boolean;
+  leftIcon?: 'back' | 'close';
   onBack?: () => void;
   rightAction?: 'help' | 'info' | 'none';
   onRightAction?: () => void;
@@ -18,6 +19,7 @@ interface TopNavBarProps {
 export const TopNavBar: React.FC<TopNavBarProps> = ({
   title,
   showBack = false,
+  leftIcon = 'back',
   onBack,
   rightAction = 'none',
   onRightAction,
@@ -28,6 +30,8 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
   const isProducts = variant === 'products';
   // Summary variant uses smaller gap and tighter button styling
   const isSummary = variant === 'summary';
+
+  const LeftIconComponent = leftIcon === 'close' ? X : ArrowLeft;
 
   return (
     <motion.header
@@ -43,14 +47,14 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
               hapticLight();
               onBack?.();
             }}
-            aria-label="Voltar"
+            aria-label={leftIcon === 'close' ? "Fechar" : "Voltar"}
             className={
               isSummary
                 ? 'text-[#0073ea] active:opacity-70 transition-opacity flex items-center justify-center cursor-pointer'
                 : 'w-10 h-10 rounded-full flex items-center justify-center text-[#0072e6] hover:bg-blue-50 active:scale-90 transition-all cursor-pointer -ml-1'
             }
           >
-            <ArrowLeft className="w-6 h-6" strokeWidth={isSummary ? 2.5 : 2} />
+            <LeftIconComponent className="w-6 h-6" strokeWidth={isSummary ? 2.5 : 2} />
           </button>
         )}
         <h1
