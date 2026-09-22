@@ -8,6 +8,7 @@ import { PinBottomSheet } from './PinBottomSheet';
 import { BottomSheet } from './BottomSheet';
 import { RouletteOdometer } from './RouletteOdometer';
 import { LoanDetailsModal } from './LoanDetailsModal';
+import { TopNavBar } from './TopNavBar';
 
 // Solid filled Material edit icon matching Figma
 const EditFilledIcon: React.FC<{ className?: string }> = ({ className = "w-[18px] h-[18px]" }) => (
@@ -87,46 +88,23 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
   };
 
   return (
-    <div
+    <div 
       className="w-full h-full flex flex-col bg-white overflow-hidden select-none"
       id="summary-screen"
     >
-      {/* App Bar */}
-      <header className="w-full px-5 pt-3 pb-3 flex items-center justify-between shrink-0 sticky top-0 bg-white/70 backdrop-blur-md z-30">
-        <div className="flex items-center gap-3.5">
-          <button
-            type="button"
-            onClick={() => {
-              hapticLight();
-              onBack?.();
-            }}
-            className="text-[#0073ea] active:opacity-70 transition-opacity flex items-center justify-center cursor-pointer"
-            aria-label="Voltar"
-          >
-            <ArrowLeft className="w-6 h-6" strokeWidth={2.5} />
-          </button>
-
-          <h1 className="text-[17px] font-bold text-[#142742] tracking-tight">
-            Resumo da proposta
-          </h1>
-        </div>
-
-        <button
-          type="button"
-          onClick={() => hapticLight()}
-          className="text-[#0073ea] active:opacity-70 transition-opacity flex items-center justify-center cursor-pointer"
-          aria-label="Ajuda"
-        >
-          <HelpCircle className="w-[22px] h-[22px]" strokeWidth={2.5} />
-        </button>
-      </header>
-
       {/* Scrollable Content */}
       <div 
         id="summary-scroll-container"
         className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden bg-white pb-6 relative"
       >
-        
+        <TopNavBar 
+          title="Resumo da proposta" 
+          showBack={true} 
+          onBack={onBack} 
+          rightAction="help" 
+          variant="summary"
+        />
+
         {/* Subtle background gradient behind hero */}
         <div className="absolute top-0 left-0 right-0 h-56 bg-gradient-to-b from-[#f2f8ff] to-white pointer-events-none" />
 

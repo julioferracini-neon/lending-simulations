@@ -3,6 +3,7 @@ import { motion, type Variants } from 'motion/react';
 import { ArrowLeft, AlertCircle, X } from 'lucide-react';
 import { formatCurrency } from '../utils/finance';
 import { hapticLight, hapticMedium, hapticSelection, hapticWarning } from '../utils/haptics';
+import { TopNavBar } from './TopNavBar';
 
 interface InputValueScreenProps {
   initialAmount?: number | null;
@@ -117,33 +118,19 @@ export const InputValueScreen: React.FC<InputValueScreenProps> = ({
       className="w-full h-full flex flex-col flex-1 min-h-0 bg-white relative select-none overflow-hidden"
       id="input-value-screen"
     >
-      {/* Top Navigation Bar */}
-      <motion.header
-        variants={itemEntranceVariants}
-        className="px-5 pt-3 pb-3 flex items-center justify-between sticky top-0 bg-white/70 backdrop-blur-md z-20 shrink-0"
-      >
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => {
-              hapticLight();
-              onBack?.();
-            }}
-            aria-label="Voltar"
-            className="w-10 h-10 rounded-full flex items-center justify-center text-[#0073e6] hover:bg-blue-50 active:scale-90 transition-all cursor-pointer -ml-1"
-          >
-            <ArrowLeft className="w-6 h-6 stroke-[2.2]" />
-          </button>
-          <h1 className="text-[17px] sm:text-lg font-bold text-[#142742] tracking-tight">
-            Empréstimos
-          </h1>
-        </div>
-      </motion.header>
+      {/* Scrollable Container with sticky TopNavBar */}
+      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
+        <TopNavBar 
+          title="Empréstimos" 
+          showBack={true} 
+          onBack={onBack} 
+          variants={itemEntranceVariants} 
+        />
 
-      {/* Main Content Area */}
-      <main className="flex-1 min-h-0 px-5 pt-4 pb-28 overflow-y-auto overscroll-contain">
-        {/* Screen Headline */}
-        <motion.h2
+        {/* Main Content Area */}
+        <main className="px-5 pt-4 pb-28">
+          {/* Screen Headline */}
+          <motion.h2
           variants={itemEntranceVariants}
           className="text-2xl sm:text-[27px] font-bold text-[#142742] tracking-tight leading-snug mb-8"
         >
@@ -232,6 +219,7 @@ export const InputValueScreen: React.FC<InputValueScreenProps> = ({
           </p>
         </motion.div>
       </main>
+      </div>
 
       {/* Sticky Bottom Action Bar with Smooth Gradient Backdrop */}
       <motion.footer

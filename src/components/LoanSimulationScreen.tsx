@@ -11,6 +11,7 @@ import { LoanDetailsModal } from './LoanDetailsModal';
 import { EditAmountModal } from './EditAmountModal';
 import { EditMonthlyInstallmentModal } from './EditMonthlyInstallmentModal';
 import { ProposalSuccessModal } from './ProposalSuccessModal';
+import { TopNavBar } from './TopNavBar';
 
 export interface LoanSimulationData {
   loanAmount: number;
@@ -142,44 +143,26 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
       className="w-full h-full flex flex-col flex-1 min-h-0 bg-white relative select-none overflow-hidden"
       id="loan-simulation-screen"
     >
-      {/* Top App Bar */}
-      <motion.header
-        variants={itemEntranceVariants}
-        className="px-5 pt-3 pb-3 flex items-center justify-between sticky top-0 bg-white/70 backdrop-blur-md z-20 shrink-0"
-      >
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => {
-              hapticLight();
-              if (onBack) onBack();
-              else resetToDefault();
-            }}
-            aria-label="Voltar"
-            className="w-10 h-10 rounded-full flex items-center justify-center text-[#0072e6] hover:bg-blue-50 active:scale-90 transition-all cursor-pointer -ml-1"
-          >
-            <ArrowLeft className="w-6 h-6 stroke-[2]" />
-          </button>
-          <h1 className="text-[17px] sm:text-lg font-bold text-[#142742] tracking-tight">
-            Plano de Pagamento
-          </h1>
-        </div>
-
-        <button
-          type="button"
-          onClick={() => {
+      {/* Scrollable Container with sticky TopNavBar */}
+      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
+        <TopNavBar 
+          title="Plano de Pagamento" 
+          showBack={true} 
+          onBack={() => {
+            hapticLight();
+            if (onBack) onBack();
+            else resetToDefault();
+          }} 
+          rightAction="info"
+          onRightAction={() => {
             hapticLight();
             setIsDetailsModalOpen(true);
           }}
-          aria-label="Informações sobre taxas e CET"
-          className="w-10 h-10 rounded-full flex items-center justify-center text-[#142742] hover:bg-slate-100 active:scale-90 transition-all cursor-pointer"
-        >
-          <Info className="w-6 h-6 stroke-[1.5]" />
-        </button>
-      </motion.header>
+          variants={itemEntranceVariants} 
+        />
 
-      {/* Main Scrollable Content */}
-      <main className="flex-1 min-h-0 px-5 pt-2 pb-28 overflow-y-auto overscroll-contain space-y-4">
+        {/* Main Scrollable Content */}
+        <main className="px-5 pt-2 pb-28 space-y-4">
         {/* Subtitle / Metadata Summary Row with Tabular Numbers */}
         <motion.div
           variants={itemEntranceVariants}
@@ -351,6 +334,7 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
           />
         </motion.div>
       </main>
+      </div>
 
       {/* Sticky Bottom Action Bar with Solid Background */}
       <motion.footer

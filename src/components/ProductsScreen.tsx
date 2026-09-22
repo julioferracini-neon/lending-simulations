@@ -21,6 +21,8 @@ import fgtsSvg from '../assets/menu/Antecipação-FGTS.svg';
 import convidarSvg from '../assets/menu/Convidar-pessoas.svg';
 import openFinanceSvg from '../assets/menu/Open-finance.svg';
 
+import { TopNavBar } from './TopNavBar';
+
 interface ProductsScreenProps {
   onSelectLoans: () => void;
 }
@@ -66,23 +68,12 @@ export const ProductsScreen: React.FC<ProductsScreenProps> = ({
     >
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto pb-32">
-        {/* Header */}
-        <motion.header
-          variants={itemEntranceVariants}
-          className="px-5 pt-8 pb-4 flex items-center justify-between"
-        >
-          <h1 className="text-[22px] font-bold text-[#142742] tracking-tight">
-            Produtos
-          </h1>
-          <button
-            type="button"
-            onClick={() => hapticLight()}
-            className="w-[34px] h-[34px] rounded-full border-[1.5px] border-white/60 bg-white/40 text-[#0073ea] flex items-center justify-center hover:bg-white/60 active:scale-95 transition-all shadow-sm"
-            aria-label="Ajuda"
-          >
-            <HelpCircle className="w-[18px] h-[18px]" strokeWidth={2.5} />
-          </button>
-        </motion.header>
+        <TopNavBar 
+          title="Produtos" 
+          variant="products" 
+          rightAction="help" 
+          variants={itemEntranceVariants} 
+        />
 
         {/* Top Cards */}
         <div className="px-5 grid grid-cols-2 gap-3 mb-6">

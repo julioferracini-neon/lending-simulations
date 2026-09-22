@@ -3,6 +3,7 @@ import { motion, type Variants } from 'motion/react';
 import { ArrowLeft, HelpCircle, ChevronRight } from 'lucide-react';
 import { formatCurrency } from '../utils/finance';
 import { hapticLight, hapticMedium } from '../utils/haptics';
+import { TopNavBar } from './TopNavBar';
 
 interface LoanHubScreenProps {
   maxPersonalLimit?: number;
@@ -33,7 +34,7 @@ const itemEntranceVariants: Variants = {
     y: 0,
     filter: 'blur(0px)',
     transition: {
-      duration: 0.65,
+      duration: 0.6,
       ease: SILKY_EASE,
     },
   },
@@ -52,47 +53,25 @@ export const LoanHubScreen: React.FC<LoanHubScreenProps> = ({
       className="w-full h-full flex flex-col flex-1 min-h-0 bg-white relative select-none overflow-hidden"
       id="loan-hub-screen"
     >
-      {/* Top Navigation Bar */}
-      <motion.header
-        variants={itemEntranceVariants}
-        className="px-5 pt-3 pb-3 flex items-center justify-between sticky top-0 bg-white/70 backdrop-blur-md z-20 shrink-0"
-      >
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => {
-              hapticLight();
-              onBack?.();
-            }}
-            aria-label="Voltar"
-            className="w-10 h-10 rounded-full flex items-center justify-center text-[#0073e6] hover:bg-blue-50 active:scale-90 transition-all cursor-pointer -ml-1"
+      {/* Scrollable Container with sticky TopNavBar */}
+      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
+        <TopNavBar 
+          title="Empréstimos" 
+          showBack={true} 
+          onBack={onBack} 
+          rightAction="help" 
+          variants={itemEntranceVariants} 
+        />
+
+        {/* Main Content Area */}
+        <main className="px-5 pt-2 pb-16">
+          {/* Screen Headline */}
+          <motion.h2
+            variants={itemEntranceVariants}
+            className="text-2xl sm:text-[27px] font-bold text-[#142742] tracking-tight leading-snug mb-5"
           >
-            <ArrowLeft className="w-6 h-6 stroke-[2.2]" />
-          </button>
-          <h1 className="text-[17px] sm:text-lg font-bold text-[#142742] tracking-tight">
-            Empréstimos
-          </h1>
-        </div>
-
-        <button
-          type="button"
-          onClick={() => hapticLight()}
-          aria-label="Ajuda sobre empréstimos"
-          className="w-10 h-10 rounded-full flex items-center justify-center text-[#142742] hover:bg-slate-100 active:scale-90 transition-all cursor-pointer"
-        >
-          <HelpCircle className="w-6 h-6 stroke-[1.8]" />
-        </button>
-      </motion.header>
-
-      {/* Main Content Area */}
-      <main className="flex-1 min-h-0 px-5 pt-2 pb-16 overflow-y-auto overscroll-contain">
-        {/* Screen Headline */}
-        <motion.h2
-          variants={itemEntranceVariants}
-          className="text-2xl sm:text-[27px] font-bold text-[#142742] tracking-tight leading-snug mb-5"
-        >
-          Opções disponíveis
-        </motion.h2>
+            Opções disponíveis
+          </motion.h2>
 
         <div className="space-y-4">
           {/* Card 1: Empréstimo Pessoal (Fluxo testável principal) */}
@@ -246,6 +225,7 @@ export const LoanHubScreen: React.FC<LoanHubScreenProps> = ({
           </p>
         </motion.div>
       </main>
+      </div>
     </motion.div>
   );
 };
