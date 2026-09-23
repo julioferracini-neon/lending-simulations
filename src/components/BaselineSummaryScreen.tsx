@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { motion, type Variants } from 'motion/react';
-import { ChevronRight, FileText, Percent, HelpCircle, Edit2 } from 'lucide-react';
+import { ChevronRight, HelpCircle, Edit2 } from 'lucide-react';
 import { TopNavBar } from './TopNavBar';
 import { BottomSheet } from './BottomSheet';
 import { PinBottomSheet } from './PinBottomSheet';
 import { formatCurrency, formatDatePtBR } from '../utils/finance';
 import { hapticLight, hapticMedium, hapticSuccess } from '../utils/haptics';
 import type { LoanSimulationData } from './LoanSimulationScreen';
+
+import iconEditorMonetizationOnSvg from '../assets/icon-editor-monetization-on.svg';
+import iconNeonLoanSvg from '../assets/icon-neon-loan.svg';
 
 interface BaselineSummaryScreenProps {
   loanAmount: number;
@@ -18,7 +21,7 @@ interface BaselineSummaryScreenProps {
   onContract?: () => void;
 }
 
-const BASE_MONTHLY_RATE = 0.0529;
+const BASE_MONTHLY_RATE = 0.0467; // Updated to match the screenshot (4.67%)
 
 const screenEntranceVariants: Variants = {
   hidden: { opacity: 0 },
@@ -57,34 +60,32 @@ export const BaselineSummaryScreen: React.FC<BaselineSummaryScreenProps> = ({
     return `16/12/${new Date().getFullYear()}`;
   };
 
-  const installmentsCount = simulationData?.installments || 12;
-  const monthlyValue = simulationData?.monthlyInstallment || (loanAmount * 1.15) / installmentsCount;
-  const totalValue = simulationData?.totalCost || (monthlyValue * installmentsCount);
+  const installmentsCount = simulationData?.installments || 7;
+  const monthlyValue = simulationData?.monthlyInstallment || 423.16;
+  const totalValue = simulationData?.totalCost || 2962.12;
 
   return (
     <motion.div 
       variants={screenEntranceVariants}
       initial="hidden"
       animate="visible"
-      className="w-full h-full flex flex-col bg-[#f4f7fb] overflow-hidden select-none"
+      className="w-full h-full flex flex-col bg-white overflow-hidden select-none"
       id="baseline-summary-screen"
     >
       <TopNavBar 
-        title="Resumo do empréstimo" 
+        title="Detalhes da proposta" 
         showBack={true} 
         onBack={onBack} 
-        rightAction="none"
+        rightAction="help"
       />
 
-      <div className="flex-1 overflow-y-auto px-4 pt-6 pb-32 flex flex-col gap-6">
+      <div className="flex-1 overflow-y-auto px-4 pt-6 pb-48 flex flex-col gap-4">
         
-        {/* Card 1: Resumo do empréstimo */}
-        <div className="bg-white rounded-[24px] border border-slate-200 overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+        {/* Card 1: Detalhes do empréstimo */}
+        <div className="bg-white rounded-[16px] border border-slate-200 overflow-hidden shrink-0">
           <div className="px-5 py-4 border-b border-slate-100 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-[#3d70e0]">
-              <FileText className="w-4 h-4" />
-            </div>
-            <h3 className="text-[16px] font-bold text-[#142742]">Resumo do empréstimo</h3>
+            <img src={iconNeonLoanSvg} alt="Loan Icon" className="w-[18px] h-[18px] opacity-70" />
+            <h3 className="text-[15px] font-bold text-[#2D3342]">Detalhes do empréstimo</h3>
           </div>
 
           <div className="flex flex-col">
@@ -93,10 +94,10 @@ export const BaselineSummaryScreen: React.FC<BaselineSummaryScreenProps> = ({
               onClick={() => { hapticLight(); onEditAmount?.(); }}
             >
               <div>
-                <p className="text-[13px] text-[#5c6b8f] mb-0.5">Valor recebido</p>
-                <p className="text-[15px] font-bold text-[#142742]">{formatCurrency(loanAmount)}</p>
+                <p className="text-[14px] font-bold text-[#2D3342] mb-1">Valor solicitado</p>
+                <p className="text-[14px] font-medium text-[#545B6F]">{formatCurrency(loanAmount)}</p>
               </div>
-              <Edit2 className="w-[18px] h-[18px] text-[#3d70e0]" />
+              <Edit2 className="w-[18px] h-[18px] text-[#0078D9]" />
             </div>
 
             <div 
@@ -104,16 +105,16 @@ export const BaselineSummaryScreen: React.FC<BaselineSummaryScreenProps> = ({
               onClick={() => { hapticLight(); onEditInstallments?.(); }}
             >
               <div>
-                <p className="text-[13px] text-[#5c6b8f] mb-0.5">Parcelas</p>
-                <p className="text-[15px] font-bold text-[#142742]">{installmentsCount}x de {formatCurrency(monthlyValue)}</p>
+                <p className="text-[14px] font-bold text-[#2D3342] mb-1">Parcelamento escolhido</p>
+                <p className="text-[14px] font-medium text-[#545B6F]">{installmentsCount} de {formatCurrency(monthlyValue)}</p>
               </div>
-              <Edit2 className="w-[18px] h-[18px] text-[#3d70e0]" />
+              <Edit2 className="w-[18px] h-[18px] text-[#0078D9]" />
             </div>
 
             <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
               <div>
-                <p className="text-[13px] text-[#5c6b8f] mb-0.5">Valor total pago</p>
-                <p className="text-[15px] font-bold text-[#142742]">{formatCurrency(totalValue)}</p>
+                <p className="text-[14px] font-bold text-[#2D3342] mb-1">Valor total a pagar</p>
+                <p className="text-[14px] font-medium text-[#545B6F]">{formatCurrency(totalValue)}</p>
               </div>
             </div>
 
@@ -122,77 +123,70 @@ export const BaselineSummaryScreen: React.FC<BaselineSummaryScreenProps> = ({
               onClick={() => { hapticLight(); onEditDueDate?.(); }}
             >
               <div>
-                <p className="text-[13px] text-[#5c6b8f] mb-0.5">Primeiro vencimento</p>
-                <p className="text-[15px] font-bold text-[#142742]">{getFirstDueDateFormatted()}</p>
+                <p className="text-[14px] font-bold text-[#2D3342] mb-1">Primeiro vencimento</p>
+                <p className="text-[14px] font-medium text-[#545B6F]">{getFirstDueDateFormatted()}</p>
               </div>
-              <Edit2 className="w-[18px] h-[18px] text-[#3d70e0]" />
+              <Edit2 className="w-[18px] h-[18px] text-[#0078D9]" />
             </div>
 
             <div className="px-5 py-4 flex items-center justify-between">
               <div>
-                <p className="text-[13px] text-[#5c6b8f] mb-0.5">Vencimento</p>
-                <p className="text-[15px] font-bold text-[#142742]">Todo dia {getDayOrFallback()} de cada mês</p>
+                <p className="text-[14px] font-bold text-[#2D3342] mb-1">Demais vencimentos</p>
+                <p className="text-[14px] font-medium text-[#545B6F]">Todo dia {getDayOrFallback()} de cada mês</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Card 2: Resumo dos custos */}
-        <div className="bg-white rounded-[24px] border border-slate-200 overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+        <div className="bg-white rounded-[16px] border border-slate-200 overflow-hidden shrink-0">
           <div className="px-5 py-4 border-b border-slate-100 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-[#3d70e0]">
-              <Percent className="w-4 h-4" />
-            </div>
-            <h3 className="text-[16px] font-bold text-[#142742]">Resumo dos custos</h3>
+            <img src={iconEditorMonetizationOnSvg} alt="Cost Icon" className="w-[18px] h-[18px] opacity-70" />
+            <h3 className="text-[15px] font-bold text-[#2D3342]">Resumo dos custos</h3>
           </div>
 
           <div className="flex flex-col">
-            <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <p className="text-[14px] text-[#5c6b8f]">Juros ao mês</p>
-                <button onClick={() => { hapticLight(); setInfoModalType('juros'); }}>
-                  <HelpCircle className="w-[14px] h-[14px] text-[#94a3b8]" />
-                </button>
+            <div className="px-5 py-4 border-b border-slate-100 flex flex-col justify-between">
+              <div className="flex items-center gap-1.5 mb-1">
+                <p className="text-[14px] font-bold text-[#2D3342]">Juros ao mês</p>
               </div>
-              <p className="text-[14px] font-semibold text-[#142742]">{(BASE_MONTHLY_RATE * 100).toFixed(2).replace('.', ',')}%</p>
+              <p className="text-[14px] font-medium text-[#545B6F]">{(BASE_MONTHLY_RATE * 100).toFixed(2).replace('.', ',')}%</p>
             </div>
 
-            <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <p className="text-[14px] text-[#5c6b8f]">CET ao ano</p>
-                <button onClick={() => { hapticLight(); setInfoModalType('cet'); }}>
-                  <HelpCircle className="w-[14px] h-[14px] text-[#94a3b8]" />
-                </button>
+            <div className="px-5 py-4 border-b border-slate-100 flex flex-col justify-between">
+              <div className="flex items-center gap-1.5 mb-1">
+                <p className="text-[14px] font-bold text-[#2D3342]">CET ao ano</p>
               </div>
-              <p className="text-[14px] font-semibold text-[#142742]">45,82%</p>
+              <p className="text-[14px] font-medium text-[#545B6F]">2,93%</p>
             </div>
 
-            <div className="px-5 py-4 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <p className="text-[14px] text-[#5c6b8f]">Proteção do empréstimo</p>
-                <button onClick={() => { hapticLight(); setInfoModalType('protecao'); }}>
-                  <HelpCircle className="w-[14px] h-[14px] text-[#94a3b8]" />
-                </button>
+            <div className="px-5 py-4 flex flex-col justify-between border-b border-slate-100">
+              <div className="flex items-center gap-1.5 mb-1">
+                <p className="text-[14px] font-bold text-[#2D3342]">Proteção do empréstimo</p>
               </div>
-              <p className="text-[14px] font-semibold text-[#142742]">7,9% do valor solicitado</p>
+              <p className="text-[14px] font-medium text-[#545B6F]">7,9% do valor do empréstimo</p>
             </div>
+            
+            <button className="w-full py-4 text-[14px] font-bold text-[#0078D9] flex items-center justify-between px-5 active:bg-slate-50 transition-colors">
+              Detalhes dos custos
+              <ChevronRight className="w-4 h-4 text-[#0078D9]" />
+            </button>
           </div>
-          
-          <button className="w-full py-4 bg-slate-50 text-[14px] font-bold text-[#3d70e0] flex items-center justify-center gap-2 active:bg-slate-100 transition-colors">
-            🔗 MAIS DETALHES
-          </button>
         </div>
 
       </div>
 
-      <div className="fixed bottom-0 inset-x-0 p-5 bg-white border-t border-slate-200 z-20 shadow-[0_-4px_24px_rgba(0,0,0,0.03)]">
+      <div className="absolute bottom-0 inset-x-0 bg-[#F5FAFF] pt-4 pb-5 px-5 z-20 flex flex-col items-center">
+        <p className="text-[12px] text-[#545B6F] text-center mb-4 leading-relaxed px-2">
+          Ao contratar, você aceita os <a href="#" className="text-[#0078D9] font-bold underline underline-offset-2">Termos de Uso</a> e <a href="#" className="text-[#0078D9] font-bold underline underline-offset-2">autoriza a cobrança da proteção</a> e débito na conta Neo do valor total ou parcial das parcelas no dia do vencimento ou após
+        </p>
         <button
           type="button"
           onClick={() => {
             hapticMedium();
             setIsPinModalOpen(true);
           }}
-          className="w-full bg-[#467bed] hover:bg-[#3666d4] active:bg-[#2b54b5] text-white font-semibold py-[15px] rounded-full transition-all duration-200 cursor-pointer text-[16px]"
+          className="w-full bg-[#0078D9] hover:bg-[#0062c4] active:scale-[0.98] text-white font-bold py-[14px] rounded-full transition-all duration-200 cursor-pointer text-[15px]"
         >
           Contratar empréstimo
         </button>
@@ -226,7 +220,7 @@ export const BaselineSummaryScreen: React.FC<BaselineSummaryScreenProps> = ({
           )}
           <button
             onClick={() => { hapticLight(); setInfoModalType(null); }}
-            className="w-full mt-6 bg-[#467bed] active:scale-[0.98] text-white font-bold py-3.5 rounded-full transition-all text-[15px]"
+            className="w-full mt-6 bg-[#0078D9] active:scale-[0.98] text-white font-bold py-3.5 rounded-full transition-all text-[15px]"
           >
             Entendi
           </button>

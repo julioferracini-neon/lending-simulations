@@ -16,6 +16,7 @@ import { LoanSimulationScreen, type LoanSimulationData } from './components/Loan
 import { ProposalLoadingScreen } from './components/ProposalLoadingScreen';
 import { SummaryScreen } from './components/SummaryScreen';
 import { SuccessScreen } from './components/SuccessScreen';
+import { BaselineSuccessScreen } from './components/BaselineSuccessScreen';
 import { ProductsScreen } from './components/ProductsScreen';
 import { GlobalHomeScreen } from './components/GlobalHomeScreen';
 import { PortalScreen } from './components/PortalScreen';
@@ -605,7 +606,11 @@ export default function App() {
               exit="exit"
               className="w-full h-full flex flex-col flex-1 min-h-0 overflow-hidden"
             >
-              <SuccessScreen onFinish={handleBaselineFinishSuccess} />
+              <BaselineSuccessScreen 
+                loanAmount={loanAmount}
+                simulationData={simulationData}
+                onFinish={handleBaselineFinishSuccess} 
+              />
             </motion.div>
           )}
 
