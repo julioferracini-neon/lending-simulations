@@ -2,14 +2,14 @@ export type FlowStep = 'portal' | 'global_home' | 'products' | 'loan_hub' | 'inp
 
 export const stepToPath: Record<FlowStep, string> = {
   portal: '/',
-  global_home: '/home',
-  products: '/products',
-  loan_hub: '/loan-hub',
-  input_value: '/input-value',
-  simulation: '/simulation',
-  proposal_loading: '/proposal-loading',
-  summary: '/summary',
-  success: '/success',
+  global_home: '/do-01/home',
+  products: '/do-01/products',
+  loan_hub: '/do-01/loan-hub',
+  input_value: '/do-01/input-value',
+  simulation: '/do-01/simulation',
+  proposal_loading: '/do-01/proposal-loading',
+  summary: '/do-01/summary',
+  success: '/do-01/success',
 };
 
 export const pathToStep: Record<string, FlowStep> = Object.entries(stepToPath).reduce(
