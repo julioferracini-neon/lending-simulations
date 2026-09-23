@@ -15,6 +15,7 @@ interface BaselineSummaryScreenProps {
   loanAmount: number;
   simulationData: LoanSimulationData | null;
   onBack: () => void;
+  onRestart?: () => void;
   onEditAmount?: () => void;
   onEditInstallments?: () => void;
   onEditDueDate?: () => void;

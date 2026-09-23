@@ -3,6 +3,7 @@ import { motion, type Variants } from 'motion/react';
 import { ChevronRight, CreditCard, ArrowRight, TrendingUp } from 'lucide-react';
 import bottomNavSvg from '../assets/BottomNav.svg';
 import { hapticLight, hapticMedium } from '../utils/haptics';
+import { HomeOfferCarousel } from './HomeOfferCarousel';
 
 // Custom SVGs
 import globalEyeSvg from '../assets/home/global/eye.svg';
@@ -66,9 +67,9 @@ export const GlobalHomeScreen: React.FC<GlobalHomeScreenProps> = ({ onSelectProd
           <motion.div variants={itemEntranceVariants} className="flex justify-between items-center px-4">
             <div className="flex items-center gap-2">
               <div className="w-12 h-12 rounded-[20px] bg-[#F0F9FF] flex items-center justify-center">
-                <span className="text-[#074A82] font-bold text-[20px]">M</span>
+                <span className="text-[#074A82] font-bold text-[20px]">J</span>
               </div>
-              <span className="text-[#074A82] font-bold text-[16px] tracking-tight">Olá, Cliente</span>
+              <span className="text-[#074A82] font-bold text-[16px] tracking-tight">Olá, Jennifer</span>
             </div>
             <div className="flex gap-4 pr-1">
               <button className="cursor-pointer active:scale-95 transition-transform">
@@ -105,23 +106,10 @@ export const GlobalHomeScreen: React.FC<GlobalHomeScreenProps> = ({ onSelectProd
             </div>
           </motion.div>
 
-          {/* Offers Section (Horizontal Scroll) - HIDDEN FOR NOW */}
-          {false && (
-            <motion.div variants={itemEntranceVariants} className="pl-4">
-              <div className="flex overflow-x-auto pb-1 scrollbar-hide gap-4 pr-4">
-                <div className="w-[296px] shrink-0 bg-white rounded-[16px] border border-[#E1E6F5] flex flex-col overflow-hidden">
-                  <div className="h-[108px] w-full bg-gradient-to-r from-[#0078D9] to-[#83C5F9]" />
-                  <div className="p-4 pt-3 flex flex-col gap-1">
-                    <h3 className="text-[#2D3342] font-semibold text-[14px] leading-tight">Reduza os juros do seu empréstimo</h3>
-                    <div className="flex justify-between items-center text-[#3F4658]">
-                      <span className="text-[12px] font-medium leading-tight w-[220px]">Migre para o empréstimo consignado e aproveite o crédito do trabalhador.</span>
-                      <ChevronRight className="w-[20px] h-[20px] shrink-0 text-[#0078D9]" strokeWidth={2.5} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
+          {/* Offers Carousel Banner */}
+          <motion.div variants={itemEntranceVariants}>
+            <HomeOfferCarousel onSelectLoan={onSelectLoan} />
+          </motion.div>
           
           {/* Modules Grid */}
           <motion.div variants={itemEntranceVariants} className="px-4">
