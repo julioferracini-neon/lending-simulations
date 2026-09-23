@@ -179,7 +179,7 @@ export default function App() {
     setLoanAmount(2000);
     setSimulationData(null);
     setDirection(-1);
-    setCurrentStep('products');
+    setCurrentStep('global_home');
   };
 
   const handleRestart = () => {
@@ -290,7 +290,7 @@ export default function App() {
     setLoanAmount(2000);
     setSimulationData(null);
     setDirection(-1);
-    setCurrentStep('baseline_products');
+    setCurrentStep('baseline_global_home');
   };
 
   const handleBaselineRestart = () => {
