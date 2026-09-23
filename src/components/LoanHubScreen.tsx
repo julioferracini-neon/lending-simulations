@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, type Variants } from 'motion/react';
-import { ArrowLeft, HelpCircle, ChevronRight } from 'lucide-react';
+import { ArrowLeft, HelpCircle, ChevronRight, Check } from 'lucide-react';
 import { formatCurrency } from '../utils/finance';
 import { hapticLight, hapticMedium } from '../utils/haptics';
 import { TopNavBar } from './TopNavBar';
@@ -45,6 +45,8 @@ export const LoanHubScreen: React.FC<LoanHubScreenProps> = ({
   onSelectPersonalLoan,
   onBack,
 }) => {
+  const [isDataprevChecked, setIsDataprevChecked] = useState(true);
+
   return (
     <motion.div
       variants={screenEntranceVariants}
@@ -215,14 +217,26 @@ export const LoanHubScreen: React.FC<LoanHubScreenProps> = ({
         {/* Footer / Dataprev Notice */}
         <motion.div
           variants={itemEntranceVariants}
-          className="text-center px-3 pt-7 pb-4"
+          className="px-3 pt-7 pb-4"
         >
-          <p className="text-[12px] text-[#475569] leading-relaxed">
-            Eu autorizo a Neon a consultar meus dados na Dataprev,{' '}
-            <span className="underline text-[#0073e6] cursor-pointer hover:text-blue-700">
-              Termos do Crédito do Trabalhador
-            </span>
-          </p>
+          {/* Dataprev Checkbox */}
+          <div 
+            className="flex items-start gap-3 cursor-pointer select-none" 
+            onClick={() => {
+              hapticLight();
+              setIsDataprevChecked(!isDataprevChecked);
+            }}
+          >
+            <div className={`w-5 h-5 shrink-0 rounded flex items-center justify-center border transition-colors mt-0.5 ${isDataprevChecked ? 'bg-[#0073e6] border-[#0073e6]' : 'border-slate-300 bg-white'}`}>
+              {isDataprevChecked && <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />}
+            </div>
+            <p className="text-[13px] leading-tight text-[#475569] text-left">
+              Autorizo a Neon a consultar meus dados na Dataprev.{' '}
+              <a href="#" onClick={(e) => { e.preventDefault(); e.stopPropagation(); hapticLight(); }} className="text-[#0073e6] underline decoration-1 underline-offset-2 font-medium">
+                Termos do Crédito do Trabalhador
+              </a>
+            </p>
+          </div>
         </motion.div>
       </main>
       </div>

@@ -37,3 +37,14 @@
 .animate-indeterminate-2 {
   animation: indeterminate-bar2 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) 1.15s infinite;
 }
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
