@@ -24,9 +24,10 @@ const bottomSheetVariants: Variants = {
 
 interface PortalScreenProps {
   onNavigateHome: () => void;
+  onNavigateBaseline: () => void;
 }
 
-export const PortalScreen: React.FC<PortalScreenProps> = ({ onNavigateHome }) => {
+export const PortalScreen: React.FC<PortalScreenProps> = ({ onNavigateHome, onNavigateBaseline }) => {
   const [selectedHypothesis, setSelectedHypothesis] = useState<{ title: string; text: string } | null>(null);
 
   const prototypes = [
@@ -42,6 +43,19 @@ export const PortalScreen: React.FC<PortalScreenProps> = ({ onNavigateHome }) =>
         text: 'Acreditamos que, ao centralizar todas as ofertas de crédito em um Hub dinâmico (com limites e taxas expostos antecipadamente), reduziremos o atrito inicial e aumentaremos a conversão. O novo simulador com valores em pílulas também deve diminuir o tempo de input de valor.',
       },
       onAction: onNavigateHome,
+    },
+    {
+      id: 'baseline',
+      title: 'Baseline (Controle)',
+      description: 'O fluxo de Empréstimo Pessoal exatamente como está em produção hoje. Utilize este protótipo como Grupo de Controle.',
+      status: 'Crafting',
+      lastUpdate: '23 Set 2026, 10:30',
+      figmaUrl: 'https://www.figma.com/design/e8K4rLAkYXZxjO5F9MoHWp/-Main--Personal-Loan-%25E2%2580%2593-In-app-Flows?node-id=5219-31906&t=WymtrVzE9WnxNIMA-11',
+      hypothesis: {
+        title: 'Grupo de Controle',
+        text: 'Este fluxo representa a jornada atual em produção. Os dados de performance e conversão gerados aqui servem de linha de base (baseline) para validar se o novo protótipo trouxe melhora estatística.',
+      },
+      onAction: onNavigateBaseline,
     },
     // Future prototypes can be added here
   ];
@@ -75,9 +89,9 @@ export const PortalScreen: React.FC<PortalScreenProps> = ({ onNavigateHome }) =>
             >
               <div className="flex flex-col gap-2">
                 {proto.status && (
-                  <div className="flex items-center gap-1.5 w-fit px-2.5 py-1 bg-green-100 rounded-full">
-                    <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
-                    <span className="text-[11px] font-bold text-green-700 uppercase tracking-wider">
+                  <div className={`flex items-center gap-1.5 w-fit px-2.5 py-1 rounded-full ${proto.status === 'Crafting' ? 'bg-orange-100' : 'bg-green-100'}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${proto.status === 'Crafting' ? 'bg-orange-500' : 'bg-green-500'}`} />
+                    <span className={`text-[11px] font-bold uppercase tracking-wider ${proto.status === 'Crafting' ? 'text-orange-700' : 'text-green-700'}`}>
                       {proto.status}
                     </span>
                   </div>

@@ -8,6 +8,10 @@ import { AnimatePresence, motion, type Variants } from 'motion/react';
 import { MobileFrame } from './components/MobileFrame';
 import { LoanHubScreen } from './components/LoanHubScreen';
 import { InputValueScreen } from './components/InputValueScreen';
+import { BaselineInputValueScreen } from './components/BaselineInputValueScreen';
+import { BaselineLoanSimulationScreen } from './components/BaselineLoanSimulationScreen';
+import { BaselineLoanHubScreen } from './components/BaselineLoanHubScreen';
+import { BaselineSummaryScreen } from './components/BaselineSummaryScreen';
 import { LoanSimulationScreen, type LoanSimulationData } from './components/LoanSimulationScreen';
 import { ProposalLoadingScreen } from './components/ProposalLoadingScreen';
 import { SummaryScreen } from './components/SummaryScreen';
@@ -51,6 +55,9 @@ export default function App() {
   const [loanAmount, setLoanAmount] = useState<number>(() => getInitialFlowState().loanAmount);
   const [simulationData, setSimulationData] = useState<LoanSimulationData | null>(() => getInitialFlowState().simulationData);
   const [direction, setDirection] = useState<number>(() => getInitialFlowState().direction);
+  
+  const [baselineInputSource, setBaselineInputSource] = useState<'home' | 'products'>('products');
+  const [inputSource, setInputSource] = useState<'home' | 'products'>('products');
 
   useUrlSyncedFlow({
     step: currentStep,
@@ -85,6 +92,14 @@ export default function App() {
 
   const handleSelectLoansFromProducts = () => {
     hapticMedium();
+    setInputSource('products');
+    setDirection(1);
+    setCurrentStep('loan_hub');
+  };
+
+  const handleSelectLoansFromHome = () => {
+    hapticMedium();
+    setInputSource('home');
     setDirection(1);
     setCurrentStep('loan_hub');
   };
@@ -95,10 +110,14 @@ export default function App() {
     setCurrentStep('input_value');
   };
 
-  const handleBackToProducts = () => {
+  const handleBackToSource = () => {
     hapticLight();
     setDirection(-1);
-    setCurrentStep('products');
+    if (inputSource === 'home') {
+      setCurrentStep('global_home');
+    } else {
+      setCurrentStep('products');
+    }
   };
 
   const handleContinueToSimulation = (amount: number) => {
@@ -168,6 +187,117 @@ export default function App() {
     setCurrentStep('products');
   };
 
+  
+  // --- BASELINE HANDLERS ---
+  const handleSelectBaselineGlobalHome = () => {
+    hapticMedium();
+    setDirection(1);
+    setCurrentStep('baseline_global_home');
+  };
+
+  const handleBaselineSelectProducts = () => {
+    hapticMedium();
+    setDirection(1);
+    setCurrentStep('baseline_products');
+  };
+
+  const handleBaselineSelectHome = () => {
+    hapticMedium();
+    setDirection(-1);
+    setCurrentStep('baseline_global_home');
+  };
+
+  const handleBaselineSelectLoansFromProducts = () => {
+    hapticMedium();
+    setBaselineInputSource('products');
+    setDirection(1);
+    setCurrentStep('baseline_input_value');
+  };
+
+  const handleBaselineSelectLoansFromHome = () => {
+    hapticMedium();
+    setBaselineInputSource('home');
+    setDirection(1);
+    setCurrentStep('baseline_input_value');
+  };
+
+  const handleBaselineBackToSource = () => {
+    hapticLight();
+    setDirection(-1);
+    if (baselineInputSource === 'home') {
+      setCurrentStep('baseline_global_home');
+    } else {
+      setCurrentStep('baseline_products');
+    }
+  };
+
+  const handleBaselineContinueFromInputValue = (data: LoanSimulationData) => {
+    hapticMedium();
+    setSessionAmount(data.loanAmount);
+    setLoanAmount(data.loanAmount);
+    setSimulationData(data);
+    setDirection(1);
+    setCurrentStep('baseline_proposal_loading');
+  };
+
+  const handleBaselineBackToInputValue = () => {
+    hapticLight();
+    setDirection(-1);
+    setCurrentStep('baseline_input_value');
+  };
+
+  const handleBaselineContinueProposal = (data: LoanSimulationData) => {
+    hapticMedium();
+    setSimulationData(data);
+    setDirection(1);
+    setCurrentStep('baseline_proposal_loading');
+  };
+
+  const handleBaselineLoadingComplete = () => {
+    hapticSuccess();
+    setDirection(1);
+    setCurrentStep('baseline_summary');
+  };
+
+  const handleBaselineBackFromSummary = () => {
+    hapticLight();
+    setDirection(-1);
+    setCurrentStep('baseline_simulation');
+  };
+
+  const handleBaselineEditAmountFromSummary = () => {
+    hapticLight();
+    setDirection(-1);
+    setCurrentStep('baseline_input_value');
+  };
+
+  const handleBaselineEditSimulationFromSummary = () => {
+    hapticLight();
+    setDirection(-1);
+    setCurrentStep('baseline_simulation');
+  };
+
+  const handleBaselineSuccess = () => {
+    hapticSuccess();
+    setDirection(1);
+    setCurrentStep('baseline_success');
+  };
+
+  const handleBaselineFinishSuccess = () => {
+    hapticMedium();
+    setSessionAmount(null);
+    setLoanAmount(2000);
+    setSimulationData(null);
+    setDirection(-1);
+    setCurrentStep('baseline_products');
+  };
+
+  const handleBaselineRestart = () => {
+    hapticLight();
+    setDirection(-1);
+    setCurrentStep('baseline_products');
+  };
+
   return (
     <MobileFrame statusBarBg="bg-transparent">
       <div className="w-full flex-1 min-h-0 flex flex-col relative overflow-hidden bg-[#f0f6fc]">
@@ -182,7 +312,10 @@ export default function App() {
               exit="exit"
               className="absolute inset-0 z-0 bg-white"
             >
-              <PortalScreen onNavigateHome={handleSelectGlobalHomeFromPortal} />
+              <PortalScreen 
+                onNavigateHome={handleSelectGlobalHomeFromPortal} 
+                onNavigateBaseline={handleSelectBaselineGlobalHome}
+              />
             </motion.div>
           )}
 
@@ -196,7 +329,10 @@ export default function App() {
               exit="exit"
               className="absolute inset-0 z-0 bg-white"
             >
-              <GlobalHomeScreen onSelectProducts={handleSelectProducts} />
+              <GlobalHomeScreen 
+                onSelectProducts={handleSelectProducts} 
+                onSelectLoan={handleSelectLoansFromHome} 
+              />
             </motion.div>
           )}
 
@@ -227,7 +363,7 @@ export default function App() {
               <LoanHubScreen
                 maxPersonalLimit={10000}
                 onSelectPersonalLoan={handleSelectPersonalLoan}
-                onBack={handleBackToProducts}
+                onBack={handleBackToSource}
               />
             </motion.div>
           )}
@@ -328,6 +464,151 @@ export default function App() {
               <SuccessScreen onFinish={handleFinishSuccess} />
             </motion.div>
           )}
+        
+          {/* --- BASELINE FLOW --- */}
+          {currentStep === 'baseline_global_home' && (
+            <motion.div
+              key="baseline_global_home"
+              custom={direction}
+              variants={screenPushVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="absolute inset-0 z-0 bg-white"
+            >
+              <GlobalHomeScreen 
+                onSelectProducts={handleBaselineSelectProducts} 
+                onSelectLoan={handleBaselineSelectLoansFromHome} 
+              />
+            </motion.div>
+          )}
+
+          {currentStep === 'baseline_products' && (
+            <motion.div
+              key="baseline_products"
+              custom={direction}
+              variants={screenPushVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="absolute inset-0 z-0 bg-white"
+            >
+              <ProductsScreen onSelectLoans={handleBaselineSelectLoansFromProducts} onSelectHome={handleBaselineSelectHome} />
+            </motion.div>
+          )}
+
+          {currentStep === 'baseline_loan_hub' && (
+            <motion.div
+              key="baseline_loan_hub"
+              custom={direction}
+              variants={screenPushVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="absolute inset-0 z-0 bg-white"
+            >
+              <BaselineLoanHubScreen
+                maxPersonalLimit={10000}
+                onSelectPersonalLoan={handleBaselineSelectPersonalLoan}
+                onBack={handleBaselineBackToProducts}
+              />
+            </motion.div>
+          )}
+          
+          {currentStep === 'baseline_input_value' && (
+            <motion.div
+              key="baseline_input_value"
+              custom={direction}
+              variants={screenPushVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="w-full h-full flex flex-col flex-1 min-h-0 overflow-hidden"
+            >
+              <BaselineInputValueScreen
+                initialAmount={sessionAmount}
+                availableLimit={10000}
+                onContinue={handleBaselineContinueFromInputValue}
+                onBack={handleBaselineBackToSource}
+              />
+            </motion.div>
+          )}
+
+          {currentStep === 'baseline_simulation' && (
+            <motion.div
+              key="baseline_simulation"
+              custom={direction}
+              variants={screenPushVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="w-full h-full flex flex-col flex-1 min-h-0 overflow-hidden"
+            >
+              <BaselineLoanSimulationScreen
+                initialLoanAmount={loanAmount}
+                initialInstallments={simulationData?.installments}
+                initialFirstDueDate={simulationData?.firstDueDate}
+                onAmountChange={(newAmt) => {
+                  setLoanAmount(newAmt);
+                  setSessionAmount(newAmt);
+                }}
+                onBack={handleBaselineBackToInputValue}
+                onContinueProposal={handleBaselineContinueProposal}
+              />
+            </motion.div>
+          )}
+
+          {currentStep === 'baseline_proposal_loading' && (
+            <motion.div
+              key="baseline_proposal_loading"
+              custom={direction}
+              variants={screenPushVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="w-full h-full flex flex-col flex-1 min-h-0 overflow-hidden"
+            >
+              <ProposalLoadingScreen onComplete={handleBaselineLoadingComplete} />
+            </motion.div>
+          )}
+
+          {currentStep === 'baseline_summary' && (
+            <motion.div
+              key="baseline_summary"
+              custom={direction}
+              variants={screenPushVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="w-full h-full flex flex-col flex-1 min-h-0 overflow-hidden"
+            >
+              <BaselineSummaryScreen
+                loanAmount={loanAmount}
+                simulationData={simulationData}
+                onBack={handleBaselineBackFromSummary}
+                onRestart={handleBaselineRestart}
+                onEditAmount={handleBaselineEditAmountFromSummary}
+                onEditInstallments={handleBaselineEditSimulationFromSummary}
+                onEditDueDate={handleBaselineEditSimulationFromSummary}
+                onContract={handleBaselineSuccess}
+              />
+            </motion.div>
+          )}
+
+          {currentStep === 'baseline_success' && (
+            <motion.div
+              key="baseline_success"
+              custom={direction}
+              variants={screenPushVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="w-full h-full flex flex-col flex-1 min-h-0 overflow-hidden"
+            >
+              <SuccessScreen onFinish={handleBaselineFinishSuccess} />
+            </motion.div>
+          )}
+
         </AnimatePresence>
       </div>
     </MobileFrame>

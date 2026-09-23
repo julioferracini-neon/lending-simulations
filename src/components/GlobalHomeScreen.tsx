@@ -17,6 +17,7 @@ import extratoRecebidoSvg from '../assets/home/extrato/extrato-recebido.svg';
 
 interface GlobalHomeScreenProps {
   onSelectProducts: () => void;
+  onSelectLoan: () => void;
 }
 
 const SILKY_EASE = [0.22, 1, 0.36, 1] as const;
@@ -47,7 +48,7 @@ const itemEntranceVariants: Variants = {
   },
 };
 
-export const GlobalHomeScreen: React.FC<GlobalHomeScreenProps> = ({ onSelectProducts }) => {
+export const GlobalHomeScreen: React.FC<GlobalHomeScreenProps> = ({ onSelectProducts, onSelectLoan }) => {
   return (
     <motion.div
       variants={screenEntranceVariants}
@@ -164,18 +165,25 @@ export const GlobalHomeScreen: React.FC<GlobalHomeScreenProps> = ({ onSelectProd
               </div>
 
               {/* Emprestimo Module */}
-              <div className="bg-white rounded-[24px] border border-[#E1E6F5] flex flex-col justify-between p-4 min-h-[156px] relative overflow-hidden shadow-sm">
+              <button 
+                type="button"
+                onClick={() => {
+                  hapticMedium();
+                  onSelectLoan();
+                }}
+                className="bg-white rounded-[24px] border border-[#E1E6F5] flex flex-col justify-between p-4 min-h-[156px] relative overflow-hidden shadow-sm cursor-pointer active:scale-95 transition-transform text-left"
+              >
                 <div className="flex flex-col gap-3">
                   <span className="font-bold text-[15px] text-[#2D3342]">Emprestimo</span>
                   <span className="text-[#545B6F] text-[12px] font-medium leading-tight pr-2">Novo crédito do trabalhador para quem é CLT</span>
                 </div>
-                <div className="flex justify-between items-end mt-4">
+                <div className="flex justify-between items-end mt-4 w-full">
                   <span className="text-[14px] text-[#0078D9] font-bold mb-[2px]">Simular</span>
                   <div className="w-[32px] h-[32px] rounded-full bg-[#F5FAFF] flex items-center justify-center shrink-0">
                     <ArrowRight className="w-[16px] h-[16px] text-[#0078D9]" strokeWidth={2.5} />
                   </div>
                 </div>
-              </div>
+              </button>
 
               {/* Investimentos Module */}
               <div className="bg-white rounded-[24px] border border-[#E1E6F5] flex flex-col justify-between p-4 min-h-[156px] relative overflow-hidden shadow-sm">
