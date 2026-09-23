@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence, type Variants } from 'motion/react';
-import { ArrowRight, Figma, Lightbulb, X, ExternalLink } from 'lucide-react';
+import { ArrowRight, Figma, Lightbulb, X, ExternalLink, Clock } from 'lucide-react';
 import { hapticMedium, hapticLight } from '../utils/haptics';
 
 const SILKY_EASE = [0.16, 1, 0.3, 1] as const;
@@ -34,6 +34,8 @@ export const PortalScreen: React.FC<PortalScreenProps> = ({ onNavigateHome }) =>
       id: 'do-01',
       title: 'Dynamic Offer (DO-01)',
       description: 'Visão de produto: como o usuário contrata Empréstimo Pessoal através do Hub que concentra os produtos de crédito disponíveis.',
+      status: 'Pronto para teste',
+      lastUpdate: '23 Set 2026, 10:15',
       figmaUrl: 'https://www.figma.com/design/e8K4rLAkYXZxjO5F9MoHWp/-Main--Personal-Loan-%25E2%2580%2593-In-app-Flows?node-id=4910-5266&t=WymtrVzE9WnxNIMA-11',
       hypothesis: {
         title: 'Hipótese: Hub Dinâmico',
@@ -71,8 +73,16 @@ export const PortalScreen: React.FC<PortalScreenProps> = ({ onNavigateHome }) =>
               transition={{ delay: index * 0.1 }}
               className="bg-white rounded-3xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-slate-100 flex flex-col gap-4"
             >
-              <div className="flex flex-col gap-1.5">
-                <h2 className="text-[19px] font-bold text-[#142742]">{proto.title}</h2>
+              <div className="flex flex-col gap-2">
+                {proto.status && (
+                  <div className="flex items-center gap-1.5 w-fit px-2.5 py-1 bg-green-100 rounded-full">
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                    <span className="text-[11px] font-bold text-green-700 uppercase tracking-wider">
+                      {proto.status}
+                    </span>
+                  </div>
+                )}
+                <h2 className="text-[19px] font-bold text-[#142742] mt-1">{proto.title}</h2>
                 <p className="text-[#475569] text-[14px] leading-relaxed">
                   {proto.description}
                 </p>
@@ -114,18 +124,29 @@ export const PortalScreen: React.FC<PortalScreenProps> = ({ onNavigateHome }) =>
                 </a>
               </div>
 
-              {/* Action Button */}
-              <button
-                type="button"
-                onClick={() => {
-                  hapticMedium();
-                  proto.onAction();
-                }}
-                className="w-full mt-1 bg-[#0073e6] text-white font-semibold text-[15px] rounded-full py-3.5 flex items-center justify-center gap-2 active:scale-[0.98] transition-all shadow-sm"
-              >
-                Acessar Protótipo
-                <ArrowRight className="w-4 h-4 stroke-[2.5]" />
-              </button>
+              {/* Action Button & Metadata */}
+              <div className="flex flex-col gap-3 mt-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    hapticMedium();
+                    proto.onAction();
+                  }}
+                  className="w-full bg-[#0073e6] text-white font-semibold text-[15px] rounded-full py-3.5 flex items-center justify-center gap-2 active:scale-[0.98] transition-all shadow-sm"
+                >
+                  Acessar Protótipo
+                  <ArrowRight className="w-4 h-4 stroke-[2.5]" />
+                </button>
+
+                {proto.lastUpdate && (
+                  <div className="flex items-center justify-center gap-1.5 opacity-70">
+                    <Clock className="w-3 h-3 text-slate-500" />
+                    <span className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">
+                      Atualizado em: {proto.lastUpdate}
+                    </span>
+                  </div>
+                )}
+              </div>
             </motion.div>
           ))}
         </div>
