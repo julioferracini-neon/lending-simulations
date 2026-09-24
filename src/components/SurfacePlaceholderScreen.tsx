@@ -1,9 +1,8 @@
 import React from 'react';
 import { motion, type Variants } from 'motion/react';
-import { CreditCard, QrCode, TrendingUp, Sparkles, ArrowRight } from 'lucide-react';
+import { CreditCard, QrCode, TrendingUp, Sparkles } from 'lucide-react';
 import { TopNavBar } from './TopNavBar';
-import { BottomNavBar, type MainTab } from './BottomNavBar';
-import { hapticMedium } from '../utils/haptics';
+import { BottomNavBar } from './BottomNavBar';
 
 export type SurfaceTab = 'cartao' | 'pix' | 'investir';
 
@@ -12,7 +11,6 @@ interface SurfacePlaceholderScreenProps {
   onSelectHome: () => void;
   onSelectProducts: () => void;
   onSelectTab: (tab: SurfaceTab) => void;
-  onSelectLoans?: () => void;
 }
 
 const TAB_CONFIG: Record<
@@ -80,7 +78,6 @@ export const SurfacePlaceholderScreen: React.FC<SurfacePlaceholderScreenProps> =
   onSelectHome,
   onSelectProducts,
   onSelectTab,
-  onSelectLoans,
 }) => {
   const current = TAB_CONFIG[tab];
 
@@ -139,30 +136,6 @@ export const SurfacePlaceholderScreen: React.FC<SurfacePlaceholderScreenProps> =
               ))}
             </div>
           </motion.div>
-
-          {/* Cross-sell or Action to loan */}
-          {onSelectLoans && (
-            <motion.div
-              variants={itemEntranceVariants}
-              onClick={() => {
-                hapticMedium();
-                onSelectLoans();
-              }}
-              className="bg-gradient-to-r from-[#0078D9] to-[#005CAD] rounded-[24px] p-5 text-white flex items-center justify-between cursor-pointer active:scale-[0.98] transition-transform shadow-md"
-            >
-              <div className="flex flex-col">
-                <span className="text-[12px] font-semibold text-blue-100 uppercase tracking-wider">
-                  Disponível para você
-                </span>
-                <span className="text-[16px] font-bold">
-                  Simular Empréstimo Pessoal
-                </span>
-              </div>
-              <div className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center">
-                <ArrowRight className="w-5 h-5 text-white" />
-              </div>
-            </motion.div>
-          )}
         </div>
       </div>
 

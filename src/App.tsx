@@ -388,7 +388,6 @@ export default function App() {
                 onSelectHome={handleSelectHome}
                 onSelectProducts={handleSelectProducts}
                 onSelectTab={handleSelectSurfaceTab}
-                onSelectLoans={handleSelectLoansFromHome}
               />
             </motion.div>
           )}
@@ -560,7 +559,6 @@ export default function App() {
                 onSelectHome={handleBaselineSelectHome}
                 onSelectProducts={handleBaselineSelectProducts}
                 onSelectTab={handleBaselineSelectSurfaceTab}
-                onSelectLoans={handleBaselineSelectLoansFromHome}
               />
             </motion.div>
           )}

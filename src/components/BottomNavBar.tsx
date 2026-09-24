@@ -17,8 +17,11 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
   onSelectTab,
 }) => {
   return (
-    <div className="fixed bottom-6 left-0 right-0 flex justify-center z-40 pointer-events-none select-none">
+    <div className="absolute bottom-6 inset-x-0 flex justify-center z-40 pointer-events-none select-none">
       <div className="w-[336px] relative">
+        {/* Fundo de vidro translúcido com blur sutil */}
+        <div className="absolute top-[2px] left-[4px] right-[4px] h-[68px] bg-white/40 backdrop-blur-md rounded-[16px] shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-white/60 pointer-events-none z-0" />
+
         <img
           src={bottomNavSvg}
           alt="Menu de Navegação"
