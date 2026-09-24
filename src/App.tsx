@@ -510,8 +510,8 @@ export default function App() {
             >
               <BaselineLoanHubScreen
                 maxPersonalLimit={10000}
-                onSelectPersonalLoan={handleBaselineSelectPersonalLoan}
-                onBack={handleBaselineBackToProducts}
+                onSelectPersonalLoan={handleBaselineSelectLoansFromProducts}
+                onBack={handleBaselineBackToSource}
               />
             </motion.div>
           )}

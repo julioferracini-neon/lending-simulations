@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, useMotionValue, type PanInfo } from 'motion/react';
+import { motion, type PanInfo } from 'motion/react';
 import { hapticLight, hapticMedium } from '../utils/haptics';
 
 import foto1Img from '../assets/offer-banner/foto1.png';
@@ -42,14 +42,14 @@ const STEP = CARD_WIDTH + GAP; // 336px
 export const HomeOfferCarousel: React.FC<HomeOfferCarouselProps> = ({ onSelectLoan }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
-  const dragX = useMotionValue(0);
 
   const handleDragStart = () => {
     setIsDragging(true);
   };
 
   const handleDragEnd = (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-    setIsDragging(false);
+    // Timeout breve para evitar clique no término do drag
+    setTimeout(() => setIsDragging(false), 80);
     const { offset, velocity } = info;
     const swipeThreshold = 40;
     const velocityThreshold = 250;
@@ -85,7 +85,7 @@ export const HomeOfferCarousel: React.FC<HomeOfferCarouselProps> = ({ onSelectLo
       <div className="w-full overflow-hidden px-4">
         <motion.div
           className="flex cursor-grab active:cursor-grabbing touch-pan-y"
-          style={{ gap: `${GAP}px`, x: dragX }}
+          style={{ gap: `${GAP}px` }}
           drag="x"
           dragConstraints={{ left: -STEP * (BANNERS.length - 1), right: 0 }}
           dragElastic={0.2}
