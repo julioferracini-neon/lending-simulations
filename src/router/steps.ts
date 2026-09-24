@@ -4,6 +4,9 @@ export type FlowStep =
   | 'portal' 
   // DO-01
   | 'global_home' 
+  | 'surface_cartao'
+  | 'surface_pix'
+  | 'surface_investir'
   | 'products' 
   | 'loan_hub' 
   | 'input_value' 
@@ -13,6 +16,9 @@ export type FlowStep =
   | 'success'
   // BASELINE
   | 'baseline_global_home'
+  | 'baseline_surface_cartao'
+  | 'baseline_surface_pix'
+  | 'baseline_surface_investir'
   | 'baseline_products'
   | 'baseline_loan_hub'
   | 'baseline_input_value'
@@ -25,6 +31,9 @@ export const stepToPath: Record<FlowStep, string> = {
   portal: '/',
   // DO-01
   global_home: '/do-01/home',
+  surface_cartao: '/do-01/cartao',
+  surface_pix: '/do-01/pix',
+  surface_investir: '/do-01/investir',
   products: '/do-01/products',
   loan_hub: '/do-01/loan-hub',
   input_value: '/do-01/input-value',
@@ -34,6 +43,9 @@ export const stepToPath: Record<FlowStep, string> = {
   success: '/do-01/success',
   // BASELINE
   baseline_global_home: '/baseline/home',
+  baseline_surface_cartao: '/baseline/cartao',
+  baseline_surface_pix: '/baseline/pix',
+  baseline_surface_investir: '/baseline/investir',
   baseline_products: '/baseline/products',
   baseline_loan_hub: '/baseline/loan-hub',
   baseline_input_value: '/baseline/input-value',
@@ -68,6 +80,9 @@ export function getPrototypeFromPath(pathname: string): FlowPrototype {
 
 const DO01_STEP_INDEX: Record<string, number> = {
   global_home: 0,
+  surface_cartao: 0.5,
+  surface_pix: 0.5,
+  surface_investir: 0.5,
   products: 1,
   loan_hub: 2,
   input_value: 3,
@@ -79,6 +94,9 @@ const DO01_STEP_INDEX: Record<string, number> = {
 
 const BASELINE_STEP_INDEX: Record<string, number> = {
   baseline_global_home: 0,
+  baseline_surface_cartao: 0.5,
+  baseline_surface_pix: 0.5,
+  baseline_surface_investir: 0.5,
   baseline_products: 1,
   baseline_loan_hub: 1.5,
   baseline_input_value: 2,
@@ -106,6 +124,9 @@ export function getCanonicalBackStep(
 ): FlowStep | null {
   switch (currentStep) {
     // --- DO-01 ---
+    case 'surface_cartao':
+    case 'surface_pix':
+    case 'surface_investir':
     case 'products':
       return 'global_home';
     case 'loan_hub':
@@ -124,6 +145,9 @@ export function getCanonicalBackStep(
     // --- BASELINE ---
     // No Baseline a tela de simulation NÃO existe.
     // summary volta direto para input_value!
+    case 'baseline_surface_cartao':
+    case 'baseline_surface_pix':
+    case 'baseline_surface_investir':
     case 'baseline_products':
       return 'baseline_global_home';
     case 'baseline_loan_hub':

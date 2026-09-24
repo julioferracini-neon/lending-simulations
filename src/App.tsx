@@ -19,6 +19,7 @@ import { SuccessScreen } from './components/SuccessScreen';
 import { BaselineSuccessScreen } from './components/BaselineSuccessScreen';
 import { ProductsScreen } from './components/ProductsScreen';
 import { GlobalHomeScreen } from './components/GlobalHomeScreen';
+import { SurfacePlaceholderScreen, type SurfaceTab } from './components/SurfacePlaceholderScreen';
 import { PortalScreen } from './components/PortalScreen';
 import { hapticLight, hapticMedium, hapticSuccess } from './utils/haptics';
 
@@ -91,6 +92,14 @@ export default function App() {
     hapticMedium();
     setDirection(-1);
     setCurrentStep('global_home');
+  };
+
+  const handleSelectSurfaceTab = (tab: SurfaceTab) => {
+    hapticMedium();
+    setDirection(1);
+    if (tab === 'cartao') setCurrentStep('surface_cartao');
+    else if (tab === 'pix') setCurrentStep('surface_pix');
+    else if (tab === 'investir') setCurrentStep('surface_investir');
   };
 
   const handleSelectLoansFromProducts = () => {
@@ -214,6 +223,14 @@ export default function App() {
     hapticMedium();
     setDirection(-1);
     setCurrentStep('baseline_global_home');
+  };
+
+  const handleBaselineSelectSurfaceTab = (tab: SurfaceTab) => {
+    hapticMedium();
+    setDirection(1);
+    if (tab === 'cartao') setCurrentStep('baseline_surface_cartao');
+    else if (tab === 'pix') setCurrentStep('baseline_surface_pix');
+    else if (tab === 'investir') setCurrentStep('baseline_surface_investir');
   };
 
   const handleBaselineSelectLoansFromProducts = () => {
@@ -351,6 +368,27 @@ export default function App() {
               <GlobalHomeScreen 
                 onSelectProducts={handleSelectProducts} 
                 onSelectLoan={handleSelectLoansFromHome} 
+                onSelectTab={handleSelectSurfaceTab}
+              />
+            </motion.div>
+          )}
+
+          {(currentStep === 'surface_cartao' || currentStep === 'surface_pix' || currentStep === 'surface_investir') && (
+            <motion.div
+              key={currentStep}
+              custom={direction}
+              variants={screenPushVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="absolute inset-0 z-0 bg-white"
+            >
+              <SurfacePlaceholderScreen
+                tab={currentStep === 'surface_cartao' ? 'cartao' : currentStep === 'surface_pix' ? 'pix' : 'investir'}
+                onSelectHome={handleSelectHome}
+                onSelectProducts={handleSelectProducts}
+                onSelectTab={handleSelectSurfaceTab}
+                onSelectLoans={handleSelectLoansFromHome}
               />
             </motion.div>
           )}
@@ -365,7 +403,11 @@ export default function App() {
               exit="exit"
               className="absolute inset-0 z-0 bg-white"
             >
-              <ProductsScreen onSelectLoans={handleSelectLoansFromProducts} onSelectHome={handleSelectHome} />
+              <ProductsScreen 
+                onSelectLoans={handleSelectLoansFromProducts} 
+                onSelectHome={handleSelectHome} 
+                onSelectTab={handleSelectSurfaceTab}
+              />
             </motion.div>
           )}
 
@@ -498,6 +540,27 @@ export default function App() {
               <GlobalHomeScreen 
                 onSelectProducts={handleBaselineSelectProducts} 
                 onSelectLoan={handleBaselineSelectLoansFromHome} 
+                onSelectTab={handleBaselineSelectSurfaceTab}
+              />
+            </motion.div>
+          )}
+
+          {(currentStep === 'baseline_surface_cartao' || currentStep === 'baseline_surface_pix' || currentStep === 'baseline_surface_investir') && (
+            <motion.div
+              key={currentStep}
+              custom={direction}
+              variants={screenPushVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="absolute inset-0 z-0 bg-white"
+            >
+              <SurfacePlaceholderScreen
+                tab={currentStep === 'baseline_surface_cartao' ? 'cartao' : currentStep === 'baseline_surface_pix' ? 'pix' : 'investir'}
+                onSelectHome={handleBaselineSelectHome}
+                onSelectProducts={handleBaselineSelectProducts}
+                onSelectTab={handleBaselineSelectSurfaceTab}
+                onSelectLoans={handleBaselineSelectLoansFromHome}
               />
             </motion.div>
           )}
@@ -512,7 +575,11 @@ export default function App() {
               exit="exit"
               className="absolute inset-0 z-0 bg-white"
             >
-              <ProductsScreen onSelectLoans={handleBaselineSelectLoansFromProducts} onSelectHome={handleBaselineSelectHome} />
+              <ProductsScreen 
+                onSelectLoans={handleBaselineSelectLoansFromProducts} 
+                onSelectHome={handleBaselineSelectHome} 
+                onSelectTab={handleBaselineSelectSurfaceTab}
+              />
             </motion.div>
           )}
 

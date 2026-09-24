@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, type Variants } from 'motion/react';
 import { ChevronRight, CreditCard, ArrowRight, TrendingUp } from 'lucide-react';
-import bottomNavSvg from '../assets/BottomNav.svg';
+import { BottomNavBar, type MainTab } from './BottomNavBar';
+import { PlaceholderBottomSheet, type PlaceholderContextData } from './PlaceholderBottomSheet';
 import { hapticLight, hapticMedium } from '../utils/haptics';
 import { HomeOfferCarousel } from './HomeOfferCarousel';
 
@@ -19,6 +20,7 @@ import extratoRecebidoSvg from '../assets/home/extrato/extrato-recebido.svg';
 interface GlobalHomeScreenProps {
   onSelectProducts: () => void;
   onSelectLoan: () => void;
+  onSelectTab?: (tab: 'cartao' | 'pix' | 'investir') => void;
 }
 
 const SILKY_EASE = [0.22, 1, 0.36, 1] as const;
@@ -49,7 +51,13 @@ const itemEntranceVariants: Variants = {
   },
 };
 
-export const GlobalHomeScreen: React.FC<GlobalHomeScreenProps> = ({ onSelectProducts, onSelectLoan }) => {
+export const GlobalHomeScreen: React.FC<GlobalHomeScreenProps> = ({ 
+  onSelectProducts, 
+  onSelectLoan, 
+  onSelectTab 
+}) => {
+  const [placeholderData, setPlaceholderData] = useState<PlaceholderContextData | null>(null);
+
   return (
     <motion.div
       variants={screenEntranceVariants}
@@ -75,7 +83,18 @@ export const GlobalHomeScreen: React.FC<GlobalHomeScreenProps> = ({ onSelectProd
               <button className="cursor-pointer active:scale-95 transition-transform">
                 <img src={globalEyeSvg} alt="Visibilidade" className="w-10 h-10" />
               </button>
-              <button className="cursor-pointer active:scale-95 transition-transform">
+              <button 
+                type="button"
+                onClick={() => {
+                  hapticLight();
+                  setPlaceholderData({
+                    title: 'Notificações e Ajustes',
+                    description: 'Acesse suas notificações, mensagens da equipe Neon e preferências de conta.',
+                    category: 'Perfil',
+                  });
+                }}
+                className="cursor-pointer active:scale-95 transition-transform"
+              >
                 <img src={globalSymbolSvg} alt="Mais" className="w-10 h-10" />
               </button>
             </div>
@@ -89,7 +108,14 @@ export const GlobalHomeScreen: React.FC<GlobalHomeScreenProps> = ({ onSelectProd
             </div>
             <button 
               type="button"
-              onClick={() => hapticLight()} 
+              onClick={() => {
+                hapticLight();
+                setPlaceholderData({
+                  title: 'Extrato da Conta',
+                  description: 'Consulte o histórico completo de transferências, rendimentos e compras realizadas.',
+                  category: 'Conta Digital',
+                });
+              }} 
               className="w-[48px] h-[48px] rounded-[16px] bg-[#F5FAFF] flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
             >
               <ChevronRight className="w-[20px] h-[20px] text-[#0078D9]" strokeWidth={2.5} />
@@ -99,10 +125,48 @@ export const GlobalHomeScreen: React.FC<GlobalHomeScreenProps> = ({ onSelectProd
           {/* Shortcuts / Quick Actions */}
           <motion.div variants={itemEntranceVariants} className="px-4">
             <div className="flex gap-[12px] w-full">
-              <ShortcutItem icon={<img src={lenteNeonSvg} alt="Lente Neon" className="w-6 h-6" />} label="Lente Neon" />
-              <ShortcutItem icon={<img src={enviarPixSvg} alt="Enviar Pix" className="w-6 h-6" />} label="Enviar Pix" />
-              <ShortcutItem icon={<img src={pagarSvg} alt="Pagar" className="w-6 h-6" />} label="Pagar" />
-              <ShortcutItem icon={<img src={recargaSvg} alt="Recarga" className="w-6 h-6" />} label="Recarga" />
+              <ShortcutItem 
+                icon={<img src={lenteNeonSvg} alt="Lente Neon" className="w-6 h-6" />} 
+                label="Lente Neon" 
+                onClick={() => {
+                  setPlaceholderData({
+                    title: 'Lente Neon',
+                    description: 'Monitore seus gastos por categorias com inteligência financeira visual em tempo real.',
+                    category: 'Gestão Financeira',
+                  });
+                }}
+              />
+              <ShortcutItem 
+                icon={<img src={enviarPixSvg} alt="Enviar Pix" className="w-6 h-6" />} 
+                label="Enviar Pix" 
+                onClick={() => {
+                  if (onSelectTab) {
+                    onSelectTab('pix');
+                  }
+                }}
+              />
+              <ShortcutItem 
+                icon={<img src={pagarSvg} alt="Pagar" className="w-6 h-6" />} 
+                label="Pagar" 
+                onClick={() => {
+                  setPlaceholderData({
+                    title: 'Pagar Contas',
+                    description: 'Pague boletos bancários com leitura rápida de código de barras ou linha digitável.',
+                    category: 'Pagamentos',
+                  });
+                }}
+              />
+              <ShortcutItem 
+                icon={<img src={recargaSvg} alt="Recarga" className="w-6 h-6" />} 
+                label="Recarga" 
+                onClick={() => {
+                  setPlaceholderData({
+                    title: 'Recarga de Celular',
+                    description: 'Recarregue seu celular Vivo, Claro, TIM ou outras operadoras direto da sua conta.',
+                    category: 'Serviços',
+                  });
+                }}
+              />
             </div>
           </motion.div>
 
@@ -114,8 +178,14 @@ export const GlobalHomeScreen: React.FC<GlobalHomeScreenProps> = ({ onSelectProd
           {/* Modules Grid */}
           <motion.div variants={itemEntranceVariants} className="px-4">
             <div className="grid grid-cols-2 gap-3">
-              {/* Cartão Module */}
-              <div className="bg-white rounded-[24px] border border-[#E1E6F5] flex flex-col justify-between p-4 min-h-[156px] relative overflow-hidden shadow-sm">
+              {/* Cartão Module (Camada 1 - Surface) */}
+              <div 
+                onClick={() => {
+                  hapticLight();
+                  onSelectTab?.('cartao');
+                }}
+                className="bg-white rounded-[24px] border border-[#E1E6F5] flex flex-col justify-between p-4 min-h-[156px] relative overflow-hidden shadow-sm cursor-pointer active:scale-95 transition-transform"
+              >
                 <div className="flex flex-col gap-3">
                   <span className="font-bold text-[15px] text-[#2D3342]">Cartão</span>
                   <div className="flex flex-col gap-1">
@@ -132,7 +202,17 @@ export const GlobalHomeScreen: React.FC<GlobalHomeScreenProps> = ({ onSelectProd
               </div>
 
               {/* Limite Module */}
-              <div className="bg-white rounded-[24px] border border-[#E1E6F5] flex flex-col justify-between p-0 min-h-[156px] relative overflow-hidden shadow-sm">
+              <div 
+                onClick={() => {
+                  hapticLight();
+                  setPlaceholderData({
+                    title: 'Limite de Crédito',
+                    description: 'Acompanhe a evolução do seu limite disponível e solicite revisões periódicas.',
+                    category: 'Cartão',
+                  });
+                }}
+                className="bg-white rounded-[24px] border border-[#E1E6F5] flex flex-col justify-between p-0 min-h-[156px] relative overflow-hidden shadow-sm cursor-pointer active:scale-95 transition-transform"
+              >
                 <div className="p-4 flex flex-col gap-3 pb-0">
                   <span className="font-bold text-[15px] text-[#2D3342]">Limite</span>
                   <div className="flex flex-col gap-1">
@@ -173,8 +253,14 @@ export const GlobalHomeScreen: React.FC<GlobalHomeScreenProps> = ({ onSelectProd
                 </div>
               </button>
 
-              {/* Investimentos Module */}
-              <div className="bg-white rounded-[24px] border border-[#E1E6F5] flex flex-col justify-between p-4 min-h-[156px] relative overflow-hidden shadow-sm">
+              {/* Investimentos Module (Camada 1 - Surface) */}
+              <div 
+                onClick={() => {
+                  hapticLight();
+                  onSelectTab?.('investir');
+                }}
+                className="bg-white rounded-[24px] border border-[#E1E6F5] flex flex-col justify-between p-4 min-h-[156px] relative overflow-hidden shadow-sm cursor-pointer active:scale-95 transition-transform"
+              >
                 <div className="flex flex-col gap-3">
                   <span className="font-bold text-[15px] text-[#2D3342]">Investimentos</span>
                   <div className="flex flex-col gap-1">
@@ -277,7 +363,14 @@ export const GlobalHomeScreen: React.FC<GlobalHomeScreenProps> = ({ onSelectProd
 
             <button 
               type="button" 
-              onClick={() => hapticLight()}
+              onClick={() => {
+                hapticLight();
+                setPlaceholderData({
+                  title: 'Extrato Completo',
+                  description: 'Acesse o extrato consolidado de todas as movimentações financeiras da sua conta Neon.',
+                  category: 'Conta Digital',
+                });
+              }}
               className="w-full mt-2 bg-[#E9F5FF] text-[#0078D9] font-bold text-[14px] py-[14px] rounded-[24px] flex items-center justify-center cursor-pointer hover:bg-[#D9EFFF] active:scale-[0.98] transition-transform"
             >
               Ver todos os lançamentos
@@ -286,44 +379,40 @@ export const GlobalHomeScreen: React.FC<GlobalHomeScreenProps> = ({ onSelectProd
         </div>
       </div>
 
-      {/* Floating Bottom Nav (Reusing ProductsScreen asset) */}
-      <div className="absolute bottom-6 left-5 right-5 pointer-events-none flex justify-center z-30">
-        <div className="relative w-full max-w-[360px] flex justify-center">
-          <div className="absolute top-[38px] left-[43px] right-[43px] h-[68px] bg-white/50 backdrop-blur-md rounded-[16px] pointer-events-none"></div>
-          
-          <img src={bottomNavSvg} alt="Bottom Navigation" className="w-full relative z-10 pointer-events-none" />
-          
-          <div className="absolute inset-0 z-20 pointer-events-auto flex items-end">
-            <div className="w-full h-[68px] flex">
-              <button 
-                onClick={() => hapticLight()} 
-                className="flex-1 h-full cursor-pointer focus:outline-none" 
-                aria-label="Início" 
-              />
-              <button className="flex-1 h-full cursor-default focus:outline-none" />
-              <button className="flex-1 h-full cursor-default focus:outline-none" />
-              <button className="flex-1 h-full cursor-default focus:outline-none" />
-              <button 
-                onClick={() => {
-                  hapticMedium();
-                  onSelectProducts();
-                }} 
-                className="flex-1 h-full cursor-pointer focus:outline-none" 
-                aria-label="Produtos" 
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Surface Bottom Bar */}
+      <BottomNavBar
+        activeTab="home"
+        onSelectHome={() => {}}
+        onSelectProducts={onSelectProducts}
+        onSelectTab={(tab) => onSelectTab?.(tab)}
+      />
+
+      {/* Second Layer: Placeholder Bottom Sheet */}
+      <PlaceholderBottomSheet
+        isOpen={!!placeholderData}
+        onClose={() => setPlaceholderData(null)}
+        data={placeholderData}
+      />
     </motion.div>
   );
 };
 
-const ShortcutItem = ({ icon, label }: { icon: React.ReactNode; label: string }) => {
+const ShortcutItem = ({ 
+  icon, 
+  label, 
+  onClick 
+}: { 
+  icon: React.ReactNode; 
+  label: string; 
+  onClick?: () => void; 
+}) => {
   return (
     <button 
       type="button"
-      onClick={() => hapticLight()}
+      onClick={() => {
+        hapticLight();
+        onClick?.();
+      }}
       className="flex flex-col flex-1 items-center gap-[8px] cursor-pointer focus:outline-none active:opacity-70 transition-opacity"
     >
       <div className="w-full aspect-square bg-[#F5FAFF] rounded-[22px] flex items-center justify-center shrink-0">
