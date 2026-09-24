@@ -24,6 +24,7 @@ import { hapticLight, hapticMedium, hapticSuccess } from './utils/haptics';
 
 import { FlowStep } from './router/steps';
 import { getInitialFlowState, useUrlSyncedFlow } from './router/useUrlSyncedFlow';
+import { EntrySource } from './router/types';
 
 const SILKY_EASE_OUT = [0.16, 1, 0.3, 1] as const;
 
@@ -51,18 +52,19 @@ const screenPushVariants: Variants = {
 };
 
 export default function App() {
-  const [currentStep, setCurrentStep] = useState<FlowStep>(() => getInitialFlowState().step);
-  const [sessionAmount, setSessionAmount] = useState<number | null>(() => getInitialFlowState().sessionAmount);
-  const [loanAmount, setLoanAmount] = useState<number>(() => getInitialFlowState().loanAmount);
-  const [simulationData, setSimulationData] = useState<LoanSimulationData | null>(() => getInitialFlowState().simulationData);
-  const [direction, setDirection] = useState<number>(() => getInitialFlowState().direction);
-  
-  const [baselineInputSource, setBaselineInputSource] = useState<'home' | 'products'>('products');
-  const [inputSource, setInputSource] = useState<'home' | 'products'>('products');
+  const initial = getInitialFlowState();
+  const [currentStep, setCurrentStep] = useState<FlowStep>(() => initial.step);
+  const [sessionAmount, setSessionAmount] = useState<number | null>(() => initial.sessionAmount);
+  const [loanAmount, setLoanAmount] = useState<number>(() => initial.loanAmount);
+  const [simulationData, setSimulationData] = useState<LoanSimulationData | null>(() => initial.simulationData);
+  const [direction, setDirection] = useState<number>(() => initial.direction);
+  const [source, setSource] = useState<EntrySource>(() => initial.source);
 
   useUrlSyncedFlow({
     step: currentStep,
     setStep: setCurrentStep,
+    source,
+    setSource,
     sessionAmount,
     setSessionAmount,
     loanAmount,
@@ -93,14 +95,14 @@ export default function App() {
 
   const handleSelectLoansFromProducts = () => {
     hapticMedium();
-    setInputSource('products');
+    setSource('products');
     setDirection(1);
     setCurrentStep('loan_hub');
   };
 
   const handleSelectLoansFromHome = () => {
     hapticMedium();
-    setInputSource('home');
+    setSource('home');
     setDirection(1);
     setCurrentStep('loan_hub');
   };
@@ -114,7 +116,7 @@ export default function App() {
   const handleBackToSource = () => {
     hapticLight();
     setDirection(-1);
-    if (inputSource === 'home') {
+    if (source === 'home') {
       setCurrentStep('global_home');
     } else {
       setCurrentStep('products');
@@ -139,13 +141,19 @@ export default function App() {
     hapticMedium();
     setSimulationData(data);
     setDirection(1);
+    setCurrentStep('summary');
+  };
+
+  const handleContractFromSummary = () => {
+    hapticMedium();
+    setDirection(1);
     setCurrentStep('proposal_loading');
   };
 
   const handleLoadingComplete = () => {
     hapticSuccess();
     setDirection(1);
-    setCurrentStep('summary');
+    setCurrentStep('success');
   };
 
   const handleBackFromSummary = () => {
@@ -210,14 +218,14 @@ export default function App() {
 
   const handleBaselineSelectLoansFromProducts = () => {
     hapticMedium();
-    setBaselineInputSource('products');
+    setSource('products');
     setDirection(1);
     setCurrentStep('baseline_input_value');
   };
 
   const handleBaselineSelectLoansFromHome = () => {
     hapticMedium();
-    setBaselineInputSource('home');
+    setSource('home');
     setDirection(1);
     setCurrentStep('baseline_input_value');
   };
@@ -225,7 +233,7 @@ export default function App() {
   const handleBaselineBackToSource = () => {
     hapticLight();
     setDirection(-1);
-    if (baselineInputSource === 'home') {
+    if (source === 'home') {
       setCurrentStep('baseline_global_home');
     } else {
       setCurrentStep('baseline_products');
@@ -238,7 +246,7 @@ export default function App() {
     setLoanAmount(data.loanAmount);
     setSimulationData(data);
     setDirection(1);
-    setCurrentStep('baseline_proposal_loading');
+    setCurrentStep('baseline_summary');
   };
 
   const handleBaselineBackToInputValue = () => {
@@ -251,19 +259,25 @@ export default function App() {
     hapticMedium();
     setSimulationData(data);
     setDirection(1);
+    setCurrentStep('baseline_summary');
+  };
+
+  const handleBaselineContractFromSummary = () => {
+    hapticMedium();
+    setDirection(1);
     setCurrentStep('baseline_proposal_loading');
   };
 
   const handleBaselineLoadingComplete = () => {
     hapticSuccess();
     setDirection(1);
-    setCurrentStep('baseline_summary');
+    setCurrentStep('baseline_success');
   };
 
   const handleBaselineBackFromSummary = () => {
     hapticLight();
     setDirection(-1);
-    setCurrentStep('baseline_simulation');
+    setCurrentStep('baseline_input_value');
   };
 
   const handleBaselineEditAmountFromSummary = () => {
@@ -275,7 +289,7 @@ export default function App() {
   const handleBaselineEditSimulationFromSummary = () => {
     hapticLight();
     setDirection(-1);
-    setCurrentStep('baseline_simulation');
+    setCurrentStep('baseline_input_value');
   };
 
   const handleBaselineSuccess = () => {
@@ -296,7 +310,11 @@ export default function App() {
   const handleBaselineRestart = () => {
     hapticLight();
     setDirection(-1);
-    setCurrentStep('baseline_products');
+    if (source === 'home') {
+      setCurrentStep('baseline_global_home');
+    } else {
+      setCurrentStep('baseline_products');
+    }
   };
 
   return (
@@ -447,7 +465,7 @@ export default function App() {
                 onEditAmount={handleEditAmountFromSummary}
                 onEditInstallments={handleEditSimulationFromSummary}
                 onEditDueDate={handleEditSimulationFromSummary}
-                onContract={handleSuccess}
+                onContract={handleContractFromSummary}
               />
             </motion.div>
           )}
@@ -591,7 +609,7 @@ export default function App() {
                 onEditAmount={handleBaselineEditAmountFromSummary}
                 onEditInstallments={handleBaselineEditSimulationFromSummary}
                 onEditDueDate={handleBaselineEditSimulationFromSummary}
-                onContract={handleBaselineSuccess}
+                onContract={handleBaselineContractFromSummary}
               />
             </motion.div>
           )}
