@@ -48,8 +48,8 @@ export const PortalScreen: React.FC<PortalScreenProps> = ({ onNavigateHome, onNa
       id: 'baseline',
       title: 'Baseline (Controle)',
       description: 'O fluxo de Empréstimo Pessoal exatamente como está em produção hoje. Utilize este protótipo como Grupo de Controle.',
-      status: 'Crafting',
-      lastUpdate: '23 Set 2026, 10:30',
+      status: 'Pronto para teste',
+      lastUpdate: '24 Set 2026, 14:35',
       figmaUrl: 'https://www.figma.com/design/e8K4rLAkYXZxjO5F9MoHWp/-Main--Personal-Loan-%25E2%2580%2593-In-app-Flows?node-id=5219-31906&t=WymtrVzE9WnxNIMA-11',
       hypothesis: {
         title: 'Grupo de Controle',
@@ -62,7 +62,7 @@ export const PortalScreen: React.FC<PortalScreenProps> = ({ onNavigateHome, onNa
 
   return (
     <div className="w-full h-full bg-[#f3f6fa] flex flex-col relative select-none overflow-hidden" id="portal-screen">
-      <div className="flex-1 min-h-0 overflow-y-auto px-5 pt-16 pb-12">
+      <div className="flex-1 min-h-0 overflow-y-auto px-5 pt-24 pb-12">
         <motion.div
           initial="hidden"
           animate="visible"
@@ -70,10 +70,10 @@ export const PortalScreen: React.FC<PortalScreenProps> = ({ onNavigateHome, onNa
           className="flex flex-col gap-2 mb-8"
         >
           <h1 className="text-3xl font-extrabold text-[#142742] tracking-tight leading-tight">
-            Lending Prototypes
+            Protótipos de Empréstimo Pessoal
           </h1>
           <p className="text-slate-500 text-[15px] leading-relaxed">
-            Selecione o protótipo que deseja avaliar.
+            Hipóteses para Q4.2026. Selecione o protótipo que deseja avaliar.
           </p>
         </motion.div>
 

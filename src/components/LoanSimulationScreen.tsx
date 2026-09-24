@@ -176,9 +176,9 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
               hapticLight();
               setIsAmountModalOpen(true);
             }}
-            className="flex items-center gap-1.5 active:opacity-70 transition-opacity"
+            className="flex items-center gap-1.5 active:opacity-70 transition-opacity group cursor-pointer"
           >
-            <span className="font-bold text-[#142742] text-[18px]">
+            <span className="font-bold text-[#142742] text-[18px] underline decoration-dotted decoration-1 underline-offset-[5px] decoration-[#8da2b5]/70 group-hover:decoration-[#0072e6] transition-colors">
               {formatCurrency(loanAmount)}
             </span>
           </button>
@@ -190,10 +190,10 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
               hapticLight();
               setIsDetailsModalOpen(true);
             }}
-            className="flex items-center gap-1.5 text-right cursor-pointer hover:opacity-80 transition-opacity"
+            className="flex items-center gap-1.5 text-right cursor-pointer hover:opacity-80 transition-opacity group"
           >
             <span className="text-[#4b6076] font-normal text-[15px]">Taxa:</span>
-            <span className="font-bold text-[#1b3248] text-[15px] tabular-nums">
+            <span className="font-bold text-[#1b3248] text-[15px] tabular-nums underline decoration-dotted decoration-1 underline-offset-[5px] decoration-[#8da2b5]/70 group-hover:decoration-[#0072e6] transition-colors">
               3,49% a.m.
             </span>
           </button>
@@ -243,19 +243,31 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
           <div className="flex items-center justify-between">
             <button
               type="button"
-              onClick={() => setIsDetailsModalOpen(true)}
+              onClick={() => {
+                hapticLight();
+                setIsDetailsModalOpen(true);
+              }}
               className="text-[15px] font-normal text-[#4b6076] hover:text-[#1b3248] transition-colors cursor-pointer text-left"
             >
               Custo total estimado
             </button>
-            <div className="min-w-[120px] text-right flex justify-end">
-              <AnimatedNumber
-                value={totalSimulation.totalEstimatedCost}
-                prefix="R$ "
-                duration={240}
-                className="text-[16px] sm:text-[17px] font-bold text-[#516e8b] tabular-nums"
-              />
-            </div>
+            <button
+              type="button"
+              onClick={() => {
+                hapticLight();
+                setIsDetailsModalOpen(true);
+              }}
+              className="min-w-[120px] text-right flex justify-end group cursor-pointer"
+            >
+              <span className="underline decoration-dotted decoration-1 underline-offset-[5px] decoration-[#8da2b5]/70 group-hover:decoration-[#0072e6] transition-colors">
+                <AnimatedNumber
+                  value={totalSimulation.totalEstimatedCost}
+                  prefix="R$ "
+                  duration={240}
+                  className="text-[16px] sm:text-[17px] font-bold text-[#516e8b] group-hover:text-[#1b3248] tabular-nums"
+                />
+              </span>
+            </button>
           </div>
         </motion.div>
 
@@ -264,12 +276,22 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
           variants={itemEntranceVariants}
           className="bg-white border border-[#e2edf7] rounded-[24px] px-4 py-3.5 flex items-center justify-between shadow-xs hover:border-[#ccdff1] transition-colors"
         >
-          <div className="flex items-center gap-2.5">
+          <button
+            type="button"
+            onClick={() => {
+              hapticLight();
+              setIsDueDateModalOpen(true);
+            }}
+            className="flex items-center gap-2.5 group cursor-pointer text-left"
+          >
             <CalendarIcon className="w-5 h-5 text-[#0072e6] stroke-[2]" />
             <span className="text-[14px] font-medium text-[#253e57]">
-              Vencimento: todo dia {firstDueDate.getDate()}
+              Vencimento:{' '}
+              <span className="underline decoration-dotted decoration-1 underline-offset-[4px] decoration-[#8da2b5]/70 group-hover:decoration-[#0072e6] transition-colors">
+                todo dia {firstDueDate.getDate()}
+              </span>
             </span>
-          </div>
+          </button>
 
           <button
             type="button"
@@ -299,10 +321,10 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
                 hapticLight();
                 setIsMonthlyModalOpen(true);
               }}
-              className="text-right cursor-pointer hover:opacity-80 transition-opacity"
+              className="text-right cursor-pointer hover:opacity-80 transition-opacity group"
               aria-label="Selecionar prazo de parcelas"
             >
-              <span className="text-[16px] sm:text-[17px] font-bold text-[#355272] hover:text-[#1e3a5f] tabular-nums inline-block text-right transition-colors">
+              <span className="text-[16px] sm:text-[17px] font-bold text-[#355272] group-hover:text-[#1e3a5f] tabular-nums inline-block text-right transition-colors underline decoration-dotted decoration-1 underline-offset-[5px] decoration-[#8da2b5]/70 group-hover:decoration-[#0072e6]">
                 {installments} {installments === 1 ? 'Parcela' : 'Parcelas'}
               </span>
             </button>
