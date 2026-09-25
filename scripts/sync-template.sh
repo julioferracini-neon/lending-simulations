@@ -20,11 +20,20 @@ fi
 echo "📥 Baixando novidades do template..."
 git fetch template
 
-# 4. Mescla atualizações do core e design system
-echo "🔀 Mesclando atualizações..."
-git merge template/main --allow-unrelated-histories -m "chore: sincronizar melhorias com prototype-boilerplate"
+# 4. Atualiza exclusivamente o Core e o Design System
+echo "📦 Atualizando pastas src/core/ e src/design-system/..."
+git checkout template/main -- src/core src/design-system
 
-# 5. Validação de tipagem
+# 5. Commita se houver alterações
+if [ -n "$(git status --porcelain src/core src/design-system)" ]; then
+  git add src/core src/design-system
+  git commit -m "chore: sincronizar core e design system com o template"
+  echo "✨ Core e Design System atualizados e commitados!"
+else
+  echo "ℹ️ O Core e o Design System já estão na versão mais recente."
+fi
+
+# 6. Validação de tipagem
 echo "🧪 Executando checagem estática..."
 npm run lint
 
