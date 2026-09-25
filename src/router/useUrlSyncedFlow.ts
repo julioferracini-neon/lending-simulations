@@ -4,8 +4,32 @@ import { LoanSimulationData } from '../components/LoanSimulationScreen';
 import { fallbackSimulationData } from './mockFixtures';
 import { EntrySource, FlowState } from './types';
 
+export function getNormalizedPath(pathname: string): string {
+  const rawBase = import.meta.env.BASE_URL || '/';
+  const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+  const baseWithoutTrailingSlash = base.endsWith('/') ? base.slice(0, -1) : base;
+
+  if (pathname === baseWithoutTrailingSlash) {
+    return '/';
+  }
+
+  if (base !== '/' && pathname.startsWith(base)) {
+    const stripped = pathname.slice(base.length - 1);
+    return stripped || '/';
+  }
+
+  return pathname;
+}
+
+export function getPrefixedUrl(targetPath: string, queryString: string = ''): string {
+  const rawBase = import.meta.env.BASE_URL || '/';
+  const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
+  const fullPath = targetPath === '/' ? (base ? `${base}/` : '/') : `${base}${targetPath}`;
+  return `${fullPath}${queryString}`;
+}
+
 export function getInitialFlowState(): FlowState {
-  const pathname = window.location.pathname;
+  const pathname = getNormalizedPath(window.location.pathname);
   const step = pathToStep[pathname] || 'portal';
 
   const searchParams = new URLSearchParams(window.location.search);
@@ -107,7 +131,7 @@ export function useUrlSyncedFlow({
     const queryString = source === 'home' && (step === 'input_value' || step === 'loan_hub' || step === 'baseline_input_value')
       ? '?from=home' 
       : '';
-    const fullTargetUrl = `${targetPath}${queryString}`;
+    const fullTargetUrl = getPrefixedUrl(targetPath, queryString);
     const currentFullUrl = `${window.location.pathname}${window.location.search}`;
 
     if (currentFullUrl !== fullTargetUrl) {
@@ -129,7 +153,7 @@ export function useUrlSyncedFlow({
     const handlePopState = (event: PopStateEvent) => {
       isPopState.current = true;
       
-      const pathname = window.location.pathname;
+      const pathname = getNormalizedPath(window.location.pathname);
       const newStep = pathToStep[pathname] || 'portal';
       
       // Calcula direção visual automática baseada nos passos

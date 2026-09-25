@@ -85,6 +85,20 @@ Para utilizar este boilerplate em um novo teste de conceito ou protótipo:
 
 ---
 
+## Publicação e Testes no GitHub Pages
+
+Este protótipo está preparado para ser compilado e publicado no GitHub Pages com deploys automáticos via GitHub Actions.
+
+### Como Ativar no GitHub
+
+1. No seu repositório no GitHub, acesse a aba **Settings**.
+2. No menu lateral esquerdo, clique em **Pages**.
+3. Na seção **Build and deployment > Source**, altere de *Deploy from a branch* para **GitHub Actions**.
+4. Faça um push para a branch `main` (ou execute manualmente na aba **Actions** > **Deploy to GitHub Pages** > **Run workflow**).
+5. O link público ficará disponível em `https://<seu-usuario>.github.io/<nome-do-repositorio>/`.
+
+---
+
 ## Stack Tecnológica
 
 * **Framework**: React 19 + TypeScript
