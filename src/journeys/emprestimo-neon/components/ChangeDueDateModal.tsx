@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { BottomSheet } from '@/src/components/BottomSheet';
+import { Button } from '@/src/design-system';
 import { calculateLoanSimulation, formatCurrency, formatDatePtBR, BASE_MONTHLY_RATE, getDefaultFirstDueDate } from '../utils/finance';
 
 interface ChangeDueDateModalProps {
@@ -114,13 +115,13 @@ export const ChangeDueDateModal: React.FC<ChangeDueDateModalProps> = ({
         </div>
 
         {/* Action button */}
-        <button
+        <Button
           type="button"
+          size="md"
           onClick={handleConfirm}
-          className="w-full bg-[#0073ea] hover:bg-[#0062c4] active:scale-[0.98] text-white font-bold py-3.5 rounded-full transition-all text-base cursor-pointer"
         >
           Confirmar
-        </button>
+        </Button>
       </div>
     </BottomSheet>
   );

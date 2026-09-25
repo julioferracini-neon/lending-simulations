@@ -4,6 +4,7 @@ import { ArrowLeft, HelpCircle, ChevronRight, Check } from 'lucide-react';
 import { formatCurrency } from '../utils/finance';
 import { hapticLight, hapticMedium } from '@/src/utils/haptics';
 import { TopNavBar } from '@/src/components/TopNavBar';
+import { Button } from '@/src/design-system';
 
 interface LoanHubScreenProps {
   maxPersonalLimit?: number;
@@ -101,16 +102,16 @@ export const LoanHubScreen: React.FC<LoanHubScreenProps> = ({
               </p>
             </div>
 
-            <button
+            <Button
+              size="md"
               type="button"
               onClick={() => {
                 hapticMedium();
                 onSelectPersonalLoan();
               }}
-              className="w-full bg-[#0073e6] hover:bg-[#0062c4] active:bg-[#0055aa] text-white font-semibold py-3.5 rounded-full shadow-xs transition-all duration-200 cursor-pointer active:scale-[0.99] text-base"
             >
               Simular
-            </button>
+            </Button>
           </motion.div>
 
           {/* Card 2: Empréstimo Consignado */}
@@ -135,13 +136,13 @@ export const LoanHubScreen: React.FC<LoanHubScreenProps> = ({
               </p>
             </div>
 
-            <button
+            <Button
+              size="md"
               type="button"
               onClick={() => hapticLight()}
-              className="w-full bg-[#0073e6] hover:bg-[#0062c4] active:bg-[#0055aa] text-white font-semibold py-3.5 rounded-full shadow-xs transition-all duration-200 cursor-pointer active:scale-[0.99] text-base"
             >
               Conferir
-            </button>
+            </Button>
           </motion.div>
 
           {/* Card 3: Compra Planejada */}
@@ -169,13 +170,13 @@ export const LoanHubScreen: React.FC<LoanHubScreenProps> = ({
               </p>
             </div>
 
-            <button
+            <Button
+              size="md"
               type="button"
               onClick={() => hapticLight()}
-              className="w-full bg-[#0073e6] hover:bg-[#0062c4] active:bg-[#0055aa] text-white font-semibold py-3.5 rounded-full shadow-xs transition-all duration-200 cursor-pointer active:scale-[0.99] text-base"
             >
               Simular
-            </button>
+            </Button>
           </motion.div>
         </div>
 

@@ -3,6 +3,7 @@ import { CreditCard, Check, Sparkles } from 'lucide-react';
 import { BottomSheet } from '@/src/components/BottomSheet';
 import { calculateLoanSimulation, formatCurrency, BASE_MONTHLY_RATE } from '../utils/finance';
 import { RouletteOdometer } from './RouletteOdometer';
+import { Button } from '@/src/design-system';
 
 interface EditMonthlyInstallmentModalProps {
   isOpen: boolean;
@@ -164,13 +165,13 @@ export const EditMonthlyInstallmentModal: React.FC<EditMonthlyInstallmentModalPr
 
         {/* Sticky Confirm Action Button */}
         <div className="sticky bottom-0 pt-4 pb-2 bg-white/95 backdrop-blur-sm border-t border-slate-100">
-          <button
+          <Button
             type="button"
+            size="md"
             onClick={handleConfirm}
-            className="w-full bg-[#0073ea] hover:bg-[#0062c4] active:scale-[0.98] text-white font-bold py-4 rounded-full transition-all flex items-center justify-center text-[15px] cursor-pointer"
           >
             Confirmar opção
-          </button>
+          </Button>
         </div>
       </div>
     </BottomSheet>

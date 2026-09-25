@@ -8,6 +8,7 @@ import { formatCurrency, formatDatePtBR } from '../utils/finance';
 import { hapticLight, hapticMedium, hapticSuccess } from '@/src/utils/haptics';
 import type { LoanSimulationData } from './LoanSimulationScreen';
 import { PlaceholderBottomSheet, type PlaceholderContextData } from '../components/PlaceholderBottomSheet';
+import { Button } from '@/src/design-system';
 
 import iconEditorMonetizationOnSvg from '@/src/assets/icon-editor-monetization-on.svg';
 import iconNeonLoanSvg from '@/src/assets/icon-neon-loan.svg';
@@ -215,16 +216,16 @@ export const BaselineSummaryScreen: React.FC<BaselineSummaryScreenProps> = ({
           </button>{' '}
           e débito na conta Neo do valor total ou parcial das parcelas no dia do vencimento ou após
         </p>
-        <button
+        <Button
           type="button"
+          size="lg"
           onClick={() => {
             hapticMedium();
             setIsPinModalOpen(true);
           }}
-          className="w-full bg-[#0078D9] hover:bg-[#0062c4] active:scale-[0.98] text-white font-bold py-[14px] rounded-full transition-all duration-200 cursor-pointer text-[15px]"
         >
           Contratar empréstimo
-        </button>
+        </Button>
       </div>
 
       {/* Info Modal */}
@@ -253,12 +254,13 @@ export const BaselineSummaryScreen: React.FC<BaselineSummaryScreenProps> = ({
               O custo da proteção é calculado como um percentual único de 7,9% sobre o valor total emprestado.
             </p>
           )}
-          <button
+          <Button
+            size="md"
+            className="mt-6"
             onClick={() => { hapticLight(); setInfoModalType(null); }}
-            className="w-full mt-6 bg-[#0078D9] active:scale-[0.98] text-white font-bold py-3.5 rounded-full transition-all text-[15px]"
           >
             Entendi
-          </button>
+          </Button>
         </div>
       </BottomSheet>
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Sparkles, Layers, Info, CheckCircle2 } from 'lucide-react';
 import { BottomSheet } from '@/src/components/BottomSheet';
+import { Button } from '@/src/design-system';
 import { hapticLight, hapticMedium } from '@/src/utils/haptics';
 
 export interface PlaceholderContextData {
@@ -72,16 +73,17 @@ export const PlaceholderBottomSheet: React.FC<PlaceholderBottomSheetProps> = ({
         </div>
 
         {/* Action Button */}
-        <button
+        <Button
           type="button"
+          size="md"
+          className="mt-2"
           onClick={() => {
             hapticMedium();
             onClose();
           }}
-          className="w-full bg-[#0078D9] hover:bg-[#0062c4] active:scale-[0.98] text-white font-bold py-3.5 rounded-full transition-all cursor-pointer text-[15px] mt-2 shadow-xs"
         >
           {data.actionLabel ?? 'Entendi'}
-        </button>
+        </Button>
       </div>
     </BottomSheet>
   );

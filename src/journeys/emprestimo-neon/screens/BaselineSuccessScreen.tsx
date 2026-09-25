@@ -4,6 +4,7 @@ import { X } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { hapticLight, hapticSuccess } from '@/src/utils/haptics';
 import { formatCurrency } from '../utils/finance';
+import { Button } from '@/src/design-system';
 import type { LoanSimulationData } from './LoanSimulationScreen';
 
 interface BaselineSuccessScreenProps {
@@ -129,15 +130,15 @@ export const BaselineSuccessScreen: React.FC<BaselineSuccessScreenProps> = ({
 
       {/* Bottom Section */}
       <div className="absolute bottom-0 inset-x-0 p-5 bg-white z-20 pb-8 shrink-0">
-        <button
+        <Button
+          size="lg"
           onClick={() => {
             hapticLight();
             onFinish();
           }}
-          className="w-full h-[52px] bg-[#3B7BE8] text-white font-semibold text-[15px] rounded-full active:scale-[0.98] transition-transform cursor-pointer"
         >
           Fechar
-        </button>
+        </Button>
       </div>
 
     </motion.div>

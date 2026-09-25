@@ -12,6 +12,7 @@ import { EditAmountModal } from '../components/EditAmountModal';
 import { EditMonthlyInstallmentModal } from '../components/EditMonthlyInstallmentModal';
 import { ProposalSuccessModal } from '../components/ProposalSuccessModal';
 import { TopNavBar } from '@/src/components/TopNavBar';
+import { Button } from '@/src/design-system';
 
 export interface LoanSimulationData {
   loanAmount: number;
@@ -324,10 +325,9 @@ export const BaselineLoanSimulationScreen: React.FC<BaselineLoanSimulationScreen
         variants={itemEntranceVariants}
         className="fixed sm:absolute bottom-0 inset-x-0 p-5 pb-8 sm:pb-6 bg-white z-20"
       >
-        <motion.button
+        <Button
           type="button"
-          whileTap={{ scale: 0.98 }}
-          transition={{ duration: 0.12, ease: EASE_IN_OUT }}
+          size="lg"
           onClick={() => {
             hapticMedium();
             if (onContinueProposal) {
@@ -342,10 +342,9 @@ export const BaselineLoanSimulationScreen: React.FC<BaselineLoanSimulationScreen
               setIsSuccessModalOpen(true);
             }
           }}
-          className="w-full bg-[#0072e6] hover:bg-[#0062c4] active:bg-[#0055aa] text-white font-bold py-4 px-6 rounded-full transition-all flex items-center justify-center text-base cursor-pointer"
         >
           Continuar proposta
-        </motion.button>
+        </Button>
       </motion.footer>
 
       {/* Bottom Sheet: Editar Valor da Parcela Mensal */}

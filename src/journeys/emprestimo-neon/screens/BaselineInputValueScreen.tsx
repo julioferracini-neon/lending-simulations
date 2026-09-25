@@ -3,6 +3,7 @@ import { motion, useAnimation, type Variants } from 'motion/react';
 import { ArrowLeft, X, Square, CheckSquare, ChevronLeft, ChevronRight } from 'lucide-react';
 import { BottomSheet } from '@/src/components/BottomSheet';
 import { formatCurrency } from '../utils/finance';
+import { Button } from '@/src/design-system';
 import { hapticLight, hapticMedium, hapticWarning } from '@/src/utils/haptics';
 import type { LoanSimulationData } from './LoanSimulationScreen';
 
@@ -327,12 +328,11 @@ export const BaselineInputValueScreen: React.FC<BaselineInputValueScreenProps> =
             </p>
           </div>
 
-          <motion.button
+          <Button
             type="button"
+            size="lg"
             onClick={handleContinue}
             disabled={!isValidToProceed}
-            whileTap={{ scale: isValidToProceed ? 0.98 : 1 }}
-            className="w-full bg-[#467bed] hover:bg-[#3666d4] active:bg-[#2b54b5] text-white font-semibold py-[15px] rounded-full transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-[16px] flex items-center justify-center gap-2"
           >
             {isSimulating ? (
               <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -341,7 +341,7 @@ export const BaselineInputValueScreen: React.FC<BaselineInputValueScreenProps> =
             ) : (
               'Continuar'
             )}
-          </motion.button>
+          </Button>
         </motion.footer>
       </motion.div>
 

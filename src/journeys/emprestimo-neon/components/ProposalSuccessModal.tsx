@@ -4,6 +4,7 @@ import { CheckCircle2, ShieldCheck, ArrowRight, Sparkles, Check } from 'lucide-r
 import confetti from 'canvas-confetti';
 import { BottomSheet } from '@/src/components/BottomSheet';
 import { formatCurrency, formatDatePtBR } from '../utils/finance';
+import { Button } from '@/src/design-system';
 
 interface ProposalSuccessModalProps {
   isOpen: boolean;
@@ -109,14 +110,15 @@ export const ProposalSuccessModal: React.FC<ProposalSuccessModalProps> = ({
             Contrato Assinado com Sucesso!
           </div>
         ) : (
-          <button
+          <Button
             type="button"
+            size="md"
             onClick={handleSign}
-            className="w-full bg-[#0072e6] hover:bg-[#0062c4] active:scale-[0.98] text-white font-bold py-3.5 rounded-full transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 text-sm cursor-pointer"
+            className="flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20"
           >
             <span>Confirmar e assinar contrato</span>
             <ArrowRight className="w-4 h-4" />
-          </button>
+          </Button>
         )}
       </div>
     </BottomSheet>

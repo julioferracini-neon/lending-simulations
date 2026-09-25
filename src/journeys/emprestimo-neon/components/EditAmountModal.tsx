@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { DollarSign, Check, Plus, Minus } from 'lucide-react';
 import { BottomSheet } from '@/src/components/BottomSheet';
 import { formatCurrency } from '../utils/finance';
+import { Button } from '@/src/design-system';
 
 interface EditAmountModalProps {
   isOpen: boolean;
@@ -105,14 +106,15 @@ export const EditAmountModal: React.FC<EditAmountModalProps> = ({
         </div>
 
         {/* Save button */}
-        <button
+        <Button
           type="button"
+          size="md"
           onClick={handleSave}
-          className="w-full bg-[#0072e6] hover:bg-[#0062c4] active:scale-[0.98] text-white font-bold py-3.5 rounded-full transition-all flex items-center justify-center gap-2 shadow-md shadow-blue-500/20 text-base cursor-pointer"
+          className="flex items-center justify-center gap-2 shadow-md shadow-blue-500/20"
         >
           <Check className="w-5 h-5" />
           Confirmar {formatCurrency(amount)}
-        </button>
+        </Button>
       </div>
     </BottomSheet>
   );

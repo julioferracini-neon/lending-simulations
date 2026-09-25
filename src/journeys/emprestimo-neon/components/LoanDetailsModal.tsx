@@ -3,6 +3,7 @@ import { Info, ShieldCheck } from 'lucide-react';
 import { BottomSheet } from '@/src/components/BottomSheet';
 import { SimulationResult } from '@/src/types';
 import { formatCurrency } from '../utils/finance';
+import { Button } from '@/src/design-system';
 
 interface LoanDetailsModalProps {
   isOpen: boolean;
@@ -140,13 +141,14 @@ export const LoanDetailsModal: React.FC<LoanDetailsModalProps> = ({
         )}
 
         {/* Footer button */}
-        <button
+        <Button
           type="button"
+          size="md"
+          className="mt-3"
           onClick={onClose}
-          className="w-full mt-3 bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 rounded-full text-sm transition-all cursor-pointer"
         >
           Entendi
-        </button>
+        </Button>
       </div>
     </BottomSheet>
   );
