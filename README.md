@@ -92,3 +92,4 @@ Para utilizar este boilerplate em um novo teste de conceito ou protótipo:
 * **Estilização**: Tailwind CSS v4 com tokens semânticos
 * **Animações e Gestos**: Motion (Framer Motion)
 * **Ícones**: Lucide React
+
