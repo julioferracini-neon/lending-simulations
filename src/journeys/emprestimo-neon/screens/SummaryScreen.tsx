@@ -115,7 +115,7 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({
         <div className="flex flex-col items-center pt-5 pb-6 px-6 relative z-10">
           <div className="w-[130px] h-[100px] mb-3 flex items-center justify-center relative">
             <img 
-              src="/assets/summary-illustration.png" 
+              src={`${import.meta.env.BASE_URL}assets/summary-illustration.png`}
               alt="Ilustração do calendário" 
               className="max-w-full max-h-full object-contain"
             />

@@ -230,7 +230,7 @@ export const LoanSimulationScreen: React.FC<LoanSimulationScreenProps> = ({
             />
             <div className="w-10 h-10 flex items-center justify-center shrink-0">
               <img 
-                src="/assets/nav-unfold.svg" 
+                src={`${import.meta.env.BASE_URL}assets/nav-unfold.svg`}
                 alt="Alterar parcelas" 
                 className="w-10 h-10 select-none pointer-events-none group-hover:scale-105 active:scale-95 transition-transform" 
               />

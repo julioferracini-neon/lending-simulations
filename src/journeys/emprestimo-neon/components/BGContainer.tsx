@@ -16,7 +16,7 @@ export const BGContainer: React.FC<BGContainerProps> = ({ children, className = 
       id="bg-container"
     >
       <img 
-        src="/assets/BGContainer.svg" 
+        src={`${import.meta.env.BASE_URL}assets/BGContainer.svg`}
         alt="" 
         className="absolute inset-0 w-full h-full object-cover object-top pointer-events-none"
         aria-hidden="true" 
