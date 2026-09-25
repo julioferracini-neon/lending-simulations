@@ -1,0 +1,65 @@
+@theme {
+  /* ========================================================================
+     TOKENS PRIMITIVOS (Escala de cores da marca e neutros)
+     ======================================================================== */
+  --color-brand-blue-50: #f0f7ff;
+  --color-brand-blue-100: #eaf4fe;
+  --color-brand-blue-200: #d6efff;
+  --color-brand-blue-500: #0073ea;
+  --color-brand-blue-600: #0062c4;
+  --color-brand-blue-700: #0055aa;
+  
+  --color-brand-navy-900: #142742;
+  --color-brand-navy-800: #1b3248;
+  --color-brand-navy-700: #253e57;
+
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #f8fafd;
+  --color-neutral-100: #f1f5f9;
+  --color-neutral-200: #e2e8f0;
+  --color-neutral-300: #cbd5e1;
+  --color-neutral-500: #5a738e;
+  --color-neutral-600: #475569;
+  --color-neutral-900: #0f172a;
+
+  --color-neon-lime: #d0ff57;
+  --color-status-success: #17652a;
+  --color-status-success-subtle: #ebf7eb;
+  --color-status-warning: #d99738;
+  --color-status-error: #ef4444;
+
+  /* ========================================================================
+     TOKENS SEMÂNTICOS (Superfície, Texto, Ação, Borda e Feedback)
+     ======================================================================== */
+  /* Superfícies */
+  --color-surface-primary: var(--color-neutral-0);
+  --color-surface-subtle: var(--color-neutral-50);
+  --color-surface-muted: var(--color-neutral-100);
+  --color-surface-brand-subtle: var(--color-brand-blue-50);
+
+  /* Textos */
+  --color-text-primary: var(--color-brand-navy-900);
+  --color-text-secondary: var(--color-neutral-500);
+  --color-text-muted: var(--color-neutral-300);
+  --color-text-brand: var(--color-brand-blue-500);
+  --color-text-inverse: var(--color-neutral-0);
+
+  /* Ações (Botões, Links, Controles Interativos) */
+  --color-action-default: var(--color-brand-blue-500);
+  --color-action-hover: var(--color-brand-blue-600);
+  --color-action-pressed: var(--color-brand-blue-700);
+  --color-action-disabled: var(--color-neutral-300);
+
+  /* Bordas e Divisores */
+  --color-border-subtle: var(--color-neutral-200);
+  --color-border-default: var(--color-neutral-300);
+  --color-border-brand: var(--color-brand-blue-500);
+
+  /* Feedback e Acentos */
+  --color-feedback-success: var(--color-status-success);
+  --color-feedback-success-subtle: var(--color-status-success-subtle);
+  --color-feedback-warning: var(--color-status-warning);
+  --color-feedback-error: var(--color-status-error);
+  --color-accent-highlight: var(--color-neon-lime);
+}
+

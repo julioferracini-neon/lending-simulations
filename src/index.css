@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./design-system/tokens.css";
 
 @keyframes indeterminate-bar1 {
   0% {

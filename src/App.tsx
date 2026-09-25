@@ -6,21 +6,25 @@
 import React, { useState } from 'react';
 import { AnimatePresence, motion, type Variants } from 'motion/react';
 import { MobileFrame } from './components/MobileFrame';
-import { LoanHubScreen } from './components/LoanHubScreen';
-import { InputValueScreen } from './components/InputValueScreen';
-import { BaselineInputValueScreen } from './components/BaselineInputValueScreen';
-import { BaselineLoanSimulationScreen } from './components/BaselineLoanSimulationScreen';
-import { BaselineLoanHubScreen } from './components/BaselineLoanHubScreen';
-import { BaselineSummaryScreen } from './components/BaselineSummaryScreen';
-import { LoanSimulationScreen, type LoanSimulationData } from './components/LoanSimulationScreen';
-import { ProposalLoadingScreen } from './components/ProposalLoadingScreen';
-import { SummaryScreen } from './components/SummaryScreen';
-import { SuccessScreen } from './components/SuccessScreen';
-import { BaselineSuccessScreen } from './components/BaselineSuccessScreen';
-import { ProductsScreen } from './components/ProductsScreen';
-import { GlobalHomeScreen } from './components/GlobalHomeScreen';
-import { SurfacePlaceholderScreen, type SurfaceTab } from './components/SurfacePlaceholderScreen';
 import { PortalScreen } from './components/PortalScreen';
+import {
+  LoanHubScreen,
+  InputValueScreen,
+  BaselineInputValueScreen,
+  BaselineLoanSimulationScreen,
+  BaselineLoanHubScreen,
+  BaselineSummaryScreen,
+  LoanSimulationScreen,
+  type LoanSimulationData,
+  ProposalLoadingScreen,
+  SummaryScreen,
+  SuccessScreen,
+  BaselineSuccessScreen,
+  ProductsScreen,
+  GlobalHomeScreen,
+  SurfacePlaceholderScreen,
+  type SurfaceTab,
+} from './journeys/emprestimo-neon';
 import { hapticLight, hapticMedium, hapticSuccess } from './utils/haptics';
 
 import { FlowStep } from './router/steps';
