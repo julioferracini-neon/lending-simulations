@@ -1,5 +1,6 @@
 {
-  "name": "react-example",
+  "name": "lending-simulations",
+  "description": "Protótipo navegável para validação de hipóteses de plano de pagamento de empréstimo",
   "private": true,
   "version": "0.0.0",
   "type": "module",

@@ -1,109 +1,90 @@
-# Protótipos Navegáveis (Boilerplate)
+# Simulações de Empréstimo: Hipóteses de Plano de Pagamento
 
-Boilerplate reutilizável para construção rápida de protótipos de alta fidelidade, micro-interações nativas e testes de hipóteses de produto em SPAs client-side.
+Protótipo navegável de alta fidelidade desenvolvido para testes com usuários e validação de hipóteses de produto na jornada de **Empréstimo Pessoal (Neon)**.
 
-Este repositório foi desenhado para ser clonado e adaptado para diferentes jornadas de negócio sem perder a fundação de design system, transições fluidas e viewport de aplicativo móvel.
-
----
-
-## Instância de Referência: Empréstimo Neon
-
-A implementação padrão deste repositório contém a jornada de **Hipóteses para Empréstimo**, servindo de exemplo prático de aplicação das diretrizes de arquitetura:
-
-* **Comparativo de fluxos**: Proposta padrão (Baseline) versus Nova experiência (Personalização de parcelas e datas).
-* **Micro-interações táteis**: Animações fluidas com Motion, feedback tátil (haptics) e odômetro numérico.
-* **Simulador financeiro client-side**: Cálculos de juros, CET, amortização e seguros integrados em tempo real sem dependência de servidor.
+Este projeto foi construído sobre a fundação do [**`prototype-boilerplate`**](https://github.com/julioferracini-neon/prototype-boilerplate) e utiliza herança contínua para manter seu Design System e componentes de infraestrutura sempre atualizados.
 
 ---
 
-## Principais Pilares
+## 1. Contexto de Produto
 
-* **Arquitetura Desacoplada**: A lógica do shell (viewport, roteador, transições de tela) é 100% isolada da regra de negócio das telas (`src/journeys/`).
-* **Design System Adapter**: Tokens semânticos centralizados em `src/design-system/tokens.css` (Tailwind CSS v4) e wrappers de componentes prontos para receber o Design System definitivo.
-* **100% Estático (Zero Backend)**: Gera um bundle estático otimizado (~550 kB) pronto para publicação em CDN, GitHub Pages, Vercel ou contêiner Nginx Alpine.
+### O Problema
+Na contratação de crédito pessoal, a escolha do plano de pagamento costuma ser uma das etapas de maior fricção e abandono. O cliente frequentemente se depara com opções pré-fixadas e tabelas rígidas, sentindo pouca flexibilidade para adaptar o compromisso financeiro ao seu fluxo de caixa mensal real (data de recebimento do salário e limite de gasto seguro).
+
+### As Hipóteses em Validação
+
+* **Hipótese A: Plano de Pagamento Dinâmico (`DO-01`)**
+  * **Conceito**: Dar ao cliente autonomia total para ajustar diretamente o valor da parcela mensal desejada, selecionar a melhor data para o primeiro vencimento e visualizar a amortização e juros em tempo real.
+  * **Mecanismos**: Sliders táteis, odômetro numérico com contagem de valores, seletores modais com feedback háptico e cálculo pró-rata die instantâneo.
+  * **Objetivo de Negócio**: Aumentar a taxa de conversão final da proposta e reduzir o atraso nas primeiras parcelas por meio de um vencimento mais conveniente.
+
+* **Hipótese B: Fluxo Baseline de Controle (`Baseline`)**
+  * **Conceito**: Fluxo convencional de seleção com simulação padrão de mercado.
+  * **Objetivo**: Servir de grupo de controle estrito durante sessões de testes de usabilidade e testes A/B comparativos com usuários reais.
 
 ---
 
-## Estrutura do Projeto
+## 2. Rotas e Deep-Links para Testes com Usuários
 
-```text
-├── src/
-│   ├── design-system/          # Camada adapter (tokens e componentes universais)
-│   │   ├── tokens.css          # Tokens semânticos e primitivos (@theme Tailwind v4)
-│   │   └── components/         # Wrappers reutilizáveis (ex: Button)
-│   ├── journeys/               # Jornadas plugáveis de protótipo
-│   │   ├── types.ts            # Contratos de navegação e telas
-│   │   └── emprestimo-neon/    # Instância atual da jornada de empréstimo
-│   │       ├── screens/        # Telas da jornada
-│   │       ├── components/     # Modais e seletores específicos
-│   │       └── utils/          # Mocks e regras de cálculo financeiro
-│   ├── components/             # Componentes globais do shell (MobileShell, etc.)
-│   ├── router/                 # Engine de navegação entre telas
-│   ├── App.tsx                 # Ponto de entrada do shell da aplicação
-│   └── main.tsx
-├── AGENTS.md                   # Diretrizes técnicas para agentes de IA
-└── vite.config.ts
+O protótipo conta com roteamento sincronizado em tempo real na URL. É possível iniciar o teste diretamente em qualquer etapa ou fluxo:
+
+| Fluxo / Hipótese | Rota Direta | Descrição |
+| :--- | :--- | :--- |
+| **Portal de Seleção** | `/` ou `#/portal` | Hub inicial para selecionar qual hipótese avaliar |
+| **Hipótese DO-01** | `#/do-01/hub` | Ponto de entrada da nova experiência de plano de pagamento |
+| **DO-01: Simulação** | `#/do-01/simulation` | Tela principal com slider dinâmico e odômetro |
+| **DO-01: Resumo** | `#/do-01/summary` | Revisão de condições, CET, seguro e confirmação por PIN |
+| **Fluxo Baseline** | `#/baseline/hub` | Experiência de controle tradicional |
+| **Home do App** | `#/home` | Contexto de navegação global com atalhos e vitrine |
+| **Produtos** | `#/produtos` | Catálogo de produtos com acesso ao empréstimo |
+
+---
+
+## 3. Conexão com o Boilerplate (Herança Contínua)
+
+Este protótipo herda o Core de navegação e o Design System do repositório template [**`prototype-boilerplate`**](https://github.com/julioferracini-neon/prototype-boilerplate).
+
+### Como Puxar Atualizações do Template
+
+Caso o repositório template receba novos componentes, tokens de cores ou melhorias na engine de viewport, execute no terminal deste projeto:
+
+```bash
+# 1. Puxar apenas novidades do Design System (tokens.css e componentes de UI)
+npm run sync:ds
+
+# 2. Puxar melhorias completas de infraestrutura (Design System + Core do Shell)
+npm run sync:template
 ```
 
+Esses comandos realizam uma sincronização cirúrgica: atualizam apenas as pastas `src/design-system/` e `src/core/`, mantendo 100% intactas as telas, textos, regras e dados da jornada de empréstimo (`src/journeys/emprestimo-neon/`).
+
 ---
 
-## Começando
+## 4. Stack Tecnológica
 
-### Pré-requisitos
-* Node.js 18+ instalado
-* npm ou bun
+* **Framework**: React 19 + TypeScript
+* **Build Tool**: Vite 8
+* **Estilização**: Tailwind CSS v4 com tokens semânticos (`@theme`)
+* **Animações e Gestos**: Motion (Framer Motion) com curvas táteis nativas
+* **Cálculo Financeiro**: Motor estático client-side (juros compostos, pró-rata die, amortização)
+* **Zero Backend**: Aplicação 100% estática, pronta para deploy no GitHub Pages
 
-### Instalação e Execução
+---
+
+## 5. Como Executar Localmente
 
 1. Instale as dependências:
    ```bash
    npm install
    ```
 
-2. Inicie o ambiente de desenvolvimento:
+2. Inicie o servidor local de desenvolvimento:
    ```bash
    npm run dev
    ```
-   Acesse no seu navegador: `http://localhost:3000`
+   Acesse no navegador: `http://localhost:3000`
 
-3. Comandos disponíveis:
-   * `npm run dev`: Servidor local com Hot Module Replacement (HMR).
-   * `npm run build`: Compilação estática de produção na pasta `dist/`.
-   * `npm run preview`: Visualização local da compilação de produção.
-   * `npm run lint`: Verificação estática de tipagem com TypeScript (`tsc --noEmit`).
-
----
-
-## Como Criar uma Nova Hipótese / Jornada
-
-Para utilizar este boilerplate em um novo teste de conceito ou protótipo:
-
-1. **Clonar este repositório** para a nova hipótese.
-2. **Criar a nova pasta de jornada** em `src/journeys/<sua-jornada>/` implementando as telas necessárias.
-3. **Atualizar os tokens visuais** em `src/design-system/tokens.css` caso o produto utilize outra identidade visual (cores primárias, superfícies, etc.).
-4. **Conectar a nova jornada no roteador** mantendo o shell de navegação e as transições do viewport.
-
----
-
-## Publicação e Testes no GitHub Pages
-
-Este protótipo está preparado para ser compilado e publicado no GitHub Pages com deploys automáticos via GitHub Actions.
-
-### Como Ativar no GitHub
-
-1. No seu repositório no GitHub, acesse a aba **Settings**.
-2. No menu lateral esquerdo, clique em **Pages**.
-3. Na seção **Build and deployment > Source**, altere de *Deploy from a branch* para **GitHub Actions**.
-4. Faça um push para a branch `main` (ou execute manualmente na aba **Actions** > **Deploy to GitHub Pages** > **Run workflow**).
-5. O link público ficará disponível em `https://<seu-usuario>.github.io/<nome-do-repositorio>/`.
-
----
-
-## Stack Tecnológica
-
-* **Framework**: React 19 + TypeScript
-* **Build Tool**: Vite 8
-* **Estilização**: Tailwind CSS v4 com tokens semânticos
-* **Animações e Gestos**: Motion (Framer Motion)
-* **Ícones**: Lucide React
-
+3. Comandos de validação:
+   * `npm run lint`: Checagem estática de tipagem (`tsc --noEmit`).
+   * `npm run build`: Compilação de produção e geração do fallback SPA (`dist/404.html`).
+   * `npm run preview`: Visualização local do build compilado.
