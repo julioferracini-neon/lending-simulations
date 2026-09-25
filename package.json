@@ -9,7 +9,9 @@
     "postbuild": "cp dist/index.html dist/404.html",
     "preview": "vite preview",
     "clean": "rm -rf dist",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "sync:template": "bash ./scripts/sync-template.sh",
+    "sync:ds": "bash ./scripts/sync-ds.sh"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
